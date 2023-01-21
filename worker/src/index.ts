@@ -1,5 +1,5 @@
 interface Env {
-  PH_KV: KVNamespace;
+  HORSE: KVNamespace;
 }
 
 export default {
@@ -9,23 +9,30 @@ export default {
 
     switch (request.method) {
       case "GET":
-        const data = await env.PH_KV.get(key);
-        if (!data) {
+        if (!key) {
+          const data = await env.HORSE.list();
+          console.log(data);
+          const str = JSON.stringify(data);
+          console.log(str);
+          return new Response(data.keys.toString());
+        }
+        const value = await env.HORSE.get(key);
+        if (!value) {
           return new Response(`Key ${key} not found.`, { status: 400 });
         }
-        return new Response(data);
+        return new Response(value);
       case "PUT":
         const body = await request.text();
         try {
           const data = JSON.parse(body);
-          await env.PH_KV.put(key, data.data);
+          await env.HORSE.put(key, data.data);
           return new Response(`Set ${data.data} to ${key}`, { status: 200 });
         } catch (err) {
           return new Response(`${err}`, { status: 500 });
         }
       case "DELETE":
         try {
-          await env.PH_KV.delete(key);
+          await env.HORSE.delete(key);
           return new Response(`Deleted ${key}`, { status: 200 });
         } catch (err) {
           return new Response(`${err}`, { status: 500 });
