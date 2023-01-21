@@ -10,11 +10,19 @@ export default {
     switch (request.method) {
       case "GET":
         if (!key) {
+          const vals = [];
           const data = await env.HORSE.list();
-          console.log(data);
-          const str = JSON.stringify(data);
-          console.log(str);
-          return new Response(data.keys.toString());
+          for (const key of Object.values(data.keys)) {
+            const value = await env.HORSE.get(key.name);
+            if (!value) {
+              continue;
+            }
+            vals.push({
+              key: key.name,
+              value,
+            });
+          }
+          return new Response(JSON.stringify(vals, null, 2));
         }
         const value = await env.HORSE.get(key);
         if (!value) {
