@@ -3,5 +3,5 @@ export default async function DashboardLayout({
 }: {
   children?: React.ReactNode;
 }) {
-  return <div>{children}</div>;
+  return <div className="font-main">{children}</div>;
 }

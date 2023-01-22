@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Listing from "../../components/listing";
 import SignOutButton from "../../components/sign-out-button";
 import { getCurrentUser } from "../../lib/session";
 
@@ -21,22 +22,24 @@ export default async function DashboardPage() {
     <div className="min-h-screen flex flex-col">
       <SignOutButton />
       <div className="flex flex-col grow justify-center items-center">
-        <div className="rounded border-2 border-black max-h-96 overflow-y-scroll w-11/12 sm:max-w-sm tabular-nums">
-          <div className="p-1 grid grid-cols-2 gap-2 text-center bg-gray-200">
-            <p className="font-bold">key</p>
-            <p className="font-bold">value</p>
+        <div className="rounded border-[3px] border-black max-h-96 overflow-y-scroll w-11/12 sm:max-w-lg text-xl tabular-nums">
+          <div className="p-1 grid grid-cols-2 gap-2 text-center bg-gray-200 border-b-[3px] border-b-black">
+            <p className="font-bold">slug</p>
+            <p className="font-bold">destination</p>
           </div>
           {data.map((kv: Data) => (
-            <div
-              key={kv.key}
-              className="grid grid-cols-2 gap-2 text-center border-2 border-white hover:border-gray-400 rounded-sm"
-            >
-              <p>{kv.key}</p>
-              <p>{kv.value}</p>
-            </div>
+            <Listing key={kv.key} k={kv.key} v={truncate(kv.value, 32)} />
           ))}
         </div>
       </div>
     </div>
   );
+}
+
+function truncate(str: string, num: number) {
+  if (str.length > num) {
+    return str.slice(0, num) + "...";
+  } else {
+    return str;
+  }
 }
