@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CheckSquare, Edit, XSquare } from "react-feather";
+import { mutate } from "swr";
 
 const Listing = ({ k, v }: { k: string; v: string }) => {
   const [keyActive, setKeyActive] = useState(false);
@@ -18,7 +19,24 @@ const Listing = ({ k, v }: { k: string; v: string }) => {
             className="text-sm border-2 p-1 border-gray-500 rounded font-mono w-40"
             value={input}
           ></input>
-          <button className="p-1 invisible group-hover:visible">
+          <button
+            className="p-1 invisible group-hover:visible"
+            onClick={() => {
+              mutate(
+                fetch(
+                  `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${k}`,
+                  {
+                    method: "PUT",
+                    body: JSON.stringify({ data: input }),
+                  }
+                ),
+                {
+                  optimisticData: [v, input],
+                  populateCatche: true,
+                }
+              );
+            }}
+          >
             <CheckSquare size="26px" color="#22c55e" />
           </button>
           <button

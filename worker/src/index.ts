@@ -2,12 +2,20 @@ interface Env {
   HORSE: KVNamespace;
 }
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS, DELETE, PUT",
+  "Access-Control-Allow-Headers": "*",
+};
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     const key = url.pathname.slice(1);
 
     switch (request.method) {
+      case "OPTIONS":
+        return new Response("OK", { status: 200, headers: corsHeaders });
       case "GET":
         if (!key) {
           const vals = [];
@@ -34,7 +42,11 @@ export default {
         try {
           const data = JSON.parse(body);
           await env.HORSE.put(key, data.data);
-          return new Response(`Set ${data.data} to ${key}`, { status: 200 });
+
+          return new Response(`Set ${data.data} to ${key}`, {
+            status: 200,
+            headers: corsHeaders,
+          });
         } catch (err) {
           return new Response(`${err}`, { status: 500 });
         }
