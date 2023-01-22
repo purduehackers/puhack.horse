@@ -28,18 +28,10 @@ export default async function DashboardPage() {
             <p className="font-bold">destination</p>
           </div>
           {data.map((kv: Data) => (
-            <Listing key={kv.key} k={kv.key} v={truncate(kv.value, 32)} />
+            <Listing key={kv.key} k={kv.key} v={kv.value} />
           ))}
         </div>
       </div>
     </div>
   );
-}
-
-function truncate(str: string, num: number) {
-  if (str.length > num) {
-    return str.slice(0, num) + "...";
-  } else {
-    return str;
-  }
 }
