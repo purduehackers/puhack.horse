@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { PlusSquare } from "react-feather";
 import Listing from "../../components/listing";
 import SignOutButton from "../../components/sign-out-button";
 import { getCurrentUser } from "../../lib/session";
