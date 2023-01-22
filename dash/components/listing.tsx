@@ -7,10 +7,12 @@ import { mutate } from "swr";
 const Listing = ({ k, v }: { k: string; v: string }) => {
   const [keyActive, setKeyActive] = useState(false);
   const [valActive, setValActive] = useState(false);
+  const [key, setKey] = useState(k);
+  const [value, setValue] = useState(v);
   const [input, setInput] = useState("");
   return (
     <div className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-words">
-      <p className="text-base text-center cursor-pointer">{k}</p>
+      <p className="text-base text-center cursor-pointer">{key}</p>
       {valActive ? (
         <div className="flex flex-row gap-1 items-center group">
           <input
@@ -21,8 +23,8 @@ const Listing = ({ k, v }: { k: string; v: string }) => {
           ></input>
           <button
             className="p-1 invisible group-hover:visible"
-            onClick={() => {
-              mutate(
+            onClick={async () => {
+              await mutate(
                 fetch(
                   `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${k}`,
                   {
@@ -33,8 +35,11 @@ const Listing = ({ k, v }: { k: string; v: string }) => {
                 {
                   optimisticData: [v, input],
                   populateCatche: true,
+                  rollbackOnError: true,
                 }
               );
+              setValue(input);
+              setValActive(false);
             }}
           >
             <CheckSquare size="26px" color="#22c55e" />
@@ -51,11 +56,11 @@ const Listing = ({ k, v }: { k: string; v: string }) => {
           className="flex flex-row gap-1 items-center group"
           onClick={() => {
             setValActive(true);
-            setInput(v);
+            setInput(value);
           }}
         >
           <p className="font-mono text-base text-gray-500 group-hover:text-black cursor-pointer">
-            {truncate(v, 32)}
+            {truncate(value, 32)}
           </p>
           <button className="text-xs p-1 invisible group-hover:visible">
             <Edit size="22px" />
