@@ -4,11 +4,17 @@ import { useState } from "react";
 import { CheckSquare, Edit, XSquare } from "react-feather";
 import { mutate } from "swr";
 
-const Listing = ({ k, v }: { k: string; v: string }) => {
+const Listing = ({
+  slug,
+  destination,
+}: {
+  slug: string;
+  destination: string;
+}) => {
   const [keyActive, setKeyActive] = useState(false);
   const [valActive, setValActive] = useState(false);
-  const [key, setKey] = useState(k);
-  const [value, setValue] = useState(v);
+  const [key, setKey] = useState(slug);
+  const [value, setValue] = useState(destination);
   const [input, setInput] = useState("");
   return (
     <div className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-words">
@@ -26,14 +32,14 @@ const Listing = ({ k, v }: { k: string; v: string }) => {
             onClick={async () => {
               await mutate(
                 fetch(
-                  `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${k}`,
+                  `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${key}`,
                   {
                     method: "PUT",
                     body: JSON.stringify({ data: input }),
                   }
                 ),
                 {
-                  optimisticData: [v, input],
+                  optimisticData: [destination, input],
                   populateCatche: true,
                   rollbackOnError: true,
                 }
