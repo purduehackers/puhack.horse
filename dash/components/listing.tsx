@@ -26,6 +26,7 @@ const Listing = ({
             onChange={(e) => setInput(e.target.value)}
             className="text-sm border-2 p-1 border-gray-500 rounded font-mono w-40"
             value={input}
+            autoFocus
           ></input>
           <button
             className="p-1 invisible group-hover:visible"
