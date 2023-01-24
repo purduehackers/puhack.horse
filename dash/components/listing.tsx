@@ -47,13 +47,13 @@ const Listing = ({
               try {
                 await mutate(
                   put(
-                    `https://puhack-dot-horse.sparklesrocketeyeworkers.dev/${key}`,
+                    `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${key}`,
                     input
                   ),
                   {
                     optimisticData: [...newData],
                     rollbackOnError: true,
-                    revalidate: true,
+                    revalidate: false,
                     populateCache: true,
                   }
                 );
