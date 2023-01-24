@@ -55,7 +55,7 @@ const Listing = ({
                   {
                     optimisticData: [...newData],
                     rollbackOnError: true,
-                    revalidate: false,
+                    revalidate: true,
                     populateCache: true,
                   }
                 );
