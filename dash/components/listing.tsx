@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckSquare, Edit, XSquare } from "react-feather";
+import { CheckSquare, Edit, XSquare } from "lucide-react";
 import useSWR from "swr";
 import { KVData } from "../types/types";
 
