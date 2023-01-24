@@ -1,14 +1,10 @@
 "use client";
 import useSWR from "swr";
+import { KVData } from "../types/types";
 import Listing from "./listing";
 import SignOutButton from "./sign-out-button";
 
-type Data = {
-  key: string;
-  value: string;
-};
-
-const RouteList = ({ fallback }: { fallback: Data[] }) => {
+const RouteList = ({ fallback }: { fallback: KVData[] }) => {
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data } = useSWR(
     "https://puhack-dot-horse.sparklesrocketeye.workers.dev",
@@ -28,8 +24,13 @@ const RouteList = ({ fallback }: { fallback: Data[] }) => {
             <p className="font-bold">slug</p>
             <p className="font-bold">destination</p>
           </div>
-          {data.map((kv: Data) => (
-            <Listing key={kv.key} slug={kv.key} destination={kv.value} />
+          {data.map((kv: KVData) => (
+            <Listing
+              key={kv.key}
+              slug={kv.key}
+              destination={kv.value}
+              data={data}
+            />
           ))}
         </div>
       </div>

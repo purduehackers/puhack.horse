@@ -1,18 +1,11 @@
 import { redirect } from "next/navigation";
-import { PlusSquare } from "react-feather";
-import Listing from "../../components/listing";
 import RouteList from "../../components/route-list";
-import SignOutButton from "../../components/sign-out-button";
 import { getCurrentUser } from "../../lib/session";
-
-type Data = {
-  key: string;
-  value: string;
-};
+import { KVData } from "../../types/types";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-  const data = await fetch(
+  const data: KVData[] = await fetch(
     "https://puhack-dot-horse.sparklesrocketeye.workers.dev"
   ).then((r) => r.json());
 

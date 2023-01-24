@@ -3,13 +3,16 @@
 import { useState } from "react";
 import { CheckSquare, Edit, XSquare } from "react-feather";
 import { mutate } from "swr";
+import { KVData } from "../types/types";
 
 const Listing = ({
   slug,
   destination,
+  data,
 }: {
   slug: string;
   destination: string;
+  data: KVData[];
 }) => {
   const [keyActive, setKeyActive] = useState(false);
   const [valActive, setValActive] = useState(false);
@@ -40,7 +43,7 @@ const Listing = ({
                   }
                 ),
                 {
-                  optimisticData: [destination, input],
+                  optimisticData: [...data, input],
                   populateCatche: true,
                   rollbackOnError: true,
                 }
