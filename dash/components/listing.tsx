@@ -17,7 +17,7 @@ const Listing = ({
   const [value, setValue] = useState(destination);
   const [input, setInput] = useState("");
   return (
-    <div className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-words">
+    <div className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-all">
       <p className="text-base text-center cursor-pointer">{key}</p>
       {valActive ? (
         <div className="flex flex-row gap-1 items-center group">
