@@ -94,14 +94,14 @@ const Listing = ({
 };
 
 async function put(url: string, data: string) {
-  try {
-    return fetch(url, {
-      method: "PUT",
-      body: JSON.stringify({ data }),
-    }).then((r) => r.json());
-  } catch (err) {
-    throw new Error(`${err}`);
-  }
+  return fetch(url, {
+    method: "PUT",
+    body: JSON.stringify({ data }),
+  })
+    .then((r) => r.json())
+    .catch((err) => {
+      throw new Error(`${err}`);
+    });
 }
 
 function mutateObject(
