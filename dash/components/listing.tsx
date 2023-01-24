@@ -44,20 +44,24 @@ const Listing = ({
             className="p-1 invisible group-hover:visible"
             onClick={async () => {
               const newData = mutateObject("value", data, key, input);
-              await mutate(
-                put(
-                  `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${key}`,
-                  input
-                ),
-                {
-                  optimisticData: [...newData],
-                  rollbackOnError: true,
-                  revalidate: true,
-                  populateCache: true,
-                }
-              );
-              setValue(input);
-              setValActive(false);
+              try {
+                await mutate(
+                  put(
+                    `https://puhack-dot-horse.sparklesrocketeyeworkers.dev/${key}`,
+                    input
+                  ),
+                  {
+                    optimisticData: [...newData],
+                    rollbackOnError: true,
+                    revalidate: true,
+                    populateCache: true,
+                  }
+                );
+                setValue(input);
+                setValActive(false);
+              } catch (err) {
+                setValActive(false);
+              }
             }}
           >
             <CheckSquare size="26px" color="#22c55e" />
@@ -90,14 +94,14 @@ const Listing = ({
 };
 
 async function put(url: string, data: string) {
-  fetch(url, {
-    method: "PUT",
-    body: JSON.stringify({ data }),
-  })
-    .then((r) => r.json())
-    .catch((err) => {
-      throw new Error(err);
-    });
+  try {
+    return fetch(url, {
+      method: "PUT",
+      body: JSON.stringify({ data }),
+    }).then((r) => r.json());
+  } catch (err) {
+    throw new Error(`${err}`);
+  }
 }
 
 function mutateObject(
