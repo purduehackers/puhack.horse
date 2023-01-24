@@ -43,6 +43,8 @@ const Listing = ({
           <button
             className="p-1 invisible group-hover:visible"
             onClick={async () => {
+              setValue(input);
+              setValActive(false);
               const newData = mutateObject("value", data, key, input);
               try {
                 await mutate(
@@ -57,9 +59,8 @@ const Listing = ({
                     populateCache: true,
                   }
                 );
-                setValue(input);
-                setValActive(false);
               } catch (err) {
+                setValue(destination);
                 setValActive(false);
               }
             }}
