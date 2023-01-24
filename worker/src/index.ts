@@ -30,13 +30,16 @@ export default {
               value,
             });
           }
-          return new Response(JSON.stringify(vals, null, 2));
+          return new Response(JSON.stringify(vals, null, 2), {
+            status: 200,
+            headers: corsHeaders,
+          });
         }
         const value = await env.HORSE.get(key);
         if (!value) {
           return new Response(`Key ${key} not found.`, { status: 400 });
         }
-        return new Response(value);
+        return new Response(value, { status: 200, headers: corsHeaders });
       case "PUT":
         const body = await request.text();
         try {
@@ -53,7 +56,10 @@ export default {
       case "DELETE":
         try {
           await env.HORSE.delete(key);
-          return new Response(`Deleted ${key}`, { status: 200 });
+          return new Response(`Deleted ${key}`, {
+            status: 200,
+            headers: corsHeaders,
+          });
         } catch (err) {
           return new Response(`${err}`, { status: 500 });
         }
