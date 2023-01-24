@@ -2,23 +2,32 @@
 
 import { useState } from "react";
 import { CheckSquare, Edit, XSquare } from "react-feather";
-import { mutate } from "swr";
+import useSWR from "swr";
 import { KVData } from "../types/types";
 
 const Listing = ({
   slug,
   destination,
-  data,
+  fallback,
 }: {
   slug: string;
   destination: string;
-  data: KVData[];
+  fallback: KVData[];
 }) => {
   const [keyActive, setKeyActive] = useState(false);
   const [valActive, setValActive] = useState(false);
   const [key, setKey] = useState(slug);
   const [value, setValue] = useState(destination);
   const [input, setInput] = useState("");
+
+  const fetcher = (url: string) => fetch(url).then((r) => r.json());
+  const { data, mutate } = useSWR(
+    "https://puhack-dot-horse.sparklesrocketeye.workers.dev",
+    fetcher,
+    {
+      fallbackData: fallback,
+    }
+  );
   return (
     <div className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-all">
       <p className="text-base text-center cursor-pointer">{key}</p>
@@ -34,6 +43,8 @@ const Listing = ({
           <button
             className="p-1 invisible group-hover:visible"
             onClick={async () => {
+              const newData = mutateObject("value", data, key, input);
+              console.log("new data", newData);
               await mutate(
                 fetch(
                   `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${key}`,
@@ -41,13 +52,13 @@ const Listing = ({
                     method: "PUT",
                     body: JSON.stringify({ data: input }),
                   }
-                ),
+                ).then((r) => {}),
                 {
-                  optimisticData: [...data, input],
-                  populateCatche: true,
+                  optimisticData: [...newData],
                   rollbackOnError: true,
+                  revalidate: true,
                 }
-              );
+              ).then((r) => console.log("slkdjf", r));
               setValue(input);
               setValActive(false);
             }}
@@ -80,6 +91,23 @@ const Listing = ({
     </div>
   );
 };
+
+function mutateObject(
+  toChange: string,
+  data: KVData[],
+  key: string,
+  value: string
+) {
+  console.log("hi");
+  if (toChange === "value") {
+    const el = data.find((el) => el.key === key);
+    if (el) {
+      el.value = value;
+    }
+  }
+  console.log("hii");
+  return data;
+}
 
 function truncate(str: string, num: number) {
   if (str.length > num) {

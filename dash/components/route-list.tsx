@@ -15,6 +15,8 @@ const RouteList = ({ fallback }: { fallback: KVData[] }) => {
     }
   );
 
+  console.log("data", data);
+
   return (
     <div className="min-h-screen flex flex-col">
       <SignOutButton />
@@ -29,7 +31,7 @@ const RouteList = ({ fallback }: { fallback: KVData[] }) => {
               key={kv.key}
               slug={kv.key}
               destination={kv.value}
-              data={data}
+              fallback={fallback}
             />
           ))}
         </div>
