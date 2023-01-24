@@ -18,18 +18,7 @@ export default {
         return new Response("OK", { status: 200, headers: corsHeaders });
       case "GET":
         if (!key) {
-          const vals = [];
-          const data = await env.HORSE.list();
-          for (const key of Object.values(data.keys)) {
-            const value = await env.HORSE.get(key.name);
-            if (!value) {
-              continue;
-            }
-            vals.push({
-              key: key.name,
-              value,
-            });
-          }
+          const vals = await getAll();
           return new Response(JSON.stringify(vals, null, 2), {
             status: 200,
             headers: corsHeaders,
@@ -45,8 +34,9 @@ export default {
         try {
           const data = JSON.parse(body);
           await env.HORSE.put(key, data.data);
+          const all = await getAll();
 
-          return new Response(`Set ${data.data} to ${key}`, {
+          return new Response(JSON.stringify(all, null, 2), {
             status: 200,
             headers: corsHeaders,
           });
@@ -65,6 +55,22 @@ export default {
         }
       default:
         return new Response("Invalid method. Use GET or PUT", { status: 400 });
+    }
+
+    async function getAll() {
+      const vals = [];
+      const data = await env.HORSE.list();
+      for (const key of Object.values(data.keys)) {
+        const value = await env.HORSE.get(key.name);
+        if (!value) {
+          continue;
+        }
+        vals.push({
+          key: key.name,
+          value,
+        });
+      }
+      return vals;
     }
   },
 };

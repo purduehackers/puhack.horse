@@ -44,21 +44,18 @@ const Listing = ({
             className="p-1 invisible group-hover:visible"
             onClick={async () => {
               const newData = mutateObject("value", data, key, input);
-              console.log("new data", newData);
               await mutate(
-                fetch(
+                put(
                   `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${key}`,
-                  {
-                    method: "PUT",
-                    body: JSON.stringify({ data: input }),
-                  }
-                ).then((r) => {}),
+                  input
+                ),
                 {
                   optimisticData: [...newData],
                   rollbackOnError: true,
                   revalidate: true,
+                  populateCache: true,
                 }
-              ).then((r) => console.log("slkdjf", r));
+              );
               setValue(input);
               setValActive(false);
             }}
@@ -92,20 +89,29 @@ const Listing = ({
   );
 };
 
+async function put(url: string, data: string) {
+  fetch(url, {
+    method: "PUT",
+    body: JSON.stringify({ data }),
+  })
+    .then((r) => r.json())
+    .catch((err) => {
+      throw new Error(err);
+    });
+}
+
 function mutateObject(
   toChange: string,
   data: KVData[],
   key: string,
   value: string
 ) {
-  console.log("hi");
   if (toChange === "value") {
     const el = data.find((el) => el.key === key);
     if (el) {
       el.value = value;
     }
   }
-  console.log("hii");
   return data;
 }
 
