@@ -46,7 +46,8 @@ export default {
       case "DELETE":
         try {
           await env.HORSE.delete(key);
-          return new Response(`Deleted ${key}`, {
+          const all = await getAll();
+          return new Response(JSON.stringify(all, null, 2), {
             status: 200,
             headers: corsHeaders,
           });

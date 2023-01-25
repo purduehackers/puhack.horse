@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { CheckSquare, Edit, XSquare } from "lucide-react";
+import { CheckSquare, Edit, Eraser, XSquare } from "lucide-react";
 import useSWR from "swr";
 import { KVData } from "../types/types";
+import Erase from "./erase";
 
 const Listing = ({
   slug,
@@ -75,26 +76,33 @@ const Listing = ({
           </button>
         </div>
       ) : (
-        <div
-          className="flex flex-row gap-1 items-center group"
-          onClick={() => {
-            setValActive(true);
-            setInput(value);
-          }}
-        >
-          <p className="font-mono text-base text-gray-500 group-hover:text-black cursor-pointer">
+        <div className="flex flex-row gap-1 items-center group">
+          <p
+            className="font-mono text-base text-gray-500 group-hover:text-black cursor-pointer"
+            onClick={() => {
+              setValActive(true);
+              setInput(value);
+            }}
+          >
             {truncate(value, 32)}
           </p>
-          <button className="text-xs p-1 invisible group-hover:visible">
+          <button
+            className="text-xs p-1 invisible group-hover:visible"
+            onClick={() => {
+              setValActive(true);
+              setInput(value);
+            }}
+          >
             <Edit size="22px" />
           </button>
+          <Erase fallback={fallback} route={key} />
         </div>
       )}
     </div>
   );
 };
 
-async function put(url: string, data: string) {
+function put(url: string, data: string) {
   return fetch(url, {
     method: "PUT",
     body: JSON.stringify({ data }),
