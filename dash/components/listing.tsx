@@ -5,19 +5,18 @@ import { CheckSquare, Edit, Eraser, XSquare } from "lucide-react";
 import useSWR from "swr";
 import { KVData } from "../types/types";
 import Erase from "./erase";
+import { put } from "../lib/api";
 
 const Listing = ({
-  slug,
+  route,
   destination,
   fallback,
 }: {
-  slug: string;
+  route: string;
   destination: string;
   fallback: KVData[];
 }) => {
-  const [keyActive, setKeyActive] = useState(false);
   const [valActive, setValActive] = useState(false);
-  const [key, setKey] = useState(slug);
   const [value, setValue] = useState(destination);
   const [input, setInput] = useState("");
 
@@ -31,7 +30,7 @@ const Listing = ({
   );
   return (
     <div className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-all">
-      <p className="text-base text-center cursor-pointer">{key}</p>
+      <p className="text-base text-center cursor-pointer">{route}</p>
       {valActive ? (
         <div className="flex flex-row gap-1 items-center group">
           <input
@@ -47,11 +46,11 @@ const Listing = ({
               setValue(input);
               setValActive(false);
               if (input === destination) return;
-              const newData = mutateObject("value", data, key, input);
+              const newData = mutateObject("value", data, route, input);
               try {
                 await mutate(
                   put(
-                    `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${key}`,
+                    `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${route}`,
                     input
                   ),
                   {
@@ -96,23 +95,12 @@ const Listing = ({
           >
             <Edit size="22px" />
           </button>
-          <Erase fallback={fallback} route={key} />
+          <Erase fallback={fallback} route={route} />
         </div>
       )}
     </div>
   );
 };
-
-function put(url: string, data: string) {
-  return fetch(url, {
-    method: "PUT",
-    body: JSON.stringify({ data }),
-  })
-    .then((r) => r.json())
-    .catch((err) => {
-      throw new Error(`${err}`);
-    });
-}
 
 function mutateObject(
   toChange: string,

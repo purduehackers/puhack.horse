@@ -1,6 +1,7 @@
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { Eraser } from "lucide-react";
 import useSWR from "swr";
+import { del } from "../lib/api";
 import { KVData } from "../types/types";
 
 const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
@@ -36,7 +37,7 @@ const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
                   const newData = deleteObject(route, data);
                   try {
                     await mutate(
-                      deleteFromKV(
+                      del(
                         `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${route}`
                       ),
                       {
@@ -61,16 +62,6 @@ const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
 
 function deleteObject(route: string, data: KVData[]) {
   return data.filter((el) => el.key !== route);
-}
-
-function deleteFromKV(url: string) {
-  return fetch(url, {
-    method: "DELETE",
-  })
-    .then((r) => r.json())
-    .catch((err) => {
-      throw new Error(`${err}`);
-    });
 }
 
 export default Erase;
