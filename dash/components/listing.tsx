@@ -46,6 +46,7 @@ const Listing = ({
             onClick={async () => {
               setValue(input);
               setValActive(false);
+              if (input === destination) return;
               const newData = mutateObject("value", data, key, input);
               try {
                 await mutate(
