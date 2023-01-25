@@ -33,13 +33,12 @@ const Listing = ({
       <p className="text-base text-center cursor-pointer">{route}</p>
       {valActive ? (
         <div className="flex flex-row gap-1 items-center group">
-          <input
-            type="text"
+          <textarea
             onChange={(e) => setInput(e.target.value)}
-            className="text-sm border-2 p-1 border-gray-500 rounded font-mono w-40"
+            className="text-sm border-2 p-1 border-gray-500 rounded font-mono w-full resize-none"
             value={input}
             autoFocus
-          ></input>
+          ></textarea>
           <button
             className="p-1 invisible group-hover:visible"
             onClick={async () => {
