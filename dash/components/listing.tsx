@@ -2,7 +2,7 @@
 
 import { CheckSquare, Edit, XSquare } from "lucide-react";
 import { useState } from "react";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 import { del, delAndPut, put } from "../lib/api";
 import { KVData } from "../types/types";
 import Erase from "./erase";
@@ -17,12 +17,11 @@ const Listing2 = ({
   fallback: KVData[];
 }) => {
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
-  const { data, mutate } = useSWR(
+  const { data, mutate } = useSWRImmutable(
     "https://puhack-dot-horse.sparklesrocketeye.workers.dev",
     fetcher,
     {
       fallbackData: fallback,
-      revalidateOnFocus: false,
     }
   );
 
