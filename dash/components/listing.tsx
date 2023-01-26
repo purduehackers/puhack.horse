@@ -1,13 +1,13 @@
 "use client";
 
+import { CheckSquare, Edit, XSquare } from "lucide-react";
 import { useState } from "react";
-import { CheckSquare, Edit, Eraser, XSquare } from "lucide-react";
 import useSWR from "swr";
+import { del, delAndPut, put } from "../lib/api";
 import { KVData } from "../types/types";
 import Erase from "./erase";
-import { put } from "../lib/api";
 
-const Listing = ({
+const Listing2 = ({
   route,
   destination,
   fallback,
@@ -16,10 +16,6 @@ const Listing = ({
   destination: string;
   fallback: KVData[];
 }) => {
-  const [valActive, setValActive] = useState(false);
-  const [value, setValue] = useState(destination);
-  const [input, setInput] = useState("");
-
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data, mutate } = useSWR(
     "https://puhack-dot-horse.sparklesrocketeye.workers.dev",
@@ -28,78 +24,103 @@ const Listing = ({
       fallbackData: fallback,
     }
   );
-  return (
+
+  const [edit, setEdit] = useState(false);
+  const [newRoute, setNewRoute] = useState(route);
+  const [newDest, setNewDest] = useState(destination);
+
+  return edit ? (
     <div className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-all">
+      <textarea
+        onChange={(e) => setNewRoute(e.target.value)}
+        className="text-sm border-2 p-1 border-gray-500 rounded font-mono w-full resize-none"
+        value={newRoute}
+        autoFocus
+      ></textarea>
+      <div className="flex flex-row gap-1 items-center group">
+        <textarea
+          onChange={(e) => setNewDest(e.target.value)}
+          className="text-sm border-2 p-1 border-gray-500 rounded font-mono w-full resize-none"
+          value={newDest}
+          autoFocus
+        ></textarea>
+        <button
+          className="p-1 invisible group-hover:visible"
+          onClick={async () => {
+            setEdit(false);
+            if (newRoute === route && newDest === destination) return;
+            let newData;
+            if (route !== newRoute) {
+              const filteredData = deleteObject(route, data);
+              newData = filteredData.concat({ key: newRoute, value: newDest });
+              console.log("new data concat", newData);
+            } else {
+              newData = mutateObject("value", data, newRoute, newDest);
+              console.log("new data mutate", newData);
+            }
+            console.log("new data final", newData);
+            try {
+              await mutate(
+                route !== newRoute
+                  ? delAndPut(
+                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${route}`,
+                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${newRoute}`,
+                      newDest
+                    )
+                  : put(
+                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${newRoute}`,
+                      newDest
+                    ),
+                {
+                  optimisticData: [...newData],
+                  rollbackOnError: true,
+                  revalidate: true,
+                  populateCache: true,
+                }
+              );
+            } catch (err) {
+              setNewRoute(route);
+              setNewDest(destination);
+              setEdit(false);
+            }
+          }}
+        >
+          <CheckSquare size="26px" color="#22c55e" />
+        </button>
+        <button
+          className="p-1 invisible group-hover:visible"
+          onClick={() => setEdit(false)}
+        >
+          <XSquare size="26px" color="#ef4444" />
+        </button>
+      </div>
+    </div>
+  ) : (
+    <div
+      className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-all"
+      onClick={() => {
+        setEdit(true);
+        setNewRoute(route);
+        setNewDest(destination);
+      }}
+    >
       <p className="text-base text-center cursor-pointer">{route}</p>
-      {valActive ? (
-        <div className="flex flex-row gap-1 items-center group">
-          <textarea
-            onChange={(e) => setInput(e.target.value)}
-            className="text-sm border-2 p-1 border-gray-500 rounded font-mono w-full resize-none"
-            value={input}
-            autoFocus
-          ></textarea>
-          <button
-            className="p-1 invisible group-hover:visible"
-            onClick={async () => {
-              setValue(input);
-              setValActive(false);
-              if (input === destination) return;
-              const newData = mutateObject("value", data, route, input);
-              try {
-                await mutate(
-                  put(
-                    `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${route}`,
-                    input
-                  ),
-                  {
-                    optimisticData: [...newData],
-                    rollbackOnError: true,
-                    revalidate: true,
-                    populateCache: true,
-                  }
-                );
-              } catch (err) {
-                setValue(destination);
-                setValActive(false);
-              }
-            }}
-          >
-            <CheckSquare size="26px" color="#22c55e" />
-          </button>
-          <button
-            className="p-1 invisible group-hover:visible"
-            onClick={() => setValActive(false)}
-          >
-            <XSquare size="26px" color="#ef4444" />
-          </button>
-        </div>
-      ) : (
-        <div className="flex flex-row gap-1 items-center group">
-          <p
-            className="font-mono text-base text-gray-500 group-hover:text-black cursor-pointer"
-            onClick={() => {
-              setValActive(true);
-              setInput(value);
-            }}
-          >
-            {truncate(value, 32)}
-          </p>
-          <button
-            className="text-xs p-1 invisible group-hover:visible"
-            onClick={() => {
-              setValActive(true);
-              setInput(value);
-            }}
-          >
-            <Edit size="22px" />
-          </button>
-          <Erase fallback={fallback} route={route} />
-        </div>
-      )}
+      <div className="flex flex-row gap-1 items-center group">
+        <p className="font-mono text-base text-gray-500 group-hover:text-black cursor-pointer">
+          {truncate(destination, 32)}
+        </p>
+        <button className="text-xs p-1 invisible group-hover:visible">
+          <Edit size="22px" />
+        </button>
+        <Erase fallback={fallback} route={route} />
+      </div>
     </div>
   );
 };
+
+function deleteObject(route: string, data: KVData[]) {
+  return data.filter((el) => el.key !== route);
+}
 
 function mutateObject(
   toChange: string,
@@ -124,4 +145,4 @@ function truncate(str: string, num: number) {
   }
 }
 
-export default Listing;
+export default Listing2;

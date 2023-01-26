@@ -2,7 +2,7 @@
 import useSWR from "swr";
 import { KVData } from "../types/types";
 import Add from "./add";
-import Listing from "./listing";
+import Listing2 from "./listing";
 import SignOutButton from "./sign-out-button";
 
 const RouteList = ({ fallback }: { fallback: KVData[] }) => {
@@ -26,7 +26,7 @@ const RouteList = ({ fallback }: { fallback: KVData[] }) => {
             <p className="font-bold">destination</p>
           </div>
           {data.map((kv: KVData) => (
-            <Listing
+            <Listing2
               key={kv.key}
               route={kv.key}
               destination={kv.value}

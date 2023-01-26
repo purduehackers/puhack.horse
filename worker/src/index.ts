@@ -34,7 +34,13 @@ export default {
         try {
           const data = JSON.parse(body);
           await env.HORSE.put(key, data.data);
-          const all = await getAll();
+          let all = await getAll();
+
+          // `getAll()` doesn't reflect the correct array if a new key was just added.
+          // But if the put request succeeded, we can assume it will eventually be there.
+          // This fakes it & returns the data assuming the new key is already there.
+          const allFiltered = all.filter((el) => el.key === key);
+          if (allFiltered.length === 0) all.push({ key, value: data.data });
 
           return new Response(JSON.stringify(all, null, 2), {
             status: 200,
