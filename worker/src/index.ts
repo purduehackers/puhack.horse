@@ -40,7 +40,10 @@ export default {
           // But if the put request succeeded, we can assume it will eventually be there.
           // This fakes it & returns the data assuming the new key is already there.
           const allFiltered = all.filter((el) => el.key === key);
-          if (allFiltered.length === 0) all.push({ key, value: data.data });
+          if (allFiltered.length === 0)
+            all = all
+              .concat({ key, value: data.data })
+              .sort((a, b) => a.key.localeCompare(b.key));
 
           return new Response(JSON.stringify(all, null, 2), {
             status: 200,

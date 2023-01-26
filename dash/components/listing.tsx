@@ -22,6 +22,7 @@ const Listing2 = ({
     fetcher,
     {
       fallbackData: fallback,
+      revalidateOnFocus: false,
     }
   );
 
@@ -52,7 +53,9 @@ const Listing2 = ({
             let newData;
             if (route !== newRoute) {
               const filteredData = deleteObject(route, data);
-              newData = filteredData.concat({ key: newRoute, value: newDest });
+              newData = filteredData
+                .concat({ key: newRoute, value: newDest })
+                .sort((a, b) => a.key.localeCompare(b.key));
             } else {
               newData = mutateObject("value", data, newRoute, newDest);
             }
