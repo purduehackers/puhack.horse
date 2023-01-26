@@ -4,6 +4,7 @@ import { CheckSquare, Edit, XSquare } from "lucide-react";
 import { useState } from "react";
 import useSWRImmutable from "swr/immutable";
 import { del, delAndPut, put } from "../lib/api";
+import { deleteObject, mutateObject, truncate } from "../lib/helpers";
 import { KVData } from "../types/types";
 import Erase from "./erase";
 
@@ -30,14 +31,14 @@ const Listing2 = ({
   const [newDest, setNewDest] = useState(destination);
 
   return edit ? (
-    <div className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-all">
+    <div className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-all group">
       <textarea
         onChange={(e) => setNewRoute(e.target.value)}
         className="text-sm border-2 p-1 border-gray-500 rounded font-mono w-full resize-none"
         value={newRoute}
         autoFocus
       ></textarea>
-      <div className="flex flex-row gap-1 items-center group">
+      <div className="flex flex-row gap-1 items-center">
         <textarea
           onChange={(e) => setNewDest(e.target.value)}
           className="text-sm border-2 p-1 border-gray-500 rounded font-mono w-full resize-none"
@@ -96,7 +97,7 @@ const Listing2 = ({
     </div>
   ) : (
     <div
-      className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-all"
+      className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-all group"
       onClick={() => {
         setEdit(true);
         setNewRoute(route);
@@ -104,7 +105,7 @@ const Listing2 = ({
       }}
     >
       <p className="text-base text-center cursor-pointer">{route}</p>
-      <div className="flex flex-row gap-1 items-center group">
+      <div className="flex flex-row gap-1 items-center">
         <p className="font-mono text-base text-gray-500 group-hover:text-black cursor-pointer">
           {truncate(destination, 32)}
         </p>
@@ -116,32 +117,5 @@ const Listing2 = ({
     </div>
   );
 };
-
-function deleteObject(route: string, data: KVData[]) {
-  return data.filter((el) => el.key !== route);
-}
-
-function mutateObject(
-  toChange: string,
-  data: KVData[],
-  key: string,
-  value: string
-) {
-  if (toChange === "value") {
-    const el = data.find((el) => el.key === key);
-    if (el) {
-      el.value = value;
-    }
-  }
-  return data;
-}
-
-function truncate(str: string, num: number) {
-  if (str.length > num) {
-    return str.slice(0, num) + "...";
-  } else {
-    return str;
-  }
-}
 
 export default Listing2;
