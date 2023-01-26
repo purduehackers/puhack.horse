@@ -26,3 +26,7 @@ export function truncate(str: string, num: number) {
     return str;
   }
 }
+
+export async function delay(millis: number) {
+  return new Promise((resolve) => setTimeout(resolve, millis));
+}

@@ -1,4 +1,5 @@
 import { KVData } from "../types/types";
+import { delay } from "./helpers";
 
 export async function put(url: string, data: string) {
   return await fetch(url, {
@@ -40,6 +41,7 @@ export async function delAndPut(urlDel: string, urlPut: string, data: string) {
   // where it would disappear from the dashboard after being added
   // until SWR revalidated again. This ensures that the data we expect
   // to be there is there before returning data to the SWR mutation.
+  await delay(1500);
   let all = await getAll();
   while (!all.find((el) => el.key === urlPut.split("/")[1])) {
     all = await getAll();
