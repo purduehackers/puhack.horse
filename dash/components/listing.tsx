@@ -53,12 +53,9 @@ const Listing2 = ({
             if (route !== newRoute) {
               const filteredData = deleteObject(route, data);
               newData = filteredData.concat({ key: newRoute, value: newDest });
-              console.log("new data concat", newData);
             } else {
               newData = mutateObject("value", data, newRoute, newDest);
-              console.log("new data mutate", newData);
             }
-            console.log("new data final", newData);
             try {
               await mutate(
                 route !== newRoute
@@ -74,7 +71,7 @@ const Listing2 = ({
                 {
                   optimisticData: [...newData],
                   rollbackOnError: true,
-                  revalidate: true,
+                  revalidate: false,
                   populateCache: true,
                 }
               );
