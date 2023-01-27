@@ -20,12 +20,6 @@ export async function del(url: string, newData: KVData[]) {
   return newData;
 }
 
-async function get(url: string) {
-  return await fetch(url, {
-    method: "GET",
-  }).then((r) => r.text());
-}
-
 async function getAllKeys(): Promise<KVList> {
   return await fetch(
     "https://puhack-dot-horse.sparklesrocketeye.workers.dev?keysOnly=true",

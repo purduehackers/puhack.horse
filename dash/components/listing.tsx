@@ -8,7 +8,7 @@ import { deleteObject, mutateObject, truncate } from "../lib/helpers";
 import { KVData } from "../types/types";
 import Erase from "./erase";
 
-const Listing2 = ({
+const Listing = ({
   route,
   destination,
   fallback,
@@ -136,4 +136,4 @@ const Listing2 = ({
   );
 };
 
-export default Listing2;
+export default Listing;
