@@ -4,6 +4,7 @@ specifiers:
   '@octokit/rest': ^19.0.7
   '@radix-ui/colors': ^0.1.8
   '@radix-ui/react-alert-dialog': ^1.0.2
+  '@radix-ui/react-dialog': ^1.0.2
   '@types/node': 18.11.3
   '@types/react': 18.0.21
   '@types/react-dom': 18.0.6
@@ -22,6 +23,7 @@ dependencies:
   '@octokit/rest': 19.0.7
   '@radix-ui/colors': 0.1.8
   '@radix-ui/react-alert-dialog': 1.0.2_rj7ozvcq3uehdlnj3cbwzbi5ce
+  '@radix-ui/react-dialog': 1.0.2_rj7ozvcq3uehdlnj3cbwzbi5ce
   lucide-react: 0.105.0_react@18.2.0
   next: 13.1.5_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.18.8_s6zlkfvllybxhmcq5pkr2zsuza
