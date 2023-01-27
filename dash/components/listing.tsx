@@ -22,7 +22,7 @@ const Listing = ({
 }) => {
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data, mutate } = useSWR(
-    "https://puhack-dot-horse.sparklesrocketeye.workers.dev",
+    "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
     fetcher,
     {
       fallbackData: fallback,
@@ -93,13 +93,13 @@ const Listing = ({
               await mutate(
                 route !== newRoute
                   ? delAndPut(
-                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${route}`,
-                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${newRoute}`,
+                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${route}`,
+                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${newRoute}`,
                       newDest,
                       newData
                     )
                   : put(
-                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${newRoute}`,
+                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${newRoute}`,
                       newDest,
                       newData
                     ),

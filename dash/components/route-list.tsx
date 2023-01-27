@@ -8,7 +8,7 @@ import SignOutButton from "./sign-out-button";
 const RouteList = ({ fallback }: { fallback: KVData[] }) => {
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data } = useSWR(
-    "https://puhack-dot-horse.sparklesrocketeye.workers.dev",
+    "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
     fetcher,
     {
       suspense: true,

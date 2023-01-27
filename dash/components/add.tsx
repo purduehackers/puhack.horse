@@ -9,7 +9,7 @@ import { put } from "../lib/api";
 const Add = ({ fallback }: { fallback: KVData[] }) => {
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data, mutate } = useSWR(
-    "https://puhack-dot-horse.sparklesrocketeye.workers.dev",
+    "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
     fetcher,
     {
       suspense: true,
@@ -84,7 +84,7 @@ const Add = ({ fallback }: { fallback: KVData[] }) => {
                   try {
                     await mutate(
                       put(
-                        `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${route}`,
+                        `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${route}`,
                         destination,
                         newData,
                         true

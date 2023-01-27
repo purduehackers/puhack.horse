@@ -16,7 +16,7 @@ export async function put(
   if (newKey) {
     await waitForPropagation(url);
   }
-  const route = new URL(url).pathname.slice(1);
+  const route = new URL(url).pathname.split("/")[2];
   newData.map((obj) => {
     if (obj.key === route) obj.status = "SUCCESS";
   });
@@ -34,7 +34,7 @@ export async function del(url: string, newData: KVData[]) {
 
 async function getAllKeys(): Promise<KVList> {
   return await fetch(
-    "https://puhack-dot-horse.sparklesrocketeye.workers.dev?keysOnly=true",
+    "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api?keysOnly=true",
     {
       method: "GET",
     }
@@ -52,7 +52,7 @@ async function waitForPropagation(url: string) {
   // after the user added it.
   await delay(20000);
   let all = await getAllKeys();
-  while (!all.find((el) => el.name === new URL(url).pathname.substring(1))) {
+  while (!all.find((el) => el.name === new URL(url).pathname.split("/")[2])) {
     await delay(10000);
     all = await getAllKeys();
   }
@@ -70,7 +70,6 @@ export async function delAndPut(
   await put(urlPut, destination, newData, true).catch((err) => {
     throw new Error(`${err}`);
   });
-  await waitForPropagation(urlPut);
   const route = new URL(urlPut).pathname.slice(1);
   newData.map((obj) => {
     if (obj.key === route) obj.status = "SUCCESS";

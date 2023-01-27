@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
   }
 
   const destination = await fetch(
-    `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${slug}`
+    `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${slug}`
   )
     .then((r) => r.text())
     .catch((err) => NextResponse.redirect(fallback));

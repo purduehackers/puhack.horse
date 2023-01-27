@@ -7,7 +7,7 @@ import { KVData } from "../types/types";
 const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data, mutate } = useSWR(
-    "https://puhack-dot-horse.sparklesrocketeye.workers.dev",
+    "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
     fetcher,
     {
       fallbackData: fallback,
@@ -38,7 +38,7 @@ const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
                   try {
                     await mutate(
                       del(
-                        `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${route}`,
+                        `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${route}`,
                         newData
                       ),
                       {
