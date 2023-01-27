@@ -143,7 +143,7 @@ const Listing = ({
   ) : (
     <div
       className={`route-list-item grid grid-cols-2 gap-2 items-center border-t-2 border-black p-2 break-all group ${
-        color === "white" ? `hover:bg-gray-200` : `hover:bg-${color}`
+        status ? `hover:bg-${color}` : `hover:bg-gray-200`
       } bg-${color} transition ease-in-out`}
     >
       <p
