@@ -65,11 +65,13 @@ const Listing2 = ({
                   ? delAndPut(
                       `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${route}`,
                       `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${newRoute}`,
-                      newDest
+                      newDest,
+                      newData
                     )
                   : put(
                       `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${newRoute}`,
-                      newDest
+                      newDest,
+                      newData
                     ),
                 {
                   optimisticData: [...newData],
@@ -96,20 +98,36 @@ const Listing2 = ({
       </div>
     </div>
   ) : (
-    <div
-      className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-all group"
-      onClick={() => {
-        setEdit(true);
-        setNewRoute(route);
-        setNewDest(destination);
-      }}
-    >
-      <p className="text-base text-center cursor-pointer">{route}</p>
+    <div className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-all group">
+      <p
+        className="text-base text-center cursor-pointer"
+        onClick={() => {
+          setEdit(true);
+          setNewRoute(route);
+          setNewDest(destination);
+        }}
+      >
+        {route}
+      </p>
       <div className="flex flex-row gap-1 items-center">
-        <p className="font-mono text-base text-gray-500 group-hover:text-black cursor-pointer">
+        <p
+          className="font-mono text-base text-gray-500 group-hover:text-black cursor-pointer"
+          onClick={() => {
+            setEdit(true);
+            setNewRoute(route);
+            setNewDest(destination);
+          }}
+        >
           {truncate(destination, 32)}
         </p>
-        <button className="text-xs p-1 invisible group-hover:visible">
+        <button
+          className="text-xs p-1 invisible group-hover:visible"
+          onClick={() => {
+            setEdit(true);
+            setNewRoute(route);
+            setNewDest(destination);
+          }}
+        >
           <Edit size="22px" />
         </button>
         <Erase fallback={fallback} route={route} />

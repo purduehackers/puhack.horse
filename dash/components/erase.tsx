@@ -38,7 +38,8 @@ const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
                   try {
                     await mutate(
                       del(
-                        `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${route}`
+                        `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${route}`,
+                        newData
                       ),
                       {
                         optimisticData: [...newData],

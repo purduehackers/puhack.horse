@@ -1,50 +1,66 @@
-import { KVData } from "../types/types";
+import { KVData, KVList } from "../types/types";
 import { delay } from "./helpers";
 
-export async function put(url: string, data: string) {
-  return await fetch(url, {
+export async function put(url: string, destination: string, newData: KVData[]) {
+  await fetch(url, {
     method: "PUT",
-    body: JSON.stringify({ data }),
-  })
-    .then((r) => r.json())
-    .catch((err) => {
-      throw new Error(`${err}`);
-    });
+    body: JSON.stringify({ data: destination }),
+  }).catch((err) => {
+    throw new Error(`${err}`);
+  });
+  return newData;
 }
 
-export async function del(url: string) {
-  return await fetch(url, {
+export async function del(url: string, newData: KVData[]) {
+  await fetch(url, {
     method: "DELETE",
-  })
-    .then((r) => r.json())
-    .catch((err) => {
-      throw new Error(`${err}`);
-    });
+  }).catch((err) => {
+    throw new Error(`${err}`);
+  });
+  return newData;
 }
 
-async function getAll(): Promise<KVData[]> {
-  return await fetch("https://puhack-dot-horse.sparklesrocketeye.workers.dev", {
+async function get(url: string) {
+  return await fetch(url, {
     method: "GET",
-  }).then((r) => r.json());
+  }).then((r) => r.text());
 }
 
-export async function delAndPut(urlDel: string, urlPut: string, data: string) {
-  await del(urlDel).catch((err) => {
+async function getAllKeys(): Promise<KVList> {
+  return await fetch(
+    "https://puhack-dot-horse.sparklesrocketeye.workers.dev?keysOnly=true",
+    {
+      method: "GET",
+    }
+  ).then((r) => r.json());
+}
+
+export async function delAndPut(
+  urlDel: string,
+  urlPut: string,
+  destination: string,
+  newData: KVData[]
+) {
+  await del(urlDel, newData).catch((err) => {
     throw new Error(`${err}`);
   });
-  await put(urlPut, data).catch((err) => {
+  await put(urlPut, destination, newData).catch((err) => {
     throw new Error(`${err}`);
   });
 
-  // When a new key is PUT into KV, it's not immediately available in the
-  // `getAll()` function called within the worker. This was causing issues
-  // where it would disappear from the dashboard after being added
-  // until SWR revalidated again. This ensures that the data we expect
-  // to be there is there before returning data to the SWR mutation.
-  await delay(1500);
-  let all = await getAll();
-  while (!all.find((el) => el.key === urlPut.split("/")[1])) {
-    all = await getAll();
+  // Cloudflare Workers KV is "eventually consistent", meaning
+  // changes will propagate eventually but may take up to 60 seconds.
+  // list()ing after adding a new key appears to be the slowest
+  // operation, taking up to 30 seconds for me while testing.
+  // This was causing problems when SWR was revalidating,
+  // because the new key wasn't there when it fetched the new data,
+  // so the row would disappear from the table for a while
+  // after the user added it.
+  await delay(30000);
+  let all = await getAllKeys();
+  while (!all.find((el) => el.name === new URL(urlPut).pathname.substring(1))) {
+    await delay(10000);
+    all = await getAllKeys();
   }
-  return all;
+  return newData;
 }

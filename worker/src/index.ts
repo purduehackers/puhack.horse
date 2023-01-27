@@ -18,7 +18,9 @@ export default {
         return new Response("OK", { status: 200, headers: corsHeaders });
       case "GET":
         if (!key) {
-          const vals = await getAll();
+          const vals = await getAll({
+            keysOnly: url.search.includes("keysOnly=true"),
+          });
           return new Response(JSON.stringify(vals, null, 2), {
             status: 200,
             headers: corsHeaders,
@@ -34,8 +36,7 @@ export default {
         try {
           const data = JSON.parse(body);
           await env.HORSE.put(key, data.data);
-          let all = await getAll();
-          return new Response(JSON.stringify(all, null, 2), {
+          return new Response(`Set route ${key} to ${data.data}`, {
             status: 200,
             headers: corsHeaders,
           });
@@ -45,8 +46,7 @@ export default {
       case "DELETE":
         try {
           await env.HORSE.delete(key);
-          const all = await getAll();
-          return new Response(JSON.stringify(all, null, 2), {
+          return new Response(`Deleted ${key}`, {
             status: 200,
             headers: corsHeaders,
           });
@@ -57,9 +57,10 @@ export default {
         return new Response("Invalid method. Use GET or PUT", { status: 400 });
     }
 
-    async function getAll() {
+    async function getAll({ keysOnly }: { keysOnly: boolean }) {
       const vals = [];
       const data = await env.HORSE.list();
+      if (keysOnly) return data.keys;
       for (const key of Object.values(data.keys)) {
         const value = await env.HORSE.get(key.name);
         if (!value) {
