@@ -44,7 +44,7 @@ const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
                       {
                         optimisticData: [...newData],
                         rollbackOnError: true,
-                        revalidate: true,
+                        revalidate: false,
                         populateCache: true,
                       }
                     );

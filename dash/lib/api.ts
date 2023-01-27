@@ -50,7 +50,7 @@ async function waitForPropagation(url: string) {
   // because the new key wasn't there when it fetched the new data,
   // so the row would disappear from the table for a while
   // after the user added it.
-  await delay(30000);
+  await delay(20000);
   let all = await getAllKeys();
   while (!all.find((el) => el.name === new URL(url).pathname.substring(1))) {
     await delay(10000);

@@ -1,8 +1,6 @@
 "use client";
-import { useEffect } from "react";
 import useSWR from "swr";
-import usePrevious from "../hooks/use-previous";
-import { KVData, Status } from "../types/types";
+import { KVData } from "../types/types";
 import Add from "./add";
 import Listing from "./listing";
 import SignOutButton from "./sign-out-button";

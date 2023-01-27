@@ -106,7 +106,7 @@ const Listing = ({
                 {
                   optimisticData: [...newData],
                   rollbackOnError: true,
-                  revalidate: true,
+                  revalidate: route !== newRoute,
                   populateCache: true,
                 }
               );
