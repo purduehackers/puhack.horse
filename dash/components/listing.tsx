@@ -118,7 +118,7 @@ const Listing = ({
             setNewDest(destination);
           }}
         >
-          {truncate(destination, 32)}
+          {truncate(newDest, 32)}
         </p>
         <button
           className="text-xs p-1 invisible group-hover:visible"
