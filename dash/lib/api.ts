@@ -63,7 +63,7 @@ export async function delAndPut(
   await del(urlDel, newData).catch((err) => {
     throw new Error(`${err}`);
   });
-  await put(urlPut, destination, newData).catch((err) => {
+  await put(urlPut, destination, newData, true).catch((err) => {
     throw new Error(`${err}`);
   });
   await waitForPropagation(urlPut);
