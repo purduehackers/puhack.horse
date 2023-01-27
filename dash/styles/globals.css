@@ -184,6 +184,11 @@ fieldset,
 .Button.green:focus {
   box-shadow: 0 0 0 2px var(--green7);
 }
+.Button:disabled,
+.Button:disabled:hover {
+  background-color: var(--mauve4);
+  color: var(--mauve11);
+}
 
 .IconButton {
   font-family: inherit;

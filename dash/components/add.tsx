@@ -71,6 +71,7 @@ const Add = ({ fallback }: { fallback: KVData[] }) => {
             <Dialog.Close asChild>
               <button
                 className="Button green"
+                disabled={route === "" || destination === ""}
                 onClick={async () => {
                   setRoute("");
                   setDestination("");
