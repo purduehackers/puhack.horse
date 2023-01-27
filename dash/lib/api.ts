@@ -9,6 +9,9 @@ export async function put(
 ) {
   await fetch(url, {
     method: "PUT",
+    headers: {
+      Authorization: `Bearer ${process.env.HORSE_SECRET}`,
+    },
     body: JSON.stringify({ data: destination }),
   }).catch((err) => {
     throw new Error(`${err}`);
@@ -26,6 +29,9 @@ export async function put(
 export async function del(url: string, newData: KVData[]) {
   await fetch(url, {
     method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${process.env.HORSE_SECRET}`,
+    },
   }).catch((err) => {
     throw new Error(`${err}`);
   });
@@ -37,6 +43,9 @@ async function getAllKeys(): Promise<KVList> {
     "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api?keysOnly=true",
     {
       method: "GET",
+      headers: {
+        Authorization: `Bearer ${process.env.HORSE_SECRET}`,
+      },
     }
   ).then((r) => r.json());
 }

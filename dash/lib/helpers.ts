@@ -1,5 +1,13 @@
 import { KVData } from "../types/types";
 
+export const fetcher = (url: string) =>
+  fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${process.env.HORSE_SECRET}`,
+    },
+  }).then((r) => r.json());
+
 export function deleteObject(route: string, data: KVData[]) {
   return data.filter((el) => el.key !== route);
 }

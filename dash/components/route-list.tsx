@@ -1,12 +1,12 @@
 "use client";
 import useSWR from "swr";
+import { fetcher } from "../lib/helpers";
 import { KVData } from "../types/types";
 import Add from "./add";
 import Listing from "./listing";
 import SignOutButton from "./sign-out-button";
 
 const RouteList = ({ fallback }: { fallback: KVData[] }) => {
-  const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data } = useSWR(
     "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
     fetcher,

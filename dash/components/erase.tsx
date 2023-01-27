@@ -2,10 +2,10 @@ import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { Eraser } from "lucide-react";
 import useSWR from "swr";
 import { del } from "../lib/api";
+import { fetcher } from "../lib/helpers";
 import { KVData } from "../types/types";
 
 const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
-  const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data, mutate } = useSWR(
     "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
     fetcher,

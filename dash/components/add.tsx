@@ -5,9 +5,9 @@ import useSWR from "swr";
 import * as Dialog from "@radix-ui/react-dialog";
 import { KVData } from "../types/types";
 import { put } from "../lib/api";
+import { fetcher } from "../lib/helpers";
 
 const Add = ({ fallback }: { fallback: KVData[] }) => {
-  const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data, mutate } = useSWR(
     "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
     fetcher,

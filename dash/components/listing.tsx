@@ -5,7 +5,13 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import usePrevious from "../hooks/use-previous";
 import { delAndPut, put } from "../lib/api";
-import { deleteObject, error, mutateObject, truncate } from "../lib/helpers";
+import {
+  deleteObject,
+  error,
+  fetcher,
+  mutateObject,
+  truncate,
+} from "../lib/helpers";
 import { KVData, Status } from "../types/types";
 import Erase from "./erase";
 
@@ -20,7 +26,6 @@ const Listing = ({
   fallback: KVData[];
   status?: Status;
 }) => {
-  const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data, mutate } = useSWR(
     "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
     fetcher,

@@ -1,5 +1,6 @@
 interface Env {
   HORSE: KVNamespace;
+  AUTH_SECRET: string;
 }
 
 const corsHeaders = {
@@ -13,6 +14,17 @@ export default {
     try {
       const url = new URL(request.url);
       if (url.pathname.slice(1).startsWith("api")) {
+        const token = request.headers
+          .get("authorization")
+          ?.replace("Bearer ", "")
+          .trim();
+        if (!token) {
+          return new Response("Missing token", { status: 401 });
+        }
+        if (token !== env.AUTH_SECRET) {
+          return new Response("Incorrect token", { status: 401 });
+        }
+
         const key = url.pathname.split("/")[2];
         switch (request.method) {
           case "OPTIONS":
