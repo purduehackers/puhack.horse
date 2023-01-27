@@ -75,7 +75,11 @@ const Add = ({ fallback }: { fallback: KVData[] }) => {
                   setRoute("");
                   setDestination("");
                   const newData = data
-                    .concat({ key: route, value: destination })
+                    .concat({
+                      key: route,
+                      value: destination,
+                      status: "PENDING",
+                    })
                     .sort((a: KVData, b: KVData) => a.key.localeCompare(b.key));
                   try {
                     await mutate(

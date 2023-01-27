@@ -7,14 +7,16 @@ export function deleteObject(route: string, data: KVData[]) {
 export function mutateObject(
   toChange: string,
   data: KVData[],
-  key: string,
-  value: string
+  route: string,
+  destination: string
 ) {
   if (toChange === "value") {
-    const el = data.find((el) => el.key === key);
-    if (el) {
-      el.value = value;
-    }
+    data.map((obj) => {
+      if (obj.key === route) {
+        obj.value = destination;
+        obj.status = "PENDING";
+      }
+    });
   }
   return data;
 }
