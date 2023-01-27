@@ -1,6 +1,7 @@
 "use client";
 import useSWR from "swr";
-import { KVData } from "../types/types";
+import usePrevious from "../hooks/use-previous";
+import { KVData, Status } from "../types/types";
 import Add from "./add";
 import Listing from "./listing";
 import SignOutButton from "./sign-out-button";
@@ -31,6 +32,7 @@ const RouteList = ({ fallback }: { fallback: KVData[] }) => {
               route={kv.key}
               destination={kv.value}
               fallback={fallback}
+              status={kv.status}
             />
           ))}
           <Add fallback={fallback} />

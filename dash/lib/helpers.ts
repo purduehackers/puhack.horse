@@ -19,6 +19,13 @@ export function mutateObject(
   return data;
 }
 
+export function error(data: KVData[], route: string) {
+  data.map((obj) => {
+    if (obj.key === route) obj.status = "FAIL";
+  });
+  return data;
+}
+
 export function truncate(str: string, num: number) {
   if (str.length > num) {
     return str.slice(0, num) + "...";

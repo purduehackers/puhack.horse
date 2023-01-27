@@ -16,6 +16,10 @@ export async function put(
   if (newKey) {
     await waitForPropagation(url);
   }
+  const route = new URL(url).pathname.slice(1);
+  newData.map((obj) => {
+    if (obj.key === route) obj.status = "SUCCESS";
+  });
   return newData;
 }
 
@@ -67,5 +71,9 @@ export async function delAndPut(
     throw new Error(`${err}`);
   });
   await waitForPropagation(urlPut);
+  const route = new URL(urlPut).pathname.slice(1);
+  newData.map((obj) => {
+    if (obj.key === route) obj.status = "SUCCESS";
+  });
   return newData;
 }

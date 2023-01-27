@@ -1,21 +1,24 @@
 "use client";
 
 import { CheckSquare, Edit, XSquare } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
+import usePrevious from "../hooks/use-previous";
 import { delAndPut, put } from "../lib/api";
-import { deleteObject, mutateObject, truncate } from "../lib/helpers";
-import { KVData } from "../types/types";
+import { deleteObject, error, mutateObject, truncate } from "../lib/helpers";
+import { KVData, Status } from "../types/types";
 import Erase from "./erase";
 
 const Listing = ({
   route,
   destination,
   fallback,
+  status,
 }: {
   route: string;
   destination: string;
   fallback: KVData[];
+  status?: Status;
 }) => {
   const fetcher = (url: string) => fetch(url).then((r) => r.json());
   const { data, mutate } = useSWR(
@@ -30,6 +33,29 @@ const Listing = ({
   const [newRoute, setNewRoute] = useState(route);
   const [newDest, setNewDest] = useState(destination);
   const [color, setColor] = useState("white");
+
+  const [currentStatus, setCurrentStatus] = useState(status);
+  const prevStatus = usePrevious(currentStatus);
+
+  useEffect(() => {
+    if (currentStatus === "PENDING" && !prevStatus) {
+      setColor("amber-100");
+    }
+    if (currentStatus === "PENDING" && prevStatus === "PENDING") {
+      setColor("green-100");
+      setTimeout(() => {
+        setColor("white-100");
+        setCurrentStatus("NEUTRAL");
+      }, 2000);
+    }
+    if (currentStatus === "FAIL") {
+      setColor("red-100");
+      setTimeout(() => {
+        setColor("white-100");
+        setCurrentStatus("NEUTRAL");
+      }, 2000);
+    }
+  }, [status]);
 
   return edit ? (
     <div className="grid grid-cols-2 gap-2 items-center border-t-2 border-black rounded-sm p-2 break-all group bg-gray-200">
@@ -58,7 +84,7 @@ const Listing = ({
             if (route !== newRoute) {
               const filteredData = deleteObject(route, data);
               newData = filteredData
-                .concat({ key: newRoute, value: newDest })
+                .concat({ key: newRoute, value: newDest, status: "PENDING" })
                 .sort((a, b) => a.key.localeCompare(b.key));
             } else {
               newData = mutateObject("value", data, newRoute, newDest);
@@ -80,7 +106,7 @@ const Listing = ({
                 {
                   optimisticData: [...newData],
                   rollbackOnError: true,
-                  revalidate: false,
+                  revalidate: true,
                   populateCache: true,
                 }
               );
@@ -89,6 +115,10 @@ const Listing = ({
                 setColor("white");
               }, 1000);
             } catch (err) {
+              await mutate(error(data, route), {
+                revalidate: true,
+                populateCache: true,
+              });
               setNewRoute(route);
               setNewDest(destination);
               setEdit(false);
