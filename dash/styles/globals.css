@@ -11,6 +11,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.route-list-item:nth-child(2) {
+  @apply border-t-0;
+}
+
 /*Alert Dialog*/
 
 .AlertDialogOverlay {
@@ -102,7 +106,7 @@
 /*Add Dialog*/
 
 fieldset,
-input {
+.Input {
   all: unset;
 }
 

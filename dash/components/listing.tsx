@@ -31,17 +31,19 @@ const Listing = ({
   const [newDest, setNewDest] = useState(destination);
 
   return edit ? (
-    <div className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-all group">
-      <textarea
-        onChange={(e) => setNewRoute(e.target.value)}
-        className="text-sm border-2 p-1 border-gray-500 rounded font-mono w-full resize-none"
-        value={newRoute}
-        autoFocus
-      ></textarea>
+    <div className="grid grid-cols-2 gap-2 items-center border-t-2 border-black first:border-t-0 rounded-sm p-2 break-all group bg-gray-200">
+      <div className="flex flex-row justify-center">
+        <input
+          onChange={(e) => setNewRoute(e.target.value)}
+          className="text-sm border-2 p-1 outline-none border-gray-500 rounded font-mono w-7/12 bg-white text-center"
+          value={newRoute}
+          autoFocus
+        ></input>
+      </div>
       <div className="flex flex-row gap-1 items-center">
         <textarea
           onChange={(e) => setNewDest(e.target.value)}
-          className="text-sm border-2 p-1 border-gray-500 rounded font-mono w-full resize-none"
+          className="text-sm border-2 p-1 outline-none border-gray-500 rounded font-mono w-full bg-white resize-none"
           value={newDest}
           autoFocus
         ></textarea>
@@ -76,7 +78,7 @@ const Listing = ({
                 {
                   optimisticData: [...newData],
                   rollbackOnError: true,
-                  revalidate: true,
+                  revalidate: false,
                   populateCache: true,
                 }
               );
@@ -98,7 +100,7 @@ const Listing = ({
       </div>
     </div>
   ) : (
-    <div className="grid grid-cols-2 gap-2 items-center border-b-2 border-black last:border-b-0 rounded-sm p-2 break-all group">
+    <div className="route-list-item grid grid-cols-2 gap-2 items-center border-t-2 first:bg-green-500 last:bg-green-500 border-black p-2 break-all group hover:bg-gray-200">
       <p
         className="text-base text-center cursor-pointer"
         onClick={() => {
