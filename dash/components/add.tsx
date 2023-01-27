@@ -73,15 +73,19 @@ const Add = ({ fallback }: { fallback: KVData[] }) => {
                 onClick={async () => {
                   setRoute("");
                   setDestination("");
+                  const newData = data
+                    .concat({ key: route, value: destination })
+                    .sort((a: KVData, b: KVData) => a.key.localeCompare(b.key));
                   try {
                     await mutate(
                       put(
                         `https://puhack-dot-horse.sparklesrocketeye.workers.dev/${route}`,
                         destination,
-                        data
+                        newData,
+                        true
                       ),
                       {
-                        optimisticData: [...data],
+                        optimisticData: [...newData],
                         rollbackOnError: true,
                         revalidate: true,
                         populateCache: true,
