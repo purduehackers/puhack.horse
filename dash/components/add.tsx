@@ -36,8 +36,8 @@ const Add = ({ fallback }: { fallback: KVData[] }) => {
         <Dialog.Content className="DialogContent">
           <Dialog.Title className="DialogTitle">Add route</Dialog.Title>
           <Dialog.Description className="DialogDescription">
-            Your changes will appear on the dashboard automatically, but it may
-            take up to 60 seconds for them to reflect in KV.
+            Your changes will appear on the dashboard instantly, but it may take
+            up to 60 seconds for them to reflect in KV.
           </Dialog.Description>
           <fieldset className="Fieldset">
             <label className="Label" htmlFor="route">
