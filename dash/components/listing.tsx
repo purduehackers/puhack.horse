@@ -83,8 +83,8 @@ const Listing = ({
           className="p-1 invisible group-hover:visible"
           onClick={async () => {
             setEdit(false);
-            setColor("amber-100");
             if (newRoute === route && newDest === destination) return;
+            setColor("amber-100");
             let newData;
             if (route !== newRoute) {
               const filteredData = deleteObject(route, data);
