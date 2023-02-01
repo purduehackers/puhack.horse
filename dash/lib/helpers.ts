@@ -36,14 +36,6 @@ export function error(data: KVData[], route: string) {
   return data;
 }
 
-export function truncate(str: string, num: number) {
-  if (str.length > num) {
-    return str.slice(0, num) + "...";
-  } else {
-    return str;
-  }
-}
-
 export async function delay(millis: number) {
   return new Promise((resolve) => setTimeout(resolve, millis));
 }
