@@ -63,16 +63,14 @@ const Listing = ({
   }, [status]);
 
   return edit ? (
-    <div className="grid grid-cols-2 first:border-t-0 items-center border-t-2 border-black rounded-sm break-all group bg-gray-200">
-      <div className="flex flex-row border-r-2 border-black h-full">
-        <input
-          onChange={(e) => setNewRoute(e.target.value)}
-          className="text-sm outline-none w-full px-4 bg-gray-200"
-          value={newRoute}
-          autoFocus
-        ></input>
-      </div>
-      <div className="flex flex-row items-center pr-4">
+    <div className="flex flex-row h-16 px-4 first:border-t-0 items-center border-t-2 border-black rounded-sm break-all group bg-gray-200">
+      <input
+        onChange={(e) => setNewRoute(e.target.value)}
+        className="text-sm outline-none w-48 pr-4 bg-gray-200 border-r-2 border-black h-full"
+        value={newRoute}
+        autoFocus
+      ></input>
+      <div className="flex flex-row flex-1 items-center pr-4">
         <textarea
           onChange={(e) => setNewDest(e.target.value)}
           className="text-sm outline-none rounded font-mono pl-2 py-2 w-full resize-none bg-gray-200"
@@ -150,12 +148,12 @@ const Listing = ({
     </div>
   ) : (
     <div
-      className={`first:border-t-0 grid grid-cols-2 items-center border-t-2 border-black px-4 break-all group ${
+      className={`first:border-t-0 flex flex-row items-center border-t-2 border-black px-4 break-all group ${
         status || color !== "white" ? `hover:bg-${color}` : `hover:bg-gray-200`
       } bg-${color} transition ease-in-out`}
     >
       <p
-        className="text-sm cursor-pointer border-r-2 border-black py-2 h-full"
+        className="text-sm truncate pr-4 cursor-pointer border-r-2 border-black py-2 w-48"
         onClick={() => {
           setEdit(true);
           setNewRoute(route);
@@ -164,9 +162,9 @@ const Listing = ({
       >
         {route}
       </p>
-      <div className="flex flex-row gap-1 pl-2 items-center">
+      <div className="flex flex-row flex-1 pl-2 items-center">
         <p
-          className="font-mono text-sm text-gray-500 group-hover:text-black cursor-pointer"
+          className="font-mono py-2 text-sm text-gray-500 group-hover:text-black cursor-pointer"
           onClick={() => {
             setEdit(true);
             setNewRoute(route);
@@ -175,6 +173,14 @@ const Listing = ({
         >
           {truncate(newDest, 30)}
         </p>
+        <div
+          className="grow cursor-pointer py-4"
+          onClick={() => {
+            setEdit(true);
+            setNewRoute(route);
+            setNewDest(destination);
+          }}
+        ></div>
         <button
           className="text-xs p-1 invisible group-hover:visible"
           onClick={() => {
