@@ -63,7 +63,7 @@ const Listing = ({
   }, [status]);
 
   return edit ? (
-    <div className="grid grid-cols-2 route-list-item items-center border-t-2 border-black rounded-sm break-all group bg-gray-200">
+    <div className="grid grid-cols-2 first:border-t-0 items-center border-t-2 border-black rounded-sm break-all group bg-gray-200">
       <div className="flex flex-row border-r-2 border-black h-full">
         <input
           onChange={(e) => setNewRoute(e.target.value)}
@@ -150,7 +150,7 @@ const Listing = ({
     </div>
   ) : (
     <div
-      className={`route-list-item grid grid-cols-2 items-center border-t-2 border-black px-4 break-all group ${
+      className={`first:border-t-0 grid grid-cols-2 items-center border-t-2 border-black px-4 break-all group ${
         status || color !== "white" ? `hover:bg-${color}` : `hover:bg-gray-200`
       } bg-${color} transition ease-in-out`}
     >
