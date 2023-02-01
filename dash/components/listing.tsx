@@ -63,19 +63,19 @@ const Listing = ({
   }, [status]);
 
   return edit ? (
-    <div className="grid grid-cols-2 gap-2 items-center border-t-2 border-black rounded-sm p-2 break-all group bg-gray-200">
-      <div className="flex flex-row justify-center">
+    <div className="grid grid-cols-2 route-list-item items-center border-t-2 border-black rounded-sm break-all group bg-gray-200">
+      <div className="flex flex-row border-r-2 border-black h-full">
         <input
           onChange={(e) => setNewRoute(e.target.value)}
-          className="text-sm border-2 p-1 outline-none border-gray-500 rounded font-mono w-7/12 bg-white text-center"
+          className="text-sm outline-none w-full px-4 bg-gray-200"
           value={newRoute}
           autoFocus
         ></input>
       </div>
-      <div className="flex flex-row gap-1 items-center">
+      <div className="flex flex-row items-center pr-4">
         <textarea
           onChange={(e) => setNewDest(e.target.value)}
-          className="text-sm border-2 p-1 outline-none border-gray-500 rounded font-mono w-full bg-white resize-none"
+          className="text-sm outline-none rounded font-mono pl-2 w-full resize-none bg-gray-200"
           value={newDest}
           autoFocus
         ></textarea>
@@ -147,12 +147,12 @@ const Listing = ({
     </div>
   ) : (
     <div
-      className={`route-list-item grid grid-cols-2 gap-2 items-center border-t-2 border-black p-2 break-all group ${
+      className={`route-list-item grid grid-cols-2 items-center border-t-2 border-black px-4 break-all group ${
         status || color !== "white" ? `hover:bg-${color}` : `hover:bg-gray-200`
       } bg-${color} transition ease-in-out`}
     >
       <p
-        className="text-base text-center cursor-pointer"
+        className="text-sm cursor-pointer border-r-2 border-black py-2 h-full"
         onClick={() => {
           setEdit(true);
           setNewRoute(route);
@@ -161,16 +161,16 @@ const Listing = ({
       >
         {route}
       </p>
-      <div className="flex flex-row gap-1 items-center">
+      <div className="flex flex-row gap-1 pl-2 items-center">
         <p
-          className="font-mono text-base text-gray-500 group-hover:text-black cursor-pointer"
+          className="font-mono text-sm text-gray-500 group-hover:text-black cursor-pointer"
           onClick={() => {
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
           }}
         >
-          {truncate(newDest, 32)}
+          {truncate(newDest, 24)}
         </p>
         <button
           className="text-xs p-1 invisible group-hover:visible"
