@@ -171,7 +171,7 @@ const Listing = ({
             setNewDest(destination);
           }}
         >
-          {truncate(newDest, 30)}
+          {truncate(newDest, 28)}
         </p>
         <div
           className="grow cursor-pointer py-4"

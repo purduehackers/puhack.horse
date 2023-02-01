@@ -20,7 +20,7 @@ const RouteList = ({ fallback }: { fallback: KVData[] }) => {
     <div className="min-h-screen flex flex-col">
       <SignOutButton />
       <div className="flex flex-col grow justify-center items-center">
-        <div className="rounded border-[3px] border-black w-11/12 sm:max-w-2xl tabular-nums">
+        <div className="rounded border-[3px] border-black w-11/12 sm:max-w-xl tabular-nums">
           <div className="py-1 flex flex-row bg-gray-200 border-b-[3px] border-b-black">
             <p className="font-bold text-center w-52">route</p>
             <p className="flex-1 font-bold text-center pl-2">destination</p>
