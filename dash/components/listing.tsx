@@ -137,7 +137,13 @@ const Listing = ({
         >
           <CheckSquare size="26px" color="#22c55e" />
         </button>
-        <button className="p-1" onClick={() => setEdit(false)}>
+        <button
+          className="p-1"
+          onClick={() => {
+            setEdit(false);
+            setNewDest(destination);
+          }}
+        >
           <XSquare size="26px" color="#ef4444" />
         </button>
       </div>
