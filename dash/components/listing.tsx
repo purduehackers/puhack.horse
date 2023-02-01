@@ -70,7 +70,7 @@ const Listing = ({
         value={newRoute}
         autoFocus
       ></input>
-      <div className="flex flex-row flex-1 items-center pr-4">
+      <div className="flex flex-row flex-1 items-center">
         <textarea
           onChange={(e) => setNewDest(e.target.value)}
           className="text-sm outline-none rounded font-mono pl-2 py-2 w-full resize-none bg-gray-200"
