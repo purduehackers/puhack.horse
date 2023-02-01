@@ -80,7 +80,7 @@ const Listing = ({
           autoFocus
         ></textarea>
         <button
-          className="p-1 invisible group-hover:visible"
+          className="p-1"
           onClick={async () => {
             setEdit(false);
             if (newRoute === route && newDest === destination) return;
@@ -137,10 +137,7 @@ const Listing = ({
         >
           <CheckSquare size="26px" color="#22c55e" />
         </button>
-        <button
-          className="p-1 invisible group-hover:visible"
-          onClick={() => setEdit(false)}
-        >
+        <button className="p-1" onClick={() => setEdit(false)}>
           <XSquare size="26px" color="#ef4444" />
         </button>
       </div>
