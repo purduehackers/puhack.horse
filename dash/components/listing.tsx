@@ -35,6 +35,7 @@ const Listing = ({
   );
 
   const [edit, setEdit] = useState(false);
+  const [whichEdit, setWhichEdit] = useState("DESTINATION");
   const [newRoute, setNewRoute] = useState(route);
   const [newDest, setNewDest] = useState(destination);
   const [color, setColor] = useState("white");
@@ -68,14 +69,14 @@ const Listing = ({
         onChange={(e) => setNewRoute(e.target.value)}
         className="text-sm outline-none w-48 pr-4 bg-gray-200 border-r-2 border-black h-full"
         value={newRoute}
-        autoFocus
+        autoFocus={whichEdit === "ROUTE"}
       ></input>
       <div className="flex flex-row flex-1 items-center">
         <textarea
           onChange={(e) => setNewDest(e.target.value)}
           className="text-sm outline-none rounded font-mono pl-2 py-2 w-full resize-none bg-gray-200"
           value={newDest}
-          autoFocus
+          autoFocus={whichEdit === "DESTINATION"}
         ></textarea>
         <button
           className="p-1"
@@ -158,6 +159,7 @@ const Listing = ({
           setEdit(true);
           setNewRoute(route);
           setNewDest(destination);
+          setWhichEdit("ROUTE");
         }}
       >
         {route}
@@ -169,6 +171,7 @@ const Listing = ({
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
+            setWhichEdit("DESTINATION");
           }}
         >
           {truncate(newDest, 28)}
@@ -179,6 +182,7 @@ const Listing = ({
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
+            setWhichEdit("DESTINATION");
           }}
         ></div>
         <button
@@ -187,6 +191,7 @@ const Listing = ({
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
+            setWhichEdit("DESTINATION");
           }}
         >
           <Edit size="22px" />
