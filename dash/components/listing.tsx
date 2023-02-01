@@ -75,7 +75,7 @@ const Listing = ({
       <div className="flex flex-row items-center pr-4">
         <textarea
           onChange={(e) => setNewDest(e.target.value)}
-          className="text-sm outline-none rounded font-mono pl-2 w-full resize-none bg-gray-200"
+          className="text-sm outline-none rounded font-mono pl-2 py-2 w-full resize-none bg-gray-200"
           value={newDest}
           autoFocus
         ></textarea>
@@ -170,7 +170,7 @@ const Listing = ({
             setNewDest(destination);
           }}
         >
-          {truncate(newDest, 24)}
+          {truncate(newDest, 30)}
         </p>
         <button
           className="text-xs p-1 invisible group-hover:visible"
