@@ -5,7 +5,13 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import usePrevious from "../hooks/use-previous";
 import { delAndPut, put } from "../lib/api";
-import { deleteObject, error, fetcher, mutateObject } from "../lib/helpers";
+import {
+  deleteObject,
+  error,
+  fetcher,
+  mutateObject,
+  truncate,
+} from "../lib/helpers";
 import { KVData, Status } from "../types/types";
 import Erase from "./erase";
 
@@ -160,14 +166,14 @@ const Listing = ({
       </p>
       <div className="flex flex-row gap-1 pl-2 items-center">
         <p
-          className="font-mono text-sm truncate text-gray-500 group-hover:text-black cursor-pointer"
+          className="font-mono text-sm text-gray-500 group-hover:text-black cursor-pointer"
           onClick={() => {
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
           }}
         >
-          {newDest}
+          {truncate(newDest, 30)}
         </p>
         <button
           className="text-xs p-1 invisible group-hover:visible"
