@@ -67,7 +67,7 @@ const Listing = ({
     <div className="flex flex-row h-16 px-4 first:border-t-0 items-center border-t-2 border-black rounded-sm break-all group bg-gray-200">
       <input
         onChange={(e) => setNewRoute(e.target.value)}
-        className="text-sm outline-none w-48 pr-4 bg-gray-200 border-r-2 border-black h-full"
+        className="text-sm outline-none w-5/12 sm:w-1/3 pr-4 bg-gray-200 border-r-2 border-black h-full"
         value={newRoute}
         autoFocus={whichEdit === "ROUTE"}
       ></input>
@@ -154,7 +154,7 @@ const Listing = ({
       } bg-${color} transition ease-in-out`}
     >
       <p
-        className="text-sm truncate pr-4 cursor-pointer border-r-2 border-black py-2 w-48"
+        className="text-sm truncate pr-4 cursor-pointer border-r-2 border-black py-2 w-5/12 sm:w-1/3"
         onClick={() => {
           setEdit(true);
           setNewRoute(route);
@@ -164,7 +164,7 @@ const Listing = ({
       >
         {route}
       </p>
-      <div className="flex flex-row flex-1 pl-2 items-center">
+      <div className="flex flex-row flex-1 pl-2 max-h-16 items-center">
         <p
           className="font-mono py-2 text-sm text-gray-500 group-hover:text-black cursor-pointer"
           onClick={() => {
