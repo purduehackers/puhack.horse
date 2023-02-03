@@ -44,14 +44,14 @@ const Listing = ({
     if (currentStatus === "PENDING" && prevStatus === "PENDING") {
       setColor("green-100");
       setTimeout(() => {
-        setColor("white-100");
+        setColor("white");
         setCurrentStatus("NEUTRAL");
       }, 2000);
     }
     if (currentStatus === "FAIL") {
       setColor("red-100");
       setTimeout(() => {
-        setColor("white-100");
+        setColor("white");
         setCurrentStatus("NEUTRAL");
       }, 2000);
     }
