@@ -5,13 +5,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import usePrevious from "../hooks/use-previous";
 import { delAndPut, put } from "../lib/api";
-import {
-  deleteObject,
-  error,
-  fetcher,
-  mutateObject,
-  truncate,
-} from "../lib/helpers";
+import { deleteObject, error, fetcher, mutateObject } from "../lib/helpers";
 import { KVData, Status } from "../types/types";
 import Erase from "./erase";
 
@@ -164,9 +158,9 @@ const Listing = ({
       >
         {route}
       </p>
-      <div className="flex flex-row flex-1 pl-2 max-h-16 items-center">
+      <div className="flex flex-row flex-1 min-w-0 pl-2 max-h-16 items-center">
         <p
-          className="font-mono py-2 text-sm text-gray-500 group-hover:text-black cursor-pointer"
+          className="font-mono py-2 truncate text-sm text-gray-500 group-hover:text-black cursor-pointer"
           onClick={() => {
             setEdit(true);
             setNewRoute(route);
@@ -174,7 +168,7 @@ const Listing = ({
             setWhichEdit("DESTINATION");
           }}
         >
-          {truncate(newDest, 28)}
+          {newDest}
         </p>
         <div
           className="grow cursor-pointer py-4"
