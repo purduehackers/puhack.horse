@@ -12,7 +12,11 @@ module.exports = {
       sans: '"Inter", sans-serif',
       mono: '"Space Mono"',
     },
-    extend: {},
+    extend: {
+      boxShadow: {
+        container: "6px 6px",
+      },
+    },
   },
   plugins: [],
 };
