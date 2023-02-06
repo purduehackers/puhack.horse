@@ -3,6 +3,7 @@ import useSWR from "swr";
 import { fetcher } from "../lib/helpers";
 import { KVData } from "../types/types";
 import Add from "./add";
+import EmojiMarquee from "./emoji-marquee";
 import Listing from "./listing";
 import SignOutButton from "./sign-out-button";
 
@@ -36,11 +37,17 @@ const RouteList = ({ fallback }: { fallback: KVData[] }) => {
                 to edit something, just click on it in the table. your changes
                 will reflect on the dashboard immediately and update in
                 cloudflare workers kv in the background. some operations may
-                take up to 60 seconds to settle in the dashboard, but most of
-                the time everything you change should be available almost
-                instantly.
+                take up to 60 seconds for the dashboard to recongize they've
+                updated, but most of the time everything you change should be
+                available almost instantly.
               </p>
             </div>
+            <div className="hidden lg:block">
+              <EmojiMarquee />
+            </div>
+          </div>
+          <div className="lg:hidden">
+            <EmojiMarquee />
           </div>
           <div className="rounded-sm border-[3px] border-black w-11/12 sm:max-w-xl tabular-nums shadow-container shadow-gray-900/70 overflow-y-auto mb-8">
             <div className="py-1 flex flex-row bg-gray-200 border-b-[3px] border-b-black">
