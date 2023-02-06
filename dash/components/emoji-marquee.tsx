@@ -1,5 +1,9 @@
-const EmojiMarquee = () => (
-  <div className="relative flex overflow-x-hidden select-none">
+const EmojiMarquee = ({ large }: { large?: boolean }) => (
+  <div
+    className={`relative lg:max-w-max flex overflow-hidden select-none ${
+      large ? "hidden lg:block" : "lg:hidden"
+    }`}
+  >
     <div className="animate-marquee whitespace-nowrap">
       <span className="text-4xl mx-4">🐴</span>
       <span className="text-4xl mx-4">🔗</span>

@@ -42,13 +42,11 @@ const RouteList = ({ fallback }: { fallback: KVData[] }) => {
                 available almost instantly.
               </p>
             </div>
-            <div className="hidden lg:block">
-              <EmojiMarquee />
+            <div className="flex justify-center">
+              <EmojiMarquee large={true} />
             </div>
           </div>
-          <div className="lg:hidden">
-            <EmojiMarquee />
-          </div>
+          <EmojiMarquee />
           <div className="rounded-sm border-[3px] border-black w-11/12 sm:max-w-xl tabular-nums shadow-container shadow-gray-900/70 overflow-y-auto mb-8">
             <div className="py-1 flex flex-row bg-gray-200 border-b-[3px] border-b-black">
               <p className="font-bold text-center w-5/12 sm:w-1/3">route</p>
