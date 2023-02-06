@@ -21,18 +21,25 @@ const RouteList = ({ fallback }: { fallback: KVData[] }) => {
       <SignOutButton />
       <div className="flex flex-col grow justify-center items-center">
         <div className="flex flex-col items-center lg:items-start justify-center lg:flex-row gap-8 w-full lg:w-11/12">
-          <div className="flex flex-col gap-4 ml-2 max-w-lg">
-            <h1 className="text-4xl sm:text-5xl font-bold">
+          <div className="flex flex-col gap-4 mx-4 max-w-lg">
+            <h1 className="text-center text-4xl sm:text-5xl font-bold">
               <span className="select-none inline-block shake">🐴</span>{" "}
               puhack.horse
             </h1>
+            <hr className="h-1 border-0 bg-gray-600 rounded-sm" />
             <div className="flex flex-col gap-2">
               <p>
                 this is the dashboard for purdue hackers' link shortener.
-                welcome!!! asdf asdlfjas jfkldjfl ksd flasdjf asklfsjf ajdslf
-                ajslf jasldfadsf a
+                welcome!!!
               </p>
-              <p>to edit something, just click on it in the </p>
+              <p>
+                to edit something, just click on it in the table. your changes
+                will reflect on the dashboard immediately and update in
+                cloudflare workers kv in the background. some operations may
+                take up to 60 seconds to settle in the dashboard, but most of
+                the time everything you change should be available almost
+                instantly.
+              </p>
             </div>
           </div>
           <div className="rounded-sm border-[3px] border-black w-11/12 sm:max-w-xl tabular-nums shadow-container shadow-gray-900/70">
