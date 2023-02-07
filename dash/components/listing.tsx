@@ -62,7 +62,7 @@ const Listing = ({
   }, [status]);
 
   return edit ? (
-    <div className="flex flex-row h-16 px-4 first:border-t-0 items-center border-t-2 border-black rounded-sm break-all group bg-gray-200">
+    <div className="flex flex-row h-16 pl-2 sm:pl-3 pr-1 first:border-t-0 items-center border-t-2 border-black rounded-sm break-all group bg-gray-200">
       <input
         onChange={(e) => setNewRoute(e.target.value)}
         className="text-sm outline-none w-5/12 sm:w-1/4 pr-4 bg-gray-200 border-r-2 border-black h-full"
@@ -143,7 +143,7 @@ const Listing = ({
     </div>
   ) : (
     <div
-      className={`first:border-t-0 flex flex-row items-center border-t-2 border-black pl-3 pr-1 break-all group ${
+      className={`first:border-t-0 flex flex-row items-center border-t-2 border-black pl-2 sm:pl-3 pr-1 break-all group ${
         status || color !== "white" ? `hover:bg-${color}` : `hover:bg-gray-200`
       } bg-${color} transition duration-100`}
     >
@@ -194,7 +194,7 @@ const Listing = ({
         </button>
         <Erase fallback={fallback} route={route} />
       </div>
-      <div className="border-l-2 w-14 border-black py-2 hidden sm:block">
+      <div className="border-l-2 w-14 border-black py-2 hidden sm:block font-bold">
         <p className="text-sm pl-2">{visits}</p>
       </div>
     </div>
