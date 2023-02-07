@@ -18,7 +18,7 @@ export function mutateObject(
   route: string,
   destination: string
 ) {
-  if (toChange === "value") {
+  if (toChange === "destination") {
     data.map((obj) => {
       if (obj.route === route) {
         obj.destination = destination;

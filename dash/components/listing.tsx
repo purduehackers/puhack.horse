@@ -85,7 +85,7 @@ const Listing = ({
                 })
                 .sort((a, b) => a.route.localeCompare(b.route));
             } else {
-              newData = mutateObject("value", data, newRoute, newDest);
+              newData = mutateObject("destination", data, newRoute, newDest);
             }
             try {
               await mutate(

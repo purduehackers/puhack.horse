@@ -32,15 +32,12 @@ const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
                 onClick={async () => {
                   const newData = deleteObject(route, data);
                   try {
-                    await mutate(
-                      del(`http://localhost:3000/api/dash/${route}`, newData),
-                      {
-                        optimisticData: [...newData],
-                        rollbackOnError: true,
-                        revalidate: false,
-                        populateCache: true,
-                      }
-                    );
+                    await mutate(del(route, newData), {
+                      optimisticData: [...newData],
+                      rollbackOnError: true,
+                      revalidate: false,
+                      populateCache: true,
+                    });
                   } catch (err) {}
                 }}
               >
@@ -54,8 +51,8 @@ const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
   );
 };
 
-function deleteObject(route: string, data) {
-  return data.filter((el) => el.key !== route);
+function deleteObject(route: string, data: KVData[]) {
+  return data.filter((el) => el.route !== route);
 }
 
 export default Erase;

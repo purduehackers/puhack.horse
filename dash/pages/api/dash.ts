@@ -30,9 +30,10 @@ export default async (req: NextRequest) => {
             items,
           }),
         }
-      )
-        .then((r) => console.log("yay"))
-        .catch((err) => console.log("err", err));
+      ).catch(
+        (err) =>
+          new Response(null, { status: 500, statusText: `Error: ${err}` })
+      );
       return NextResponse.json({ ok: true });
     } catch (err) {
       console.log(err);
@@ -41,5 +42,5 @@ export default async (req: NextRequest) => {
 };
 
 export const config = {
-  runtime: "experimental-edge",
+  runtime: "edge",
 };

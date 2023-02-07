@@ -1,4 +1,5 @@
-import { KVData, KVList } from "../types/types";
+import { KVData } from "../types/types";
+import { delay } from "./helpers";
 
 const url = `http://localhost:3000/api/dash`;
 
@@ -28,6 +29,7 @@ export async function add(
   newData.map((obj) => {
     if (obj.route === route) obj.status = "SUCCESS";
   });
+  await waitForPropagation(route);
   return newData;
 }
 
@@ -81,6 +83,7 @@ export async function updateRoute(
   newData.map((obj) => {
     if (obj.route === newRoute) obj.status = "SUCCESS";
   });
+  await waitForPropagation(newRoute);
   return newData;
 }
 
@@ -111,4 +114,21 @@ export async function updateDestination(
     if (obj.route === route) obj.status = "SUCCESS";
   });
   return newData;
+}
+
+async function waitForPropagation(route: string) {
+  // Cloudflare Workers KV is "eventually consistent", meaning
+  // changes will propagate eventually but may take up to 60 seconds.
+  // list()ing after adding a new key appears to be the slowest
+  // operation, taking up to 30 seconds for me while testing.
+  // This was causing problems when SWR was revalidating,
+  // because the new key wasn't there when it fetched the new data,
+  // so the row would disappear from the table for a while
+  // after the user added it.
+  await delay(1000);
+  let all = await fetch(url).then((r) => r.json());
+  while (!all.find((el: KVData) => el.route === route)) {
+    await delay(1000);
+    all = await fetch(url).then((r) => r.json());
+  }
 }
