@@ -6,13 +6,9 @@ import { fetcher } from "../lib/helpers";
 import { KVData } from "../types/types";
 
 const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
-  const { data, mutate } = useSWR(
-    "http://localhost:3000/api/get-all",
-    fetcher,
-    {
-      fallbackData: fallback,
-    }
-  );
+  const { data, mutate } = useSWR("http://localhost:3000/api/dash", fetcher, {
+    fallbackData: fallback,
+  });
   return (
     <AlertDialog.Root>
       <AlertDialog.Trigger asChild>
@@ -37,10 +33,7 @@ const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
                   const newData = deleteObject(route, data);
                   try {
                     await mutate(
-                      del(
-                        `http://localhost:3000/api/get-all/${route}`,
-                        newData
-                      ),
+                      del(`http://localhost:3000/api/dash/${route}`, newData),
                       {
                         optimisticData: [...newData],
                         rollbackOnError: true,

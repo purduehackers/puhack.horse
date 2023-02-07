@@ -8,14 +8,10 @@ import { add } from "../lib/api";
 import { fetcher } from "../lib/helpers";
 
 const Add = ({ fallback }: { fallback: KVData[] }) => {
-  const { data, mutate } = useSWR(
-    "http://localhost:3000/api/get-all",
-    fetcher,
-    {
-      suspense: true,
-      fallbackData: fallback,
-    }
-  );
+  const { data, mutate } = useSWR("http://localhost:3000/api/dash", fetcher, {
+    suspense: true,
+    fallbackData: fallback,
+  });
 
   const [route, setRoute] = useState("");
   const [destination, setDestination] = useState("");

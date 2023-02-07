@@ -8,7 +8,7 @@ import Listing from "./listing";
 import UserInfo from "./user-info";
 
 const RouteList = ({ fallback, user }: { fallback: KVData[]; user: User }) => {
-  const { data } = useSWR("http://localhost:3000/api/get-all", fetcher, {
+  const { data } = useSWR("http://localhost:3000/api/dash", fetcher, {
     suspense: true,
     fallbackData: fallback,
   });

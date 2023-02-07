@@ -6,7 +6,7 @@ import { KVData } from "../../types/types";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-  const data = await fetch("http://localhost:3000/api/get-all", {
+  const data = await fetch("http://localhost:3000/api/dash", {
     headers: {
       Authorization: `Bearer ${process.env.HORSE_SECRET}`,
     },

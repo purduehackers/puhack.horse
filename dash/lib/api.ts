@@ -1,6 +1,6 @@
 import { KVData, KVList } from "../types/types";
 
-const url = `http://localhost:3000/api/get-all`;
+const url = `http://localhost:3000/api/dash`;
 
 export async function add(
   route: string,

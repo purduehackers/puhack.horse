@@ -20,13 +20,9 @@ const Listing = ({
   fallback: KVData[];
   status?: Status;
 }) => {
-  const { data, mutate } = useSWR(
-    "http://localhost:3000/api/get-all",
-    fetcher,
-    {
-      fallbackData: fallback,
-    }
-  );
+  const { data, mutate } = useSWR("http://localhost:3000/api/dash", fetcher, {
+    fallbackData: fallback,
+  });
 
   const [edit, setEdit] = useState(false);
   const [whichEdit, setWhichEdit] = useState("DESTINATION");
