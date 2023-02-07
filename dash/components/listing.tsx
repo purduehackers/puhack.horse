@@ -44,7 +44,7 @@ const Listing = ({
   const prevVisits = usePrevious(visits);
 
   useEffect(() => {
-    if (visits !== prevVisits) {
+    if (prevVisits && visits !== prevVisits) {
       setNewVisit(true);
       setTimeout(() => {
         setNewVisit(false);
