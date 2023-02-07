@@ -2,17 +2,13 @@ import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { Eraser } from "lucide-react";
 import useSWR from "swr";
 import { del } from "../lib/api";
-import { fetcher } from "../lib/helpers";
+import { fetcher, server } from "../lib/helpers";
 import { KVData } from "../types/types";
 
 const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
-  const { data, mutate } = useSWR(
-    "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
-    fetcher,
-    {
-      fallbackData: fallback,
-    }
-  );
+  const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
+    fallbackData: fallback,
+  });
   return (
     <AlertDialog.Root>
       <AlertDialog.Trigger asChild>
@@ -36,18 +32,12 @@ const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
                 onClick={async () => {
                   const newData = deleteObject(route, data);
                   try {
-                    await mutate(
-                      del(
-                        `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${route}`,
-                        newData
-                      ),
-                      {
-                        optimisticData: [...newData],
-                        rollbackOnError: true,
-                        revalidate: false,
-                        populateCache: true,
-                      }
-                    );
+                    await mutate(del(route, newData), {
+                      optimisticData: [...newData],
+                      rollbackOnError: true,
+                      revalidate: false,
+                      populateCache: true,
+                    });
                   } catch (err) {}
                 }}
               >
@@ -62,7 +52,7 @@ const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
 };
 
 function deleteObject(route: string, data: KVData[]) {
-  return data.filter((el) => el.key !== route);
+  return data.filter((el) => el.route !== route);
 }
 
 export default Erase;

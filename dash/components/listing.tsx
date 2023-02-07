@@ -4,8 +4,14 @@ import { CheckSquare, Edit, XSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import usePrevious from "../hooks/use-previous";
-import { delAndPut, put } from "../lib/api";
-import { deleteObject, error, fetcher, mutateObject } from "../lib/helpers";
+import { updateDestination, updateRoute } from "../lib/api";
+import {
+  deleteObject,
+  error,
+  fetcher,
+  mutateObject,
+  server,
+} from "../lib/helpers";
 import { KVData, Status } from "../types/types";
 import Erase from "./erase";
 
@@ -20,13 +26,9 @@ const Listing = ({
   fallback: KVData[];
   status?: Status;
 }) => {
-  const { data, mutate } = useSWR(
-    "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
-    fetcher,
-    {
-      fallbackData: fallback,
-    }
-  );
+  const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
+    fallbackData: fallback,
+  });
 
   const [edit, setEdit] = useState(false);
   const [whichEdit, setWhichEdit] = useState("DESTINATION");
@@ -82,25 +84,20 @@ const Listing = ({
             if (route !== newRoute) {
               const filteredData = deleteObject(route, data);
               newData = filteredData
-                .concat({ key: newRoute, value: newDest, status: "PENDING" })
-                .sort((a, b) => a.key.localeCompare(b.key));
+                .concat({
+                  route: newRoute,
+                  destination: newDest,
+                  status: "PENDING",
+                })
+                .sort((a, b) => a.route.localeCompare(b.route));
             } else {
-              newData = mutateObject("value", data, newRoute, newDest);
+              newData = mutateObject("destination", data, newRoute, newDest);
             }
             try {
               await mutate(
                 route !== newRoute
-                  ? delAndPut(
-                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${route}`,
-                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${newRoute}`,
-                      newDest,
-                      newData
-                    )
-                  : put(
-                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${newRoute}`,
-                      newDest,
-                      newData
-                    ),
+                  ? updateRoute(route, newRoute, newDest, newData)
+                  : updateDestination(newRoute, newDest, newData),
                 {
                   optimisticData: [...newData],
                   rollbackOnError: true,

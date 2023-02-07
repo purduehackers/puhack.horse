@@ -1,5 +1,10 @@
 import { KVData } from "../types/types";
 
+const dev = process.env.NODE_ENV !== "production";
+export const server = dev
+  ? "http://localhost:3000"
+  : "https://dash.puhack.horse";
+
 export const fetcher = (url: string) =>
   fetch(url, {
     method: "GET",
@@ -9,7 +14,7 @@ export const fetcher = (url: string) =>
   }).then((r) => r.json());
 
 export function deleteObject(route: string, data: KVData[]) {
-  return data.filter((el) => el.key !== route);
+  return data.filter((el) => el.route !== route);
 }
 
 export function mutateObject(
@@ -18,10 +23,10 @@ export function mutateObject(
   route: string,
   destination: string
 ) {
-  if (toChange === "value") {
+  if (toChange === "destination") {
     data.map((obj) => {
-      if (obj.key === route) {
-        obj.value = destination;
+      if (obj.route === route) {
+        obj.destination = destination;
         obj.status = "PENDING";
       }
     });
@@ -31,7 +36,7 @@ export function mutateObject(
 
 export function error(data: KVData[], route: string) {
   data.map((obj) => {
-    if (obj.key === route) obj.status = "FAIL";
+    if (obj.route === route) obj.status = "FAIL";
   });
   return data;
 }

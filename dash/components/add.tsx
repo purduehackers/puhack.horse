@@ -4,18 +4,14 @@ import { useState } from "react";
 import useSWR from "swr";
 import * as Dialog from "@radix-ui/react-dialog";
 import { KVData } from "../types/types";
-import { put } from "../lib/api";
-import { fetcher } from "../lib/helpers";
+import { add } from "../lib/api";
+import { fetcher, server } from "../lib/helpers";
 
 const Add = ({ fallback }: { fallback: KVData[] }) => {
-  const { data, mutate } = useSWR(
-    "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
-    fetcher,
-    {
-      suspense: true,
-      fallbackData: fallback,
-    }
-  );
+  const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
+    suspense: true,
+    fallbackData: fallback,
+  });
 
   const [route, setRoute] = useState("");
   const [destination, setDestination] = useState("");
@@ -85,26 +81,20 @@ const Add = ({ fallback }: { fallback: KVData[] }) => {
                   setDestination("");
                   const newData = data
                     .concat({
-                      key: route,
-                      value: destination,
+                      route: route,
+                      destination: destination,
                       status: "PENDING",
                     })
-                    .sort((a: KVData, b: KVData) => a.key.localeCompare(b.key));
-                  try {
-                    await mutate(
-                      put(
-                        `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${route}`,
-                        destination,
-                        newData,
-                        true
-                      ),
-                      {
-                        optimisticData: [...newData],
-                        rollbackOnError: true,
-                        revalidate: true,
-                        populateCache: true,
-                      }
+                    .sort((a: KVData, b: KVData) =>
+                      a.route.localeCompare(b.route)
                     );
+                  try {
+                    await mutate(add(route, destination, newData), {
+                      optimisticData: [...newData],
+                      rollbackOnError: true,
+                      revalidate: true,
+                      populateCache: true,
+                    });
                   } catch (err) {}
                 }}
               >

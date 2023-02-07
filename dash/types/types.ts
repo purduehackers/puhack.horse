@@ -7,8 +7,8 @@ export type User =
   | undefined;
 
 export type KVData = {
-  key: string;
-  value: string;
+  route: string;
+  destination: string;
   status?: Status;
 };
 
