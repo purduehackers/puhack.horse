@@ -16,13 +16,31 @@ const Add = ({ fallback }: { fallback: ConfigData[] }) => {
   const [route, setRoute] = useState("");
   const [destination, setDestination] = useState("");
 
+  async function handleSubmit() {
+    setRoute("");
+    setDestination("");
+    const newData = data
+      .concat({
+        route: route,
+        destination: destination,
+        visits: 0,
+        status: "PENDING",
+      })
+      .sort((a: ConfigData, b: ConfigData) => a.route.localeCompare(b.route));
+    try {
+      await mutate(add(route, destination, 0, newData), {
+        optimisticData: [...newData],
+        rollbackOnError: true,
+        revalidate: true,
+        populateCache: true,
+      });
+    } catch (err) {}
+  }
+
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <div
-          className="py-2 pl-2 bg-amber-500 font-bold flex flex-row items-center gap-1 hover:bg-amber-400 transition duration-100 cursor-pointer sticky w-full bottom-0 border-t-[3px] border-black"
-          onClick={() => {}}
-        >
+        <div className="py-2 pl-2 bg-amber-500 font-bold flex flex-row items-center gap-1 hover:bg-amber-400 transition duration-100 cursor-pointer sticky w-full bottom-0 border-t-[3px] border-black">
           <PlusIcon />
           <p>add</p>
         </div>
@@ -76,28 +94,7 @@ const Add = ({ fallback }: { fallback: ConfigData[] }) => {
               <button
                 className="Button green"
                 disabled={route === "" || destination === ""}
-                onClick={async () => {
-                  setRoute("");
-                  setDestination("");
-                  const newData = data
-                    .concat({
-                      route: route,
-                      destination: destination,
-                      visits: 0,
-                      status: "PENDING",
-                    })
-                    .sort((a: ConfigData, b: ConfigData) =>
-                      a.route.localeCompare(b.route)
-                    );
-                  try {
-                    await mutate(add(route, destination, 0, newData), {
-                      optimisticData: [...newData],
-                      rollbackOnError: true,
-                      revalidate: true,
-                      populateCache: true,
-                    });
-                  } catch (err) {}
-                }}
+                onClick={handleSubmit}
               >
                 Save changes
               </button>

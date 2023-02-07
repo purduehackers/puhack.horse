@@ -55,7 +55,6 @@ const Listing = ({
     }
   }, [visits]);
   useEffect(() => {
-    console.log("fetched before?", fetchedBefore);
     if (!prevRoute && !status && fetchedBefore) {
       setColor("blue-300");
       setTimeout(() => {
@@ -83,6 +82,56 @@ const Listing = ({
     }
   }, [status]);
 
+  async function handleMutate() {
+    setEdit(false);
+    if (newRoute === route && newDest === destination) return;
+    setColor("amber-300");
+    let newData;
+    if (route !== newRoute) {
+      const filteredData = deleteObject(route, data);
+      newData = filteredData
+        .concat({
+          route: newRoute,
+          destination: newDest,
+          visits,
+          status: "PENDING",
+        })
+        .sort((a, b) => a.route.localeCompare(b.route));
+    } else {
+      newData = mutateObject("destination", data, newRoute, newDest);
+    }
+    try {
+      await mutate(
+        route !== newRoute
+          ? updateRoute(route, newRoute, newDest, visits, newData)
+          : updateDestination(newRoute, newDest, visits, newData),
+        {
+          optimisticData: [...newData],
+          rollbackOnError: true,
+          revalidate: route !== newRoute,
+          populateCache: true,
+        }
+      );
+      setColor("green-300");
+      setTimeout(() => {
+        setColor("white");
+      }, 1500);
+    } catch (err) {
+      await mutate(error(data, route), {
+        revalidate: true,
+        populateCache: true,
+      });
+      setNewRoute(route);
+      setNewDest(destination);
+      setEdit(false);
+
+      setColor("red-300");
+      setTimeout(() => {
+        setColor("white");
+      }, 1500);
+    }
+  }
+
   return edit ? (
     <div className="flex flex-row h-16 first:border-t-0 items-center border-t-2 border-black rounded-sm break-all group bg-gray-200">
       <input
@@ -90,6 +139,15 @@ const Listing = ({
         className="text-sm outline-none w-5/12 sm:w-1/4 pl-2 pr-4 bg-gray-200 border-r-2 border-black h-full"
         value={newRoute}
         autoFocus={whichEdit === "ROUTE"}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            setEdit(false);
+            setNewRoute(route);
+            setNewDest(destination);
+          } else if (e.key === "Enter") {
+            return handleMutate();
+          }
+        }}
       ></input>
       <div className="flex flex-row flex-1 items-center">
         <textarea
@@ -97,65 +155,24 @@ const Listing = ({
           className="text-sm outline-none rounded font-mono p-2 w-full resize-none bg-gray-200"
           value={newDest}
           autoFocus={whichEdit === "DESTINATION"}
-        ></textarea>
-        <button
-          className="p-1"
-          onClick={async () => {
-            setEdit(false);
-            if (newRoute === route && newDest === destination) return;
-            setColor("amber-300");
-            let newData;
-            if (route !== newRoute) {
-              const filteredData = deleteObject(route, data);
-              newData = filteredData
-                .concat({
-                  route: newRoute,
-                  destination: newDest,
-                  visits,
-                  status: "PENDING",
-                })
-                .sort((a, b) => a.route.localeCompare(b.route));
-            } else {
-              newData = mutateObject("destination", data, newRoute, newDest);
-            }
-            try {
-              await mutate(
-                route !== newRoute
-                  ? updateRoute(route, newRoute, newDest, visits, newData)
-                  : updateDestination(newRoute, newDest, visits, newData),
-                {
-                  optimisticData: [...newData],
-                  rollbackOnError: true,
-                  revalidate: route !== newRoute,
-                  populateCache: true,
-                }
-              );
-              setColor("green-300");
-              setTimeout(() => {
-                setColor("white");
-              }, 1500);
-            } catch (err) {
-              await mutate(error(data, route), {
-                revalidate: true,
-                populateCache: true,
-              });
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              setEdit(false);
               setNewRoute(route);
               setNewDest(destination);
-              setEdit(false);
-
-              setColor("red-300");
-              setTimeout(() => {
-                setColor("white");
-              }, 1500);
+            } else if (e.key === "Enter") {
+              return handleMutate();
             }
           }}
-        >
+        ></textarea>
+        <button className="p-1" onClick={async () => handleMutate}>
           <CheckSquare size="26px" color="#22c55e" />
         </button>
         <button
           className="pl-1 mr-4"
           onClick={() => {
             setEdit(false);
+            setNewRoute(route);
             setNewDest(destination);
           }}
         >
