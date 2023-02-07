@@ -10,7 +10,7 @@ export default function UserInfo({ user }: { user: User }) {
         <img className="rounded-full" src={user?.image || ""} width="32px" />
         <p className="font-bold">{user?.name}</p> •
         <button
-          className="rounded-sm px-1 font-bold w-fit border-2 border-gray-600 hover:bg-gray-600 hover:text-white transition duration-100"
+          className="rounded-sm px-1 font-bold w-fit border-2 border-gray-600 hover:bg-gray-600 hover:text-gray-100 transition duration-100"
           onClick={() => signOut()}
         >
           Sign Out
