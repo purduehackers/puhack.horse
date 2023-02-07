@@ -3,7 +3,7 @@
 import { signOut } from "next-auth/react";
 import { User } from "../types/types";
 
-export default function SignOutButton({ user }: { user: User }) {
+export default function UserInfo({ user }: { user: User }) {
   return (
     <div className="clear-both mb-12 m-4">
       <div className="flex flex-col float-right">

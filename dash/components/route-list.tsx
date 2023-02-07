@@ -5,7 +5,7 @@ import { KVData, User } from "../types/types";
 import Add from "./add";
 import EmojiMarquee from "./emoji-marquee";
 import Listing from "./listing";
-import SignOutButton from "./sign-out-button";
+import UserInfo from "./user-info";
 
 const RouteList = ({ fallback, user }: { fallback: KVData[]; user: User }) => {
   const { data } = useSWR(
@@ -19,7 +19,7 @@ const RouteList = ({ fallback, user }: { fallback: KVData[]; user: User }) => {
 
   return (
     <div className="flex flex-col">
-      <SignOutButton user={user} />
+      <UserInfo user={user} />
       <div className="flex flex-col justify-center items-center">
         <div className="flex flex-col items-center lg:items-start justify-center lg:flex-row w-full lg:w-11/12 gap-x-8">
           <div className="flex flex-col gap-4 mx-4 max-w-md">
