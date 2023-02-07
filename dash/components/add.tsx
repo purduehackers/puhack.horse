@@ -45,6 +45,10 @@ const Add = ({ fallback }: { fallback: KVData[] }) => {
             </label>
             <input
               className="Input"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
               id="route"
               value={route}
               onChange={(e) => setRoute(e.target.value)}
@@ -56,6 +60,10 @@ const Add = ({ fallback }: { fallback: KVData[] }) => {
             </label>
             <input
               className="Input"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
               id="destination"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
