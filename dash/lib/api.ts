@@ -21,7 +21,7 @@ export async function put(
   }
   const route = new URL(url).pathname.split("/")[2];
   newData.map((obj) => {
-    if (obj.key === route) obj.status = "SUCCESS";
+    if (obj.route === route) obj.status = "SUCCESS";
   });
   return newData;
 }
@@ -39,15 +39,12 @@ export async function del(url: string, newData: KVData[]) {
 }
 
 async function getAllKeys(): Promise<KVList> {
-  return await fetch(
-    "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api?keysOnly=true",
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${process.env.HORSE_SECRET}`,
-      },
-    }
-  ).then((r) => r.json());
+  return await fetch("http://localhost:3000/api/get-all?keysOnly=true", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${process.env.HORSE_SECRET}`,
+    },
+  }).then((r) => r.json());
 }
 
 async function waitForPropagation(url: string) {
@@ -81,7 +78,7 @@ export async function delAndPut(
   });
   const route = new URL(urlPut).pathname.slice(1);
   newData.map((obj) => {
-    if (obj.key === route) obj.status = "SUCCESS";
+    if (obj.route === route) obj.status = "SUCCESS";
   });
   return newData;
 }

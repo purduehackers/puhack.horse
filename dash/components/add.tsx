@@ -9,7 +9,7 @@ import { fetcher } from "../lib/helpers";
 
 const Add = ({ fallback }: { fallback: KVData[] }) => {
   const { data, mutate } = useSWR(
-    "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
+    "http://localhost:3000/api/get-all",
     fetcher,
     {
       suspense: true,
@@ -89,11 +89,13 @@ const Add = ({ fallback }: { fallback: KVData[] }) => {
                       value: destination,
                       status: "PENDING",
                     })
-                    .sort((a: KVData, b: KVData) => a.key.localeCompare(b.key));
+                    .sort((a: KVData, b: KVData) =>
+                      a.route.localeCompare(b.route)
+                    );
                   try {
                     await mutate(
                       put(
-                        `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${route}`,
+                        `http://localhost:3000/api/get-all/${route}`,
                         destination,
                         newData,
                         true

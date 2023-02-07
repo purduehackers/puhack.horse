@@ -21,7 +21,7 @@ const Listing = ({
   status?: Status;
 }) => {
   const { data, mutate } = useSWR(
-    "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
+    "http://localhost:3000/api/get-all",
     fetcher,
     {
       fallbackData: fallback,
@@ -91,13 +91,13 @@ const Listing = ({
               await mutate(
                 route !== newRoute
                   ? delAndPut(
-                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${route}`,
-                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${newRoute}`,
+                      `http://localhost:3000/api/get-all/${route}`,
+                      `http://localhost:3000/api/get-all/${newRoute}`,
                       newDest,
                       newData
                     )
                   : put(
-                      `https://puhack-dot-horse.sparklesrocketeye.workers.dev/api/${newRoute}`,
+                      `http://localhost:3000/api/get-all/${newRoute}`,
                       newDest,
                       newData
                     ),

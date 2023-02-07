@@ -8,13 +8,13 @@ export const fetcher = (url: string) =>
     },
   }).then((r) => r.json());
 
-export function deleteObject(route: string, data: KVData[]) {
+export function deleteObject(route: string, data) {
   return data.filter((el) => el.key !== route);
 }
 
 export function mutateObject(
   toChange: string,
-  data: KVData[],
+  data,
   route: string,
   destination: string
 ) {
@@ -29,7 +29,7 @@ export function mutateObject(
   return data;
 }
 
-export function error(data: KVData[], route: string) {
+export function error(data, route: string) {
   data.map((obj) => {
     if (obj.key === route) obj.status = "FAIL";
   });

@@ -8,14 +8,10 @@ import Listing from "./listing";
 import UserInfo from "./user-info";
 
 const RouteList = ({ fallback, user }: { fallback: KVData[]; user: User }) => {
-  const { data } = useSWR(
-    "https://puhack-dot-horse.sparklesrocketeye.workers.dev/api",
-    fetcher,
-    {
-      suspense: true,
-      fallbackData: fallback,
-    }
-  );
+  const { data } = useSWR("http://localhost:3000/api/get-all", fetcher, {
+    suspense: true,
+    fallbackData: fallback,
+  });
 
   return (
     <div className="flex flex-col">
@@ -56,9 +52,9 @@ const RouteList = ({ fallback, user }: { fallback: KVData[]; user: User }) => {
             <div className="flex flex-col overflow-y-scroll max-h-[30rem]">
               {data.map((kv: KVData) => (
                 <Listing
-                  key={kv.key}
-                  route={kv.key}
-                  destination={kv.value}
+                  key={kv.route}
+                  route={kv.route}
+                  destination={kv.destination}
                   fallback={fallback}
                   status={kv.status}
                 />
