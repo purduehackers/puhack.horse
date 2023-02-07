@@ -83,6 +83,7 @@ const Add = ({ fallback }: { fallback: ConfigData[] }) => {
                     .concat({
                       route: route,
                       destination: destination,
+                      visits: 0,
                       status: "PENDING",
                     })
                     .sort((a: ConfigData, b: ConfigData) =>
