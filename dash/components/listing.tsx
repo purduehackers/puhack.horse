@@ -65,7 +65,7 @@ const Listing = ({
     <div className="flex flex-row h-16 px-4 first:border-t-0 items-center border-t-2 border-black rounded-sm break-all group bg-gray-200">
       <input
         onChange={(e) => setNewRoute(e.target.value)}
-        className="text-sm outline-none w-5/12 sm:w-1/3 pr-4 bg-gray-200 border-r-2 border-black h-full"
+        className="text-sm outline-none w-5/12 sm:w-1/4 pr-4 bg-gray-200 border-r-2 border-black h-full"
         value={newRoute}
         autoFocus={whichEdit === "ROUTE"}
       ></input>
@@ -143,12 +143,12 @@ const Listing = ({
     </div>
   ) : (
     <div
-      className={`first:border-t-0 flex flex-row items-center border-t-2 border-black px-4 break-all group ${
+      className={`first:border-t-0 flex flex-row items-center border-t-2 border-black pl-3 pr-1 break-all group ${
         status || color !== "white" ? `hover:bg-${color}` : `hover:bg-gray-200`
       } bg-${color} transition duration-100`}
     >
       <p
-        className="text-sm truncate pr-4 cursor-pointer border-r-2 border-black py-2 w-5/12 sm:w-1/3"
+        className="text-sm truncate pr-4 cursor-pointer border-r-2 border-black py-2 w-5/12 sm:w-1/4"
         onClick={() => {
           setEdit(true);
           setNewRoute(route);
@@ -158,7 +158,7 @@ const Listing = ({
       >
         {route}
       </p>
-      <div className="flex flex-row flex-1 min-w-0 pl-2 max-h-16 items-center">
+      <div className="flex flex-row flex-1 min-w-0 px-2 max-h-16 items-center">
         <p
           className={`font-mono py-2 truncate text-sm text-gray-500 ${
             color === "white" ? "text-gray-500" : "text-black"
@@ -193,6 +193,9 @@ const Listing = ({
           <Edit size="22px" />
         </button>
         <Erase fallback={fallback} route={route} />
+      </div>
+      <div className="border-l-2 w-14 border-black py-2 hidden sm:block">
+        <p className="text-sm pl-2">{visits}</p>
       </div>
     </div>
   );
