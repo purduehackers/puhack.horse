@@ -12,7 +12,7 @@ export default function UserInfo({ user }: { user: User }) {
           <p className="font-bold">{user?.name}</p>
         </div>
         <button
-          className="border-2 border-black rounded-sm px-1 text-sm font-bold w-fit ml-auto hover:bg-gray-600 hover:text-white transition hover:border-gray-600"
+          className="border-2 border-black rounded-sm px-1 text-sm font-bold w-fit ml-auto hover:bg-gray-600 hover:text-white transition duration-100 hover:border-gray-600"
           onClick={() => signOut()}
         >
           Sign Out

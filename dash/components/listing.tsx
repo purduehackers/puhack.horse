@@ -39,17 +39,17 @@ const Listing = ({
 
   useEffect(() => {
     if (currentStatus === "PENDING" && !prevStatus) {
-      setColor("amber-100");
+      setColor("amber-300");
     }
     if (currentStatus === "PENDING" && prevStatus === "PENDING") {
-      setColor("green-100");
+      setColor("green-300");
       setTimeout(() => {
         setColor("white");
         setCurrentStatus("NEUTRAL");
       }, 2000);
     }
     if (currentStatus === "FAIL") {
-      setColor("red-100");
+      setColor("red-300");
       setTimeout(() => {
         setColor("white");
         setCurrentStatus("NEUTRAL");
@@ -77,7 +77,7 @@ const Listing = ({
           onClick={async () => {
             setEdit(false);
             if (newRoute === route && newDest === destination) return;
-            setColor("amber-100");
+            setColor("amber-300");
             let newData;
             if (route !== newRoute) {
               const filteredData = deleteObject(route, data);
@@ -108,10 +108,10 @@ const Listing = ({
                   populateCache: true,
                 }
               );
-              setColor("green-100");
+              setColor("green-300");
               setTimeout(() => {
                 setColor("white");
-              }, 1000);
+              }, 1500);
             } catch (err) {
               await mutate(error(data, route), {
                 revalidate: true,
@@ -121,10 +121,10 @@ const Listing = ({
               setNewDest(destination);
               setEdit(false);
 
-              setColor("red-100");
+              setColor("red-300");
               setTimeout(() => {
                 setColor("white");
-              }, 1000);
+              }, 1500);
             }
           }}
         >
@@ -145,7 +145,7 @@ const Listing = ({
     <div
       className={`first:border-t-0 flex flex-row items-center border-t-2 border-black px-4 break-all group ${
         status || color !== "white" ? `hover:bg-${color}` : `hover:bg-gray-200`
-      } bg-${color} transition ease-in-out`}
+      } bg-${color} transition duration-100`}
     >
       <p
         className="text-sm truncate pr-4 cursor-pointer border-r-2 border-black py-2 w-5/12 sm:w-1/3"

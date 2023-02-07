@@ -49,11 +49,11 @@ const RouteList = ({ fallback, user }: { fallback: KVData[]; user: User }) => {
           </div>
           <EmojiMarquee />
           <div className="rounded-sm border-[3px] border-black w-11/12 sm:max-w-xl tabular-nums shadow-container shadow-gray-900/70 overflow-y-auto mb-8 mt-4 lg:mt-0">
-            <div className="py-1 flex flex-row bg-gray-200 border-b-[3px] border-b-black">
+            <div className="py-1 flex flex-row bg-amber-500 border-b-[3px] border-b-black">
               <p className="font-bold text-center w-5/12 sm:w-1/3">route</p>
               <p className="flex-1 font-bold text-center pl-2">destination</p>
             </div>
-            <div className="flex flex-col overflow-y-scroll max-h-[32rem]">
+            <div className="flex flex-col overflow-y-scroll max-h-[30rem]">
               {data.map((kv: KVData) => (
                 <Listing
                   key={kv.key}

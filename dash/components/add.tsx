@@ -24,7 +24,7 @@ const Add = ({ fallback }: { fallback: KVData[] }) => {
     <Dialog.Root>
       <Dialog.Trigger asChild>
         <div
-          className="py-2 pl-2 bg-gray-200 font-bold flex flex-row items-center gap-1 hover:bg-gray-300 cursor-pointer sticky w-full bottom-0 border-t-[3px] border-black"
+          className="py-2 pl-2 bg-amber-500 font-bold flex flex-row items-center gap-1 hover:bg-amber-400 transition duration-100 cursor-pointer sticky w-full bottom-0 border-t-[3px] border-black"
           onClick={() => {}}
         >
           <PlusIcon />
