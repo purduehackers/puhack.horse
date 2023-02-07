@@ -21,11 +21,12 @@ const RouteList = ({ fallback }: { fallback: KVData[] }) => {
     <div className="flex flex-col">
       <SignOutButton />
       <div className="flex flex-col justify-center items-center">
-        <div className="flex flex-col items-center lg:items-start justify-center lg:flex-row gap-8 w-full lg:w-11/12">
-          <div className="flex flex-col gap-4 mx-4 max-w-lg">
-            <h1 className="text-center text-4xl sm:text-5xl font-bold">
+        <div className="flex flex-col items-center lg:items-start justify-center lg:flex-row w-full lg:w-11/12 gap-x-8">
+          <div className="flex flex-col gap-4 mx-4 max-w-md">
+            <h1 className="text-center text-amber-600 font-mono text-3xl sm:text-4xl font-bold">
               <span className="select-none inline-block shake">🐴</span>{" "}
-              puhack.horse
+              puhack.horse{" "}
+              <span className="select-none inline-block shake">🐴</span>
             </h1>
             <hr className="h-1 border-0 bg-gray-600 rounded-sm" />
             <div className="flex flex-col gap-2">
@@ -47,7 +48,7 @@ const RouteList = ({ fallback }: { fallback: KVData[] }) => {
             </div>
           </div>
           <EmojiMarquee />
-          <div className="rounded-sm border-[3px] border-black w-11/12 sm:max-w-xl tabular-nums shadow-container shadow-gray-900/70 overflow-y-auto mb-8">
+          <div className="rounded-sm border-[3px] border-black w-11/12 sm:max-w-xl tabular-nums shadow-container shadow-gray-900/70 overflow-y-auto mb-8 mt-4">
             <div className="py-1 flex flex-row bg-gray-200 border-b-[3px] border-b-black">
               <p className="font-bold text-center w-5/12 sm:w-1/3">route</p>
               <p className="flex-1 font-bold text-center pl-2">destination</p>
