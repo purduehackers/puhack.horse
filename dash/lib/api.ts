@@ -1,6 +1,6 @@
 import { KVData, KVList } from "../types/types";
 
-const url = `https://api.vercel.com/v1/edge-config/${process.env.EDGE_CONFIG_ID}/items?teamId=${process.env.TEAM_ID}`;
+const url = `http://localhost:3000/api/get-all`;
 
 export async function add(
   route: string,
@@ -10,7 +10,6 @@ export async function add(
   await fetch(url, {
     method: "PATCH",
     headers: {
-      Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -36,7 +35,6 @@ export async function del(key: string, newData: KVData[]) {
   await fetch(url, {
     method: "PATCH",
     headers: {
-      Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -62,7 +60,6 @@ export async function updateRoute(
   await fetch(url, {
     method: "PATCH",
     headers: {
-      Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -95,7 +92,6 @@ export async function updateDestination(
   await fetch(url, {
     method: "PATCH",
     headers: {
-      Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({

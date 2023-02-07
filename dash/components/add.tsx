@@ -85,8 +85,8 @@ const Add = ({ fallback }: { fallback: KVData[] }) => {
                   setDestination("");
                   const newData = data
                     .concat({
-                      key: route,
-                      value: destination,
+                      route: route,
+                      destination: destination,
                       status: "PENDING",
                     })
                     .sort((a: KVData, b: KVData) =>
