@@ -2,11 +2,16 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { get } from "@vercel/edge-config";
 
+const server =
+  process.env.NODE_ENV === "production"
+    ? "https://dash.puhack.horse"
+    : "http://localhost:3000";
+
 export async function middleware(req: NextRequest) {
   try {
     const route = req.nextUrl.pathname.slice(1);
     const data = await get(route);
-    fetch("http://localhost:3000/api/dash", {
+    fetch(`${server}/api/dash`, {
       method: "PATCH",
       body: JSON.stringify({
         items: [
