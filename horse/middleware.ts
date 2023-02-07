@@ -11,23 +11,25 @@ export async function middleware(req: NextRequest) {
   try {
     const route = req.nextUrl.pathname.slice(1);
     const data = await get(route);
-    fetch(`${server}/api/dash`, {
-      method: "PATCH",
-      body: JSON.stringify({
-        items: [
-          {
-            operation: "update",
-            key: route,
-            value: {
-              route,
-              destination: data.destination,
-              visits: data.visits + 1,
+    return Promise.race([
+      fetch(`${server}/api/dash`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          items: [
+            {
+              operation: "update",
+              key: route,
+              value: {
+                route,
+                destination: data.destination,
+                visits: data.visits + 1,
+              },
             },
-          },
-        ],
+          ],
+        }),
       }),
-    });
-    return NextResponse.redirect(data.destination);
+      NextResponse.redirect(data.destination),
+    ]);
   } catch (err) {
     return NextResponse.redirect("https://purduehackers.com");
   }
