@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher, server } from "../lib/helpers";
 import { ConfigData, User } from "../types/types";
@@ -18,6 +19,11 @@ const RouteList = ({
     suspense: true,
     fallbackData: fallback,
   });
+
+  const [fetchedBefore, setFetchedBefore] = useState(false);
+  useEffect(() => {
+    if (!fetchedBefore) setFetchedBefore(true);
+  }, [data]);
 
   return (
     <div className="flex flex-col">
@@ -57,18 +63,17 @@ const RouteList = ({
               <p className="sm:w-14"></p>
             </div>
             <div className="flex flex-col overflow-y-scroll max-h-[30rem]">
-              {data.map((kv: ConfigData) => {
-                return (
-                  <Listing
-                    key={kv.route}
-                    route={kv.route}
-                    destination={kv.destination}
-                    visits={kv.visits}
-                    fallback={fallback}
-                    status={kv.status}
-                  />
-                );
-              })}
+              {data.map((kv: ConfigData) => (
+                <Listing
+                  key={kv.route}
+                  route={kv.route}
+                  destination={kv.destination}
+                  visits={kv.visits}
+                  fallback={fallback}
+                  fetchedBefore={fetchedBefore}
+                  status={kv.status}
+                />
+              ))}
             </div>
             <Add fallback={fallback} />
           </div>

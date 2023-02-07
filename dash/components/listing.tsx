@@ -20,12 +20,14 @@ const Listing = ({
   destination,
   visits,
   fallback,
+  fetchedBefore,
   status,
 }: {
   route: string;
   destination: string;
   visits: number;
   fallback: ConfigData[];
+  fetchedBefore: boolean;
   status?: Status;
 }) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
@@ -41,6 +43,7 @@ const Listing = ({
 
   const [currentStatus, setCurrentStatus] = useState(status);
   const prevStatus = usePrevious(currentStatus);
+  const prevRoute = usePrevious(route);
   const prevVisits = usePrevious(visits);
 
   useEffect(() => {
@@ -51,6 +54,15 @@ const Listing = ({
       }, 2000);
     }
   }, [visits]);
+  useEffect(() => {
+    console.log("fetched before?", fetchedBefore);
+    if (!prevRoute && !status && fetchedBefore) {
+      setColor("blue-300");
+      setTimeout(() => {
+        setColor("white");
+      }, 2000);
+    }
+  }, [prevRoute, status]);
   useEffect(() => {
     if (currentStatus === "PENDING" && !prevStatus) {
       setColor("amber-300");
@@ -192,7 +204,7 @@ const Listing = ({
           }}
         ></div>
         <button
-          className="text-xs p-1 pr-2 invisible group-hover:visible"
+          className="text-xs py-1 px-2 invisible group-hover:visible"
           onClick={() => {
             setEdit(true);
             setNewRoute(route);

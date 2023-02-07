@@ -5,7 +5,13 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
     "./app/**/*.{js,ts,jsx,tsx}",
   ],
-  safelist: ["bg-red-300", "bg-green-300", "bg-amber-300", "bg-white"],
+  safelist: [
+    "bg-red-300",
+    "bg-green-300",
+    "bg-amber-300",
+    "bg-blue-300",
+    "bg-white",
+  ],
   theme: {
     fontFamily: {
       main: '"Space Grotesk", system-ui, Roboto, sans-serif',
