@@ -60,7 +60,7 @@ const RouteList = ({
             <div className="py-1 flex flex-row bg-amber-500 border-b-[3px] border-b-black">
               <p className="font-bold text-center w-5/12 sm:w-1/4">route</p>
               <p className="flex-1 font-bold text-center pl-2">destination</p>
-              <p className="sm:w-14"></p>
+              <p className="sm:w-20"></p>
             </div>
             <div className="flex flex-col overflow-y-scroll max-h-[30rem]">
               {data.map((kv: ConfigData) => (
