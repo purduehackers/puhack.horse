@@ -160,7 +160,9 @@ const Listing = ({
       </p>
       <div className="flex flex-row flex-1 min-w-0 pl-2 max-h-16 items-center">
         <p
-          className="font-mono py-2 truncate text-sm text-gray-500 group-hover:text-black cursor-pointer"
+          className={`font-mono py-2 truncate text-sm text-gray-500 ${
+            color === "white" ? "text-gray-500" : "text-black"
+          } group-hover:text-black cursor-pointer transition duration-100`}
           onClick={() => {
             setEdit(true);
             setNewRoute(route);
