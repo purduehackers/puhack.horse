@@ -5,14 +5,12 @@ import { User } from "../types/types";
 
 export default function UserInfo({ user }: { user: User }) {
   return (
-    <div className="clear-both mb-12 m-4">
-      <div className="flex flex-col float-right">
-        <div className="flex flex-row gap-1 items-center">
-          <img className="rounded-full" src={user?.image || ""} width="32px" />
-          <p className="font-bold">{user?.name}</p>
-        </div>
+    <div className="clear-both mb-8 lg:mb-12 m-4">
+      <div className="flex flex-row float-right gap-1 items-center text-base">
+        <img className="rounded-full" src={user?.image || ""} width="32px" />
+        <p className="font-bold">{user?.name}</p> •
         <button
-          className="border-2 border-black rounded-sm px-1 text-sm font-bold w-fit ml-auto hover:bg-gray-600 hover:text-white transition duration-100 hover:border-gray-600"
+          className="rounded-sm px-1 font-bold w-fit ml-auto hover:bg-gray-600 hover:text-white transition duration-100"
           onClick={() => signOut()}
         >
           Sign Out
