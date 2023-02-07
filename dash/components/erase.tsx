@@ -18,7 +18,7 @@ const Erase = ({
   return (
     <AlertDialog.Root>
       <AlertDialog.Trigger asChild>
-        <button className="text-xs p-1 invisible group-hover:visible">
+        <button className="text-xs py-1 mr-3 invisible group-hover:visible">
           <Eraser size="22px" />
         </button>
       </AlertDialog.Trigger>

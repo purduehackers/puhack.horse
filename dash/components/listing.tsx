@@ -82,7 +82,7 @@ const Listing = ({
       <div className="flex flex-row flex-1 items-center">
         <textarea
           onChange={(e) => setNewDest(e.target.value)}
-          className="text-sm outline-none rounded font-mono pl-2 py-2 w-full resize-none bg-gray-200"
+          className="text-sm outline-none rounded font-mono p-2 w-full resize-none bg-gray-200"
           value={newDest}
           autoFocus={whichEdit === "DESTINATION"}
         ></textarea>
@@ -141,7 +141,7 @@ const Listing = ({
           <CheckSquare size="26px" color="#22c55e" />
         </button>
         <button
-          className="pl-1 pr-4"
+          className="pl-1 mr-4"
           onClick={() => {
             setEdit(false);
             setNewDest(destination);
@@ -192,7 +192,7 @@ const Listing = ({
           }}
         ></div>
         <button
-          className="text-xs p-1 invisible group-hover:visible"
+          className="text-xs p-1 pr-2 invisible group-hover:visible"
           onClick={() => {
             setEdit(true);
             setNewRoute(route);
@@ -205,7 +205,7 @@ const Listing = ({
         <Erase fallback={fallback} route={route} />
       </div>
       <div
-        className={`border-l-2 w-14 border-black py-2 hidden sm:block font-bold ${
+        className={`border-l-2 w-20 border-black py-2 hidden sm:block font-bold ${
           newVisit && "bg-blue-300"
         } transition duration-100`}
       >
