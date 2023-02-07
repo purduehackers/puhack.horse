@@ -4,7 +4,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import * as Dialog from "@radix-ui/react-dialog";
 import { KVData } from "../types/types";
-import { put } from "../lib/api";
+import { add } from "../lib/api";
 import { fetcher } from "../lib/helpers";
 
 const Add = ({ fallback }: { fallback: KVData[] }) => {
@@ -93,20 +93,12 @@ const Add = ({ fallback }: { fallback: KVData[] }) => {
                       a.route.localeCompare(b.route)
                     );
                   try {
-                    await mutate(
-                      put(
-                        `http://localhost:3000/api/get-all/${route}`,
-                        destination,
-                        newData,
-                        true
-                      ),
-                      {
-                        optimisticData: [...newData],
-                        rollbackOnError: true,
-                        revalidate: true,
-                        populateCache: true,
-                      }
-                    );
+                    await mutate(add(route, destination, newData), {
+                      optimisticData: [...newData],
+                      rollbackOnError: true,
+                      revalidate: true,
+                      populateCache: true,
+                    });
                   } catch (err) {}
                 }}
               >

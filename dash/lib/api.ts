@@ -1,82 +1,116 @@
 import { KVData, KVList } from "../types/types";
-import { delay } from "./helpers";
 
-export async function put(
-  url: string,
+const url = `https://api.vercel.com/v1/edge-config/${process.env.EDGE_CONFIG_ID}/items?teamId=${process.env.TEAM_ID}`;
+
+export async function add(
+  route: string,
   destination: string,
-  newData: KVData[],
-  newKey?: boolean
+  newData: KVData[]
 ) {
   await fetch(url, {
-    method: "PUT",
+    method: "PATCH",
     headers: {
-      Authorization: `Bearer ${process.env.HORSE_SECRET}`,
+      Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`,
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ data: destination }),
+    body: JSON.stringify({
+      items: [
+        {
+          operation: "create",
+          key: route,
+          value: destination,
+        },
+      ],
+    }),
   }).catch((err) => {
-    throw new Error(`${err}`);
+    throw new Error(err);
   });
-  if (newKey) {
-    await waitForPropagation(url);
-  }
-  const route = new URL(url).pathname.split("/")[2];
+
   newData.map((obj) => {
     if (obj.route === route) obj.status = "SUCCESS";
   });
   return newData;
 }
 
-export async function del(url: string, newData: KVData[]) {
+export async function del(key: string, newData: KVData[]) {
   await fetch(url, {
-    method: "DELETE",
+    method: "PATCH",
     headers: {
-      Authorization: `Bearer ${process.env.HORSE_SECRET}`,
+      Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`,
+      "Content-Type": "application/json",
     },
+    body: JSON.stringify({
+      items: [
+        {
+          operation: "delete",
+          key,
+        },
+      ],
+    }),
   }).catch((err) => {
     throw new Error(`${err}`);
   });
   return newData;
 }
 
-async function getAllKeys(): Promise<KVList> {
-  return await fetch("http://localhost:3000/api/get-all?keysOnly=true", {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${process.env.HORSE_SECRET}`,
-    },
-  }).then((r) => r.json());
-}
-
-async function waitForPropagation(url: string) {
-  // Cloudflare Workers KV is "eventually consistent", meaning
-  // changes will propagate eventually but may take up to 60 seconds.
-  // list()ing after adding a new key appears to be the slowest
-  // operation, taking up to 30 seconds for me while testing.
-  // This was causing problems when SWR was revalidating,
-  // because the new key wasn't there when it fetched the new data,
-  // so the row would disappear from the table for a while
-  // after the user added it.
-  await delay(20000);
-  let all = await getAllKeys();
-  while (!all.find((el) => el.name === new URL(url).pathname.split("/")[2])) {
-    await delay(10000);
-    all = await getAllKeys();
-  }
-}
-
-export async function delAndPut(
-  urlDel: string,
-  urlPut: string,
+export async function updateRoute(
+  oldRoute: string,
+  newRoute: string,
   destination: string,
   newData: KVData[]
 ) {
-  await del(urlDel, newData).catch((err) => {
+  await fetch(url, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      items: [
+        {
+          operation: "delete",
+          key: oldRoute,
+        },
+        {
+          operation: "create",
+          key: newRoute,
+          value: destination,
+        },
+      ],
+    }),
+  }).catch((err) => {
     throw new Error(`${err}`);
   });
-  await put(urlPut, destination, newData, true).catch((err) => {
-    throw new Error(`${err}`);
+  newData.map((obj) => {
+    if (obj.route === newRoute) obj.status = "SUCCESS";
   });
-  const route = new URL(urlPut).pathname.slice(1);
+  return newData;
+}
+
+export async function updateDestination(
+  route: string,
+  newDestination: string,
+  newData: KVData[]
+) {
+  await fetch(url, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${process.env.VERCEL_API_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      items: [
+        {
+          operation: "update",
+          key: route,
+          value: newDestination,
+        },
+      ],
+    }),
+  }).catch((err) => {
+    throw new Error(err);
+  });
+
   newData.map((obj) => {
     if (obj.route === route) obj.status = "SUCCESS";
   });

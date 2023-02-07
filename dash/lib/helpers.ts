@@ -8,20 +8,20 @@ export const fetcher = (url: string) =>
     },
   }).then((r) => r.json());
 
-export function deleteObject(route: string, data) {
-  return data.filter((el) => el.key !== route);
+export function deleteObject(route: string, data: KVData[]) {
+  return data.filter((el) => el.route !== route);
 }
 
 export function mutateObject(
   toChange: string,
-  data,
+  data: KVData[],
   route: string,
   destination: string
 ) {
   if (toChange === "value") {
     data.map((obj) => {
-      if (obj.key === route) {
-        obj.value = destination;
+      if (obj.route === route) {
+        obj.destination = destination;
         obj.status = "PENDING";
       }
     });
@@ -29,9 +29,9 @@ export function mutateObject(
   return data;
 }
 
-export function error(data, route: string) {
+export function error(data: KVData[], route: string) {
   data.map((obj) => {
-    if (obj.key === route) obj.status = "FAIL";
+    if (obj.route === route) obj.status = "FAIL";
   });
   return data;
 }

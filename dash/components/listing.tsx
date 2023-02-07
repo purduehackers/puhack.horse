@@ -4,7 +4,7 @@ import { CheckSquare, Edit, XSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import usePrevious from "../hooks/use-previous";
-import { delAndPut, put } from "../lib/api";
+import { updateDestination, updateRoute } from "../lib/api";
 import { deleteObject, error, fetcher, mutateObject } from "../lib/helpers";
 import { KVData, Status } from "../types/types";
 import Erase from "./erase";
@@ -82,25 +82,20 @@ const Listing = ({
             if (route !== newRoute) {
               const filteredData = deleteObject(route, data);
               newData = filteredData
-                .concat({ key: newRoute, value: newDest, status: "PENDING" })
-                .sort((a, b) => a.key.localeCompare(b.key));
+                .concat({
+                  route: newRoute,
+                  destination: newDest,
+                  status: "PENDING",
+                })
+                .sort((a, b) => a.route.localeCompare(b.route));
             } else {
               newData = mutateObject("value", data, newRoute, newDest);
             }
             try {
               await mutate(
                 route !== newRoute
-                  ? delAndPut(
-                      `http://localhost:3000/api/get-all/${route}`,
-                      `http://localhost:3000/api/get-all/${newRoute}`,
-                      newDest,
-                      newData
-                    )
-                  : put(
-                      `http://localhost:3000/api/get-all/${newRoute}`,
-                      newDest,
-                      newData
-                    ),
+                  ? updateRoute(route, newRoute, newDest, newData)
+                  : updateDestination(newRoute, newDest, newData),
                 {
                   optimisticData: [...newData],
                   rollbackOnError: true,
