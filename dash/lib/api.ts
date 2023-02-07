@@ -1,7 +1,7 @@
 import { KVData } from "../types/types";
-import { delay } from "./helpers";
+import { delay, server } from "./helpers";
 
-const url = `http://localhost:3000/api/dash`;
+const url = `${server}/api/dash`;
 
 export async function add(
   route: string,

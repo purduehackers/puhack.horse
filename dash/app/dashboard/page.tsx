@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
 import RouteList from "../../components/route-list";
+import { server } from "../../lib/helpers";
 import { getCurrentUser } from "../../lib/session";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-  const data = await fetch("http://localhost:3000/api/dash", {
+  const data = await fetch(`${server}/api/dash`, {
     headers: {
       Authorization: `Bearer ${process.env.HORSE_SECRET}`,
     },

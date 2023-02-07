@@ -1,6 +1,6 @@
 "use client";
 import useSWR from "swr";
-import { fetcher } from "../lib/helpers";
+import { fetcher, server } from "../lib/helpers";
 import { KVData, User } from "../types/types";
 import Add from "./add";
 import EmojiMarquee from "./emoji-marquee";
@@ -8,7 +8,7 @@ import Listing from "./listing";
 import UserInfo from "./user-info";
 
 const RouteList = ({ fallback, user }: { fallback: KVData[]; user: User }) => {
-  const { data } = useSWR("http://localhost:3000/api/dash", fetcher, {
+  const { data } = useSWR(`${server}/api/dash`, fetcher, {
     suspense: true,
     fallbackData: fallback,
   });

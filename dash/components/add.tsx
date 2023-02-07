@@ -5,10 +5,10 @@ import useSWR from "swr";
 import * as Dialog from "@radix-ui/react-dialog";
 import { KVData } from "../types/types";
 import { add } from "../lib/api";
-import { fetcher } from "../lib/helpers";
+import { fetcher, server } from "../lib/helpers";
 
 const Add = ({ fallback }: { fallback: KVData[] }) => {
-  const { data, mutate } = useSWR("http://localhost:3000/api/dash", fetcher, {
+  const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
     suspense: true,
     fallbackData: fallback,
   });

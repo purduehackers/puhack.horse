@@ -2,11 +2,11 @@ import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { Eraser } from "lucide-react";
 import useSWR from "swr";
 import { del } from "../lib/api";
-import { fetcher } from "../lib/helpers";
+import { fetcher, server } from "../lib/helpers";
 import { KVData } from "../types/types";
 
 const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
-  const { data, mutate } = useSWR("http://localhost:3000/api/dash", fetcher, {
+  const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
     fallbackData: fallback,
   });
   return (

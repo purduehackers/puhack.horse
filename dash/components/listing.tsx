@@ -5,7 +5,13 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import usePrevious from "../hooks/use-previous";
 import { updateDestination, updateRoute } from "../lib/api";
-import { deleteObject, error, fetcher, mutateObject } from "../lib/helpers";
+import {
+  deleteObject,
+  error,
+  fetcher,
+  mutateObject,
+  server,
+} from "../lib/helpers";
 import { KVData, Status } from "../types/types";
 import Erase from "./erase";
 
@@ -20,7 +26,7 @@ const Listing = ({
   fallback: KVData[];
   status?: Status;
 }) => {
-  const { data, mutate } = useSWR("http://localhost:3000/api/dash", fetcher, {
+  const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
     fallbackData: fallback,
   });
 

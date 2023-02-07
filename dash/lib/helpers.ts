@@ -1,5 +1,10 @@
 import { KVData } from "../types/types";
 
+const dev = process.env.NODE_ENV !== "production";
+export const server = dev
+  ? "http://localhost:3000"
+  : "https://dash.puhack.horse";
+
 export const fetcher = (url: string) =>
   fetch(url, {
     method: "GET",
