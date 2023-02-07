@@ -1,4 +1,4 @@
-import { KVData } from "../types/types";
+import { ConfigData } from "../types/types";
 import { delay, server } from "./helpers";
 
 const url = `${server}/api/dash`;
@@ -6,7 +6,8 @@ const url = `${server}/api/dash`;
 export async function add(
   route: string,
   destination: string,
-  newData: KVData[]
+  visits: number,
+  newData: ConfigData[]
 ) {
   await fetch(url, {
     method: "PATCH",
@@ -18,7 +19,11 @@ export async function add(
         {
           operation: "create",
           key: route,
-          value: destination,
+          value: {
+            route,
+            destination,
+            visits,
+          },
         },
       ],
     }),
@@ -33,7 +38,7 @@ export async function add(
   return newData;
 }
 
-export async function del(key: string, newData: KVData[]) {
+export async function del(key: string, newData: ConfigData[]) {
   await fetch(url, {
     method: "PATCH",
     headers: {
@@ -57,7 +62,8 @@ export async function updateRoute(
   oldRoute: string,
   newRoute: string,
   destination: string,
-  newData: KVData[]
+  visits: number,
+  newData: ConfigData[]
 ) {
   await fetch(url, {
     method: "PATCH",
@@ -73,7 +79,11 @@ export async function updateRoute(
         {
           operation: "create",
           key: newRoute,
-          value: destination,
+          value: {
+            route: newRoute,
+            destination,
+            visits,
+          },
         },
       ],
     }),
@@ -90,7 +100,8 @@ export async function updateRoute(
 export async function updateDestination(
   route: string,
   newDestination: string,
-  newData: KVData[]
+  visits: number,
+  newData: ConfigData[]
 ) {
   await fetch(url, {
     method: "PATCH",
@@ -102,7 +113,11 @@ export async function updateDestination(
         {
           operation: "update",
           key: route,
-          value: newDestination,
+          value: {
+            route,
+            destination: newDestination,
+            visits,
+          },
         },
       ],
     }),
@@ -127,7 +142,7 @@ async function waitForPropagation(route: string) {
   // after the user added it.
   await delay(1000);
   let all = await fetch(url).then((r) => r.json());
-  while (!all.find((el: KVData) => el.route === route)) {
+  while (!all.find((el: ConfigData) => el.route === route)) {
     await delay(1000);
     all = await fetch(url).then((r) => r.json());
   }

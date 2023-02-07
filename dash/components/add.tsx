@@ -3,11 +3,11 @@ import { PlusIcon, X } from "lucide-react";
 import { useState } from "react";
 import useSWR from "swr";
 import * as Dialog from "@radix-ui/react-dialog";
-import { KVData } from "../types/types";
+import { ConfigData } from "../types/types";
 import { add } from "../lib/api";
 import { fetcher, server } from "../lib/helpers";
 
-const Add = ({ fallback }: { fallback: KVData[] }) => {
+const Add = ({ fallback }: { fallback: ConfigData[] }) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
     suspense: true,
     fallbackData: fallback,
@@ -85,11 +85,11 @@ const Add = ({ fallback }: { fallback: KVData[] }) => {
                       destination: destination,
                       status: "PENDING",
                     })
-                    .sort((a: KVData, b: KVData) =>
+                    .sort((a: ConfigData, b: ConfigData) =>
                       a.route.localeCompare(b.route)
                     );
                   try {
-                    await mutate(add(route, destination, newData), {
+                    await mutate(add(route, destination, 0, newData), {
                       optimisticData: [...newData],
                       rollbackOnError: true,
                       revalidate: true,

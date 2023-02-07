@@ -1,13 +1,19 @@
 "use client";
 import useSWR from "swr";
 import { fetcher, server } from "../lib/helpers";
-import { KVData, User } from "../types/types";
+import { ConfigData, User } from "../types/types";
 import Add from "./add";
 import EmojiMarquee from "./emoji-marquee";
 import Listing from "./listing";
 import UserInfo from "./user-info";
 
-const RouteList = ({ fallback, user }: { fallback: KVData[]; user: User }) => {
+const RouteList = ({
+  fallback,
+  user,
+}: {
+  fallback: ConfigData[];
+  user: User;
+}) => {
   const { data } = useSWR(`${server}/api/dash`, fetcher, {
     suspense: true,
     fallbackData: fallback,
@@ -50,15 +56,18 @@ const RouteList = ({ fallback, user }: { fallback: KVData[]; user: User }) => {
               <p className="flex-1 font-bold text-center pl-2">destination</p>
             </div>
             <div className="flex flex-col overflow-y-scroll max-h-[30rem]">
-              {data.map((kv: KVData) => (
-                <Listing
-                  key={kv.route}
-                  route={kv.route}
-                  destination={kv.destination}
-                  fallback={fallback}
-                  status={kv.status}
-                />
-              ))}
+              {data.map((kv: ConfigData) => {
+                return (
+                  <Listing
+                    key={kv.route}
+                    route={kv.route}
+                    destination={kv.destination}
+                    visits={kv.visits}
+                    fallback={fallback}
+                    status={kv.status}
+                  />
+                );
+              })}
             </div>
             <Add fallback={fallback} />
           </div>

@@ -6,9 +6,10 @@ export type User =
     }
   | undefined;
 
-export type KVData = {
+export type ConfigData = {
   route: string;
   destination: string;
+  visits: number;
   status?: Status;
 };
 

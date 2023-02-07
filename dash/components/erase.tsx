@@ -3,9 +3,15 @@ import { Eraser } from "lucide-react";
 import useSWR from "swr";
 import { del } from "../lib/api";
 import { fetcher, server } from "../lib/helpers";
-import { KVData } from "../types/types";
+import { ConfigData } from "../types/types";
 
-const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
+const Erase = ({
+  fallback,
+  route,
+}: {
+  fallback: ConfigData[];
+  route: string;
+}) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
     fallbackData: fallback,
   });
@@ -51,7 +57,7 @@ const Erase = ({ fallback, route }: { fallback: KVData[]; route: string }) => {
   );
 };
 
-function deleteObject(route: string, data: KVData[]) {
+function deleteObject(route: string, data: ConfigData[]) {
   return data.filter((el) => el.route !== route);
 }
 

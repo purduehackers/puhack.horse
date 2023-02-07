@@ -12,18 +12,20 @@ import {
   mutateObject,
   server,
 } from "../lib/helpers";
-import { KVData, Status } from "../types/types";
+import { ConfigData, Status } from "../types/types";
 import Erase from "./erase";
 
 const Listing = ({
   route,
   destination,
+  visits,
   fallback,
   status,
 }: {
   route: string;
   destination: string;
-  fallback: KVData[];
+  visits: number;
+  fallback: ConfigData[];
   status?: Status;
 }) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
@@ -87,6 +89,7 @@ const Listing = ({
                 .concat({
                   route: newRoute,
                   destination: newDest,
+                  visits,
                   status: "PENDING",
                 })
                 .sort((a, b) => a.route.localeCompare(b.route));
@@ -96,8 +99,8 @@ const Listing = ({
             try {
               await mutate(
                 route !== newRoute
-                  ? updateRoute(route, newRoute, newDest, newData)
-                  : updateDestination(newRoute, newDest, newData),
+                  ? updateRoute(route, newRoute, newDest, visits, newData)
+                  : updateDestination(newRoute, newDest, visits, newData),
                 {
                   optimisticData: [...newData],
                   rollbackOnError: true,

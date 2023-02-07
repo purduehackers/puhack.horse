@@ -12,15 +12,7 @@ export default async (req: NextRequest) => {
   // }
   if (req.method === "GET") {
     const configItems = await getAll();
-
-    let reformattedData = [];
-    for (const [key, value] of Object.entries(configItems)) {
-      reformattedData.push({
-        route: key,
-        destination: value,
-      });
-    }
-    return NextResponse.json(reformattedData);
+    return NextResponse.json(Object.values(configItems));
   } else if (req.method === "PATCH") {
     try {
       const data = await req.json();
