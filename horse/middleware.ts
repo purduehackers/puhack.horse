@@ -14,7 +14,7 @@ const server =
     : "http://localhost:3000";
 
 async function log(route: string, data: ConfigData) {
-  return fetch(`${server}/api/dash`, {
+  return await fetch(`${server}/api/dash`, {
     method: "PATCH",
     body: JSON.stringify({
       items: [
