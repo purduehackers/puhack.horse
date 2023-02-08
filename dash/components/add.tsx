@@ -11,6 +11,7 @@ const Add = ({ fallback }: { fallback: ConfigData[] }) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
     suspense: true,
     fallbackData: fallback,
+    refreshInterval: 10000,
   });
 
   const [route, setRoute] = useState("");

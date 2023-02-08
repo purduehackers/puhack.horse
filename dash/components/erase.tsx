@@ -14,6 +14,7 @@ const Erase = ({
 }) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
     fallbackData: fallback,
+    refreshInterval: 10000,
   });
   return (
     <AlertDialog.Root>
