@@ -132,14 +132,10 @@ export async function updateDestination(
 }
 
 async function waitForPropagation(route: string) {
-  // Cloudflare Workers KV is "eventually consistent", meaning
-  // changes will propagate eventually but may take up to 60 seconds.
-  // list()ing after adding a new key appears to be the slowest
-  // operation, taking up to 30 seconds for me while testing.
-  // This was causing problems when SWR was revalidating,
-  // because the new key wasn't there when it fetched the new data,
-  // so the row would disappear from the table for a while
-  // after the user added it.
+  // Writes to Edge Config can take a few seconds to propagate.
+  // This waits for the new route to appear in a `getAll()` call
+  // before returning data. If we didn't do this, the Optimistic UI
+  // would update, but the row would then disappear when it revalidated.
   await delay(1000);
   let all = await fetch(url).then((r) => r.json());
   while (!all.find((el: ConfigData) => el.route === route)) {

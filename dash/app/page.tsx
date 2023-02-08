@@ -12,7 +12,7 @@ async function Index() {
       <main className="flex w-full flex-1 flex-col gap-4 items-center justify-center px-20 text-center">
         <h1 className="text-4xl font-bold text-center">puhack.horse 🐴</h1>
         <div className="border-2 border-black bg-gray-200 p-2 rounded">
-          <p>Workers KV-based link shortener</p>
+          <p>Edge Config-based link shortener</p>
         </div>
         <SignInButton />
       </main>

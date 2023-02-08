@@ -44,11 +44,10 @@ const RouteList = ({
               </p>
               <p>
                 to edit something, just click on it in the table. your changes
-                will reflect on the dashboard immediately and update in
-                cloudflare workers kv in the background. some operations may
-                take up to 60 seconds for the dashboard to recognize they've
-                updated, but most of the time everything you change should be
-                available instantly.
+                will reflect on the dashboard immediately and update in edge
+                config in the background. some operations may take up to 60
+                seconds for the dashboard to recognize they've updated, but most
+                of the time everything you change should be available instantly.
               </p>
             </div>
             <div className="flex justify-center">
@@ -63,15 +62,15 @@ const RouteList = ({
               <p className="sm:w-20"></p>
             </div>
             <div className="flex flex-col overflow-y-scroll max-h-[30rem]">
-              {data.map((kv: ConfigData) => (
+              {data.map((listing: ConfigData) => (
                 <Listing
-                  key={kv.route}
-                  route={kv.route}
-                  destination={kv.destination}
-                  visits={kv.visits}
+                  key={listing.route}
+                  route={listing.route}
+                  destination={listing.destination}
+                  visits={listing.visits}
                   fallback={fallback}
                   fetchedBefore={fetchedBefore}
-                  status={kv.status}
+                  status={listing.status}
                 />
               ))}
             </div>

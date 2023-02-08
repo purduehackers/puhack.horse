@@ -51,7 +51,7 @@ const Add = ({ fallback }: { fallback: ConfigData[] }) => {
           <Dialog.Title className="DialogTitle">Add route</Dialog.Title>
           <Dialog.Description className="DialogDescription">
             Your changes will appear on the dashboard instantly, but it may take
-            up to 60 seconds for them to reflect in KV.
+            up to 60 seconds for them to reflect in Edge Config.
           </Dialog.Description>
           <fieldset className="Fieldset">
             <label className="Label" htmlFor="route">

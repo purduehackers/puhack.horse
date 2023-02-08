@@ -15,7 +15,3 @@ export type ConfigData = {
 
 const StatusItems = ["PENDING", "SUCCESS", "FAIL", "NEUTRAL"];
 export type Status = typeof StatusItems[number];
-
-export type KVList = {
-  name: string;
-}[];
