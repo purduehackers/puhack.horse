@@ -136,7 +136,7 @@ const Listing = ({
     <div className="flex flex-row h-16 first:border-t-0 items-center border-t-2 border-black rounded-sm break-all group bg-gray-200">
       <input
         onChange={(e) => setNewRoute(e.target.value)}
-        className="text-sm outline-none w-5/12 sm:w-1/4 pl-2 pr-4 bg-gray-200 border-r-2 border-black h-full"
+        className="text-sm outline-none w-5/12 sm:w-1/4 pl-2 pr-4 pb-5 bg-gray-200 border-r-2 border-black h-full"
         value={newRoute}
         autoFocus={whichEdit === "ROUTE"}
         onKeyDown={(e) => {
