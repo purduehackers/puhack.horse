@@ -9,15 +9,15 @@ import Listing from "./listing";
 import UserInfo from "./user-info";
 
 const RouteList = ({
-  fallback,
+  fallbackData,
   user,
 }: {
-  fallback: ConfigData[];
+  fallbackData: ConfigData[];
   user: User;
 }) => {
   const { data } = useSWR(`${server}/api/dash`, fetcher, {
     suspense: true,
-    fallbackData: fallback,
+    fallbackData,
     refreshInterval: 10000,
   });
 
@@ -69,13 +69,13 @@ const RouteList = ({
                   route={listing.route}
                   destination={listing.destination}
                   visits={listing.visits}
-                  fallback={fallback}
+                  fallbackData={fallbackData}
                   fetchedBefore={fetchedBefore}
                   status={listing.status}
                 />
               ))}
             </div>
-            <Add fallback={fallback} />
+            <Add fallbackData={fallbackData} />
           </div>
         </div>
       </div>

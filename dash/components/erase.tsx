@@ -6,14 +6,14 @@ import { fetcher, server } from "../lib/helpers";
 import { ConfigData } from "../types/types";
 
 const Erase = ({
-  fallback,
+  fallbackData,
   route,
 }: {
-  fallback: ConfigData[];
+  fallbackData: ConfigData[];
   route: string;
 }) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
-    fallbackData: fallback,
+    fallbackData,
     refreshInterval: 10000,
   });
   return (

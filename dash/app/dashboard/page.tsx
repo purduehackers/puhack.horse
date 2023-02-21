@@ -15,5 +15,5 @@ export default async function DashboardPage() {
     redirect("/");
   }
 
-  return <RouteList fallback={data} user={user} />;
+  return <RouteList fallbackData={data} user={user} />;
 }

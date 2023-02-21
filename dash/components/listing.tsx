@@ -19,19 +19,19 @@ const Listing = ({
   route,
   destination,
   visits,
-  fallback,
+  fallbackData,
   fetchedBefore,
   status,
 }: {
   route: string;
   destination: string;
   visits: number;
-  fallback: ConfigData[];
+  fallbackData: ConfigData[];
   fetchedBefore: boolean;
   status?: Status;
 }) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
-    fallbackData: fallback,
+    fallbackData,
     refreshInterval: 10000,
   });
 
@@ -166,7 +166,7 @@ const Listing = ({
             }
           }}
         ></textarea>
-        <button className="p-1" onClick={async () => handleMutate}>
+        <button className="p-1" onClick={handleMutate}>
           <CheckSquare size="26px" color="#22c55e" />
         </button>
         <button
@@ -232,7 +232,7 @@ const Listing = ({
         >
           <Edit size="22px" />
         </button>
-        <Erase fallback={fallback} route={route} />
+        <Erase fallbackData={fallbackData} route={route} />
       </div>
       <div
         className={`border-l-2 w-20 border-black py-2 hidden sm:block font-bold ${

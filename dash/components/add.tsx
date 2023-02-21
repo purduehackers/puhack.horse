@@ -7,10 +7,10 @@ import { ConfigData } from "../types/types";
 import { add } from "../lib/api";
 import { fetcher, server } from "../lib/helpers";
 
-const Add = ({ fallback }: { fallback: ConfigData[] }) => {
+const Add = ({ fallbackData }: { fallbackData: ConfigData[] }) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
     suspense: true,
-    fallbackData: fallback,
+    fallbackData,
     refreshInterval: 10000,
   });
 
@@ -22,8 +22,8 @@ const Add = ({ fallback }: { fallback: ConfigData[] }) => {
     setDestination("");
     const newData = data
       .concat({
-        route: route,
-        destination: destination,
+        route,
+        destination,
         visits: 0,
         status: "PENDING",
       })
