@@ -8,7 +8,7 @@ async function Index() {
     return redirect("/dashboard");
   }
   return (
-    <div className="flex h-screen flex-col items-center justify-center py-2 font-main">
+    <div className="flex h-screen flex-col items-center justify-center py-2">
       <main className="flex w-full flex-1 flex-col gap-4 items-center justify-center px-4 md:px-20">
         <h1 className="text-amber-600 font-mono text-3xl sm:text-6xl font-bold">
           <span className="select-none inline-block shake">🐴</span>{" "}

@@ -52,7 +52,6 @@
   color: var(--mauve12);
   font-size: 17px;
   font-weight: 500;
-  @apply font-main;
 }
 
 .AlertDialogDescription {
@@ -60,7 +59,6 @@
   color: var(--mauve12);
   font-size: 15px;
   line-height: 1.5;
-  @apply font-main;
 }
 
 .Button {
@@ -73,7 +71,6 @@
   line-height: 1;
   font-weight: 500;
   height: 35px;
-  @apply font-main;
 }
 .Button.violet {
   background-color: white;
@@ -145,7 +142,6 @@ fieldset,
   font-weight: 500;
   color: var(--mauve12);
   font-size: 17px;
-  @apply font-main;
 }
 
 .DialogDescription {
@@ -153,7 +149,6 @@ fieldset,
   color: var(--mauve11);
   font-size: 15px;
   line-height: 1.5;
-  @apply font-main;
 }
 
 .Button {
@@ -219,7 +214,6 @@ fieldset,
   gap: 20px;
   align-items: center;
   margin-bottom: 15px;
-  @apply font-main;
 }
 
 .Label {
