@@ -13,5 +13,6 @@ export type ConfigData = {
   status?: Status;
 };
 
-const StatusItems = ["PENDING", "SUCCESS", "FAIL", "NEUTRAL"];
-export type Status = typeof StatusItems[number];
+export type Status = "PENDING" | "SUCCESS" | "FAIL" | "NEUTRAL";
+
+export type EditItem = "ROUTE" | "DESTINATION";

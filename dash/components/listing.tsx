@@ -12,7 +12,7 @@ import {
   mutateObject,
   server,
 } from "../lib/helpers";
-import { ConfigData, Status } from "../types/types";
+import { ConfigData, EditItem, Status } from "../types/types";
 import Erase from "./erase";
 
 const Listing = ({
@@ -36,10 +36,10 @@ const Listing = ({
   });
 
   const [edit, setEdit] = useState(false);
-  const [whichEdit, setWhichEdit] = useState("DESTINATION");
+  const [editItem, setEditItem] = useState<EditItem>("DESTINATION");
   const [newRoute, setNewRoute] = useState(route);
   const [newDest, setNewDest] = useState(destination);
-  const [newVisit, setNewVisit] = useState(false);
+  const [isNewVisit, setIsNewVisit] = useState(false);
   const [color, setColor] = useState("white");
 
   const [currentStatus, setCurrentStatus] = useState(status);
@@ -49,9 +49,9 @@ const Listing = ({
 
   useEffect(() => {
     if (prevVisits && visits !== prevVisits) {
-      setNewVisit(true);
+      setIsNewVisit(true);
       setTimeout(() => {
-        setNewVisit(false);
+        setIsNewVisit(false);
       }, 2000);
     }
   }, [visits]);
@@ -139,7 +139,7 @@ const Listing = ({
         onChange={(e) => setNewRoute(e.target.value)}
         className="text-sm outline-none w-5/12 sm:w-1/4 pl-2 pr-4 pb-5 bg-gray-200 border-r-2 border-black h-full"
         value={newRoute}
-        autoFocus={whichEdit === "ROUTE"}
+        autoFocus={editItem === "ROUTE"}
         onKeyDown={(e) => {
           if (e.key === "Escape") {
             setEdit(false);
@@ -155,7 +155,7 @@ const Listing = ({
           onChange={(e) => setNewDest(e.target.value)}
           className="text-sm outline-none rounded font-mono p-2 w-full resize-none bg-gray-200"
           value={newDest}
-          autoFocus={whichEdit === "DESTINATION"}
+          autoFocus={editItem === "DESTINATION"}
           onKeyDown={(e) => {
             if (e.key === "Escape") {
               setEdit(false);
@@ -193,7 +193,7 @@ const Listing = ({
           setEdit(true);
           setNewRoute(route);
           setNewDest(destination);
-          setWhichEdit("ROUTE");
+          setEditItem("ROUTE");
         }}
       >
         {route}
@@ -207,7 +207,7 @@ const Listing = ({
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
-            setWhichEdit("DESTINATION");
+            setEditItem("DESTINATION");
           }}
         >
           {newDest}
@@ -218,7 +218,7 @@ const Listing = ({
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
-            setWhichEdit("DESTINATION");
+            setEditItem("DESTINATION");
           }}
         ></div>
         <button
@@ -227,7 +227,7 @@ const Listing = ({
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
-            setWhichEdit("DESTINATION");
+            setEditItem("DESTINATION");
           }}
         >
           <Edit size="22px" />
@@ -236,7 +236,7 @@ const Listing = ({
       </div>
       <div
         className={`border-l-2 w-20 border-black py-2 hidden sm:block font-bold ${
-          newVisit && "bg-blue-300"
+          isNewVisit && "bg-blue-300"
         } transition duration-100`}
       >
         <p className="text-sm pl-2">{visits}</p>
