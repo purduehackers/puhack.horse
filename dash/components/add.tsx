@@ -1,5 +1,5 @@
 "use client";
-import { PlusIcon, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import useSWR from "swr";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -42,7 +42,7 @@ const Add = ({ fallbackData }: { fallbackData: ConfigData[] }) => {
     <Dialog.Root>
       <Dialog.Trigger asChild>
         <div className="py-2 pl-2 bg-amber-500 font-bold flex flex-row items-center gap-1 hover:bg-amber-400 transition duration-100 cursor-pointer sticky w-full bottom-0 border-t-[3px] border-black">
-          <PlusIcon />
+          <Plus />
           <p>add</p>
         </div>
       </Dialog.Trigger>
