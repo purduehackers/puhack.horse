@@ -13,6 +13,7 @@ export async function add(
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_HORSE_SECRET}`,
     },
     body: JSON.stringify({
       items: [
@@ -43,6 +44,7 @@ export async function del(route: string, newData: ConfigData[]) {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_HORSE_SECRET}`,
     },
     body: JSON.stringify({
       items: [
@@ -70,6 +72,7 @@ export async function updateRoute(
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_HORSE_SECRET}`,
     },
     body: JSON.stringify({
       items: [
@@ -108,6 +111,7 @@ export async function updateDestination(
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_HORSE_SECRET}`,
     },
     body: JSON.stringify({
       items: [

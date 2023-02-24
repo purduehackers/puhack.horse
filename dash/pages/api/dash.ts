@@ -2,18 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAll } from "@vercel/edge-config";
 
 export default async (req: NextRequest) => {
-  // const authorization = req.headers.get("Authorization");
-  // if (authorization !== `Bearer ${process.env.HORSE_SECRET}`) {
-  //   console.log("huh????", authorization);
-  //   return new Response(null, {
-  //     status: 403,
-  //     statusText: `You need an API key to access this!!!!`,
-  //   });
-  // }
   if (req.method === "GET") {
     const configItems = await getAll();
     return NextResponse.json(Object.values(configItems));
   } else if (req.method === "PATCH") {
+    const authorization = req.headers.get("Authorization");
+    if (!authorization) {
+      return new Response(null, {
+        status: 400,
+        statusText: `You need an API key to access this!!!!`,
+      });
+    } else if (authorization !== `Bearer ${process.env.HORSE_SECRET}`) {
+      return new Response(null, {
+        status: 403,
+        statusText: `Incorrect API key!!!!!!!!!!`,
+      });
+    }
     try {
       const data = await req.json();
       const { items } = data;
