@@ -18,9 +18,6 @@ async function log(req: NextRequest, route: string, data: ConfigData) {
   if (isbot(req.headers.get("User-Agent"))) return;
   return fetch(`${server}/api/dash`, {
     method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${process.env.HORSE_SECRET}`,
-    },
     body: JSON.stringify({
       items: [
         {
