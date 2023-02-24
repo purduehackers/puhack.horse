@@ -38,7 +38,7 @@ export async function add(
   return newData;
 }
 
-export async function del(key: string, newData: ConfigData[]) {
+export async function del(route: string, newData: ConfigData[]) {
   await fetch(url, {
     method: "PATCH",
     headers: {
@@ -48,13 +48,14 @@ export async function del(key: string, newData: ConfigData[]) {
       items: [
         {
           operation: "delete",
-          key,
+          key: route,
         },
       ],
     }),
   }).catch((err) => {
     throw new Error(`${err}`);
   });
+  await waitForPropagation(route, false);
   return newData;
 }
 
@@ -131,14 +132,18 @@ export async function updateDestination(
   return newData;
 }
 
-async function waitForPropagation(route: string) {
+async function waitForPropagation(route: string, add = true) {
   // Writes to Edge Config can take a few seconds to propagate.
   // This waits for the new route to appear in a `getAll()` call
   // before returning data. If we didn't do this, the Optimistic UI
   // would update, but the row would then disappear when it revalidated.
   await delay(1000);
   let all = await fetch(url).then((r) => r.json());
-  while (!all.find((el: ConfigData) => el.route === route)) {
+  while (
+    add
+      ? !all.find((el: ConfigData) => el.route === route)
+      : all.find((el: ConfigData) => el.route === route)
+  ) {
     await delay(1000);
     all = await fetch(url).then((r) => r.json());
   }
