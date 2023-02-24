@@ -1,6 +1,7 @@
 import { NextResponse, NextFetchEvent } from "next/server";
 import type { NextRequest } from "next/server";
 import { get } from "@vercel/edge-config";
+import isbot from "isbot";
 
 type ConfigData = {
   route: string;
@@ -13,7 +14,8 @@ const server =
     ? "https://dash.puhack.horse"
     : "http://localhost:3000";
 
-async function log(route: string, data: ConfigData) {
+async function log(req: NextRequest, route: string, data: ConfigData) {
+  if (isbot(req.headers.get("User-Agent"))) return;
   return fetch(`${server}/api/dash`, {
     method: "PATCH",
     body: JSON.stringify({
@@ -39,7 +41,7 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
 
     ev.waitUntil(
       (async () => {
-        return log(route, data);
+        return log(req, route, data);
       })()
     );
 
