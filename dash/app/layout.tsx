@@ -1,10 +1,13 @@
 import type { PropsWithChildren } from "react";
 import "../styles/globals.css";
 
+export const metadata = {
+  title: "puhack.horse",
+};
+
 async function Layout({ children }: PropsWithChildren<{}>) {
   return (
     <html lang="en-US">
-      <head />
       <body>{children}</body>
     </html>
   );
