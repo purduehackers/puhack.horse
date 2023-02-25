@@ -29,6 +29,7 @@ module.exports = {
       },
       boxShadow: {
         container: "6px 6px",
+        button: "2px 2px",
       },
       animation: {
         marquee: "marquee 25s linear infinite",
