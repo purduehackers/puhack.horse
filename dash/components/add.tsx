@@ -1,13 +1,21 @@
 "use client";
 import { Plus, X } from "lucide-react";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import useSWR from "swr";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ConfigData } from "../types/types";
 import { add } from "../lib/api";
 import { fetcher, server } from "../lib/helpers";
 
-const Add = ({ fallbackData }: { fallbackData: ConfigData[] }) => {
+const Add = ({
+  open,
+  setOpen,
+  fallbackData,
+}: {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  fallbackData: ConfigData[];
+}) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
     suspense: true,
     fallbackData,
@@ -39,7 +47,7 @@ const Add = ({ fallbackData }: { fallbackData: ConfigData[] }) => {
   }
 
   return (
-    <Dialog.Root>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
         <div className="py-2 pl-2 bg-amber-500 font-bold flex flex-row items-center gap-1 hover:bg-amber-400 transition duration-100 cursor-pointer sticky w-full bottom-0 border-t-[3px] border-black">
           <Plus />

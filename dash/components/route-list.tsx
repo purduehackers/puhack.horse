@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher, server } from "../lib/helpers";
 import { ConfigData, User } from "../types/types";
@@ -25,6 +25,15 @@ const RouteList = ({
   useEffect(() => {
     if (!fetchedBefore) setFetchedBefore(true);
   }, [data]);
+
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey && e.shiftKey && e.key === "a") || e.key === "A") {
+        setAddDialogOpen(true);
+      }
+    });
+  });
 
   return (
     <div className="flex flex-col">
@@ -75,7 +84,11 @@ const RouteList = ({
                 />
               ))}
             </div>
-            <Add fallbackData={fallbackData} />
+            <Add
+              open={addDialogOpen}
+              setOpen={setAddDialogOpen}
+              fallbackData={fallbackData}
+            />
           </div>
         </div>
       </div>
