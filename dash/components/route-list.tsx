@@ -29,7 +29,11 @@ const RouteList = ({
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   useEffect(() => {
     document.addEventListener("keydown", (e) => {
-      if ((e.ctrlKey && e.shiftKey && e.key === "a") || e.key === "A") {
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        e.shiftKey &&
+        (e.key === "a" || e.key === "A")
+      ) {
         setAddDialogOpen(true);
       }
     });
