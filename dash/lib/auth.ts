@@ -1,6 +1,10 @@
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions, Profile } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import isInOrg from "./is-in-org";
+
+interface ProfileWithLogin extends Profile {
+  login: string | null | undefined;
+}
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -17,7 +21,8 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      return await isInOrg(user.email);
+      const githubProfile = profile as ProfileWithLogin | undefined;
+      return await isInOrg(githubProfile?.login);
     },
     async redirect({ url, baseUrl }) {
       return "/dashboard";
