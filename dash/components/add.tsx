@@ -95,7 +95,7 @@ const Add = ({ fallbackData }: { fallbackData: ConfigData[] }) => {
           <div className="mt-[25px] flex justify-end">
             <Dialog.Close asChild>
               <button
-                className="bg-green4 text-green11 disabled:bg-mauve4 disabled:text-mauve11 hover:bg-green5 focus:shadow-black inline-flex h-[35px] items-center justify-center rounded-sm border-2 border-black focus:border-[3px] shadow-button px-[15px] font-medium leading-none focus:outline-none"
+                className="bg-green4 text-green11 disabled:bg-mauve4 disabled:text-mauve11 hover:bg-green5 focus:shadow-black inline-flex h-[35px] items-center justify-center rounded-sm border-2 border-black focus:border-[2.5px] shadow-button shadow-gray-800/80 px-[15px] font-medium leading-none focus:outline-none"
                 disabled={route === "" || destination === ""}
                 onClick={handleSubmit}
               >
