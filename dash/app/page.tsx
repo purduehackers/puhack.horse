@@ -19,7 +19,7 @@ async function Index() {
           <p>Hello!!!! You've found the admin dashboard for puhack.horse</p>
           <p>
             You can only access this if you're on the Core team in the Purdue
-            hackers GitHub org. If you think you should be in there, but can't
+            Hackers GitHub org. If you think you should be in there, but can't
             access the dashboard, ping @matthew!!!
           </p>
         </div>
