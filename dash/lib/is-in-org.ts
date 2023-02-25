@@ -13,7 +13,7 @@ const isInOrg = async (email: string | null | undefined): Promise<boolean> => {
     per_page: 100,
   });
   const member = members.data.filter((acc) => acc.email === email);
-  return member !== null;
+  return member.length > 0;
 };
 
 export default isInOrg;
