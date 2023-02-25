@@ -1,6 +1,6 @@
 # puhack.horse
 
-🔗🐴 A link shortener powered by Vercel Edge Config.
+🔗🐴 A link shortener powered by [Vercel Edge Config](https://vercel.com/blog/edge-config-ultra-low-latency-data-at-the-edge).
 
 This is a monorepo with two repositories:
 
