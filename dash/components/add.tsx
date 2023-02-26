@@ -61,8 +61,8 @@ const Add = ({
             Add route
           </Dialog.Title>
           <Dialog.Description className="text-mauve11 mt-[10px] mb-5 text-[15px] leading-normal">
-            Your changes will appear on the dashboard instantly, but it may take
-            up to 60 seconds for them to reflect in Edge Config.
+            Your changes will appear on the dashboard instantly, but it will
+            take a few seconds for them to reflect in Edge Config.
           </Dialog.Description>
           <fieldset className="mb-[15px] flex items-center gap-5">
             <label
