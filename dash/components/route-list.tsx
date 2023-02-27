@@ -59,9 +59,8 @@ const RouteList = ({
               <p>
                 to edit something, just click on it in the table. your changes
                 will reflect on the dashboard immediately and update in edge
-                config in the background. some operations may take up to 60
-                seconds for the dashboard to recognize they've updated, but most
-                of the time everything you change should be available instantly.
+                config in the background. it will take a few seconds to
+                propagate, but shouldn't take longer than that.
               </p>
             </div>
             <div className="flex justify-center">
