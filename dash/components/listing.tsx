@@ -32,7 +32,6 @@ const Listing = ({
 }) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
     fallbackData,
-    refreshInterval: 10000,
   });
 
   const [edit, setEdit] = useState(false);

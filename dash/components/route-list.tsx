@@ -18,7 +18,6 @@ const RouteList = ({
   const { data } = useSWR(`${server}/api/dash`, fetcher, {
     suspense: true,
     fallbackData,
-    refreshInterval: 10000,
   });
 
   const [fetchedBefore, setFetchedBefore] = useState(false);

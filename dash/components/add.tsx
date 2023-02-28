@@ -19,7 +19,6 @@ const Add = ({
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
     suspense: true,
     fallbackData,
-    refreshInterval: 10000,
   });
 
   const [route, setRoute] = useState("");
