@@ -29,7 +29,8 @@ const Erase = ({
             Delete route
           </AlertDialog.Title>
           <AlertDialog.Description className="text-mauve11 mt-4 mb-5 text-[15px] leading-normal">
-            Are you sure you want to delete this route?
+            Are you sure you want to delete the route{" "}
+            {<span className="font-bold text-black">{route}</span>}?
           </AlertDialog.Description>
           <div className="flex justify-end gap-[25px]">
             <AlertDialog.Cancel asChild>
