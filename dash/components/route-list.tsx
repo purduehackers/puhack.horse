@@ -1,5 +1,5 @@
 "use client";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher, server } from "../lib/helpers";
 import { ConfigData, User } from "../types/types";
