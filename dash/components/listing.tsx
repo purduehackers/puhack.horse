@@ -1,7 +1,7 @@
 "use client";
 
-import { CheckSquare, Edit, XSquare } from "lucide-react";
-import { useEffect, useState } from "react";
+import { CheckSquare, Edit, Eraser, XSquare } from "lucide-react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import useSWR from "swr";
 import usePrevious from "../hooks/use-previous";
 import { updateDestination, updateRoute } from "../lib/api";
@@ -12,23 +12,27 @@ import {
   mutateObject,
   server,
 } from "../lib/helpers";
-import { ConfigData, EditItem, Status } from "../types/types";
+import { ConfigData, EditItem, Status, User } from "../types/types";
 import Erase from "./erase";
 
 const Listing = ({
+  user,
   route,
   destination,
   visits,
   fallbackData,
   fetchedBefore,
   status,
+  setSignInModalOpen,
 }: {
+  user: User;
   route: string;
   destination: string;
   visits: number;
   fallbackData: ConfigData[];
   fetchedBefore: boolean;
   status?: Status;
+  setSignInModalOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
     fallbackData,
@@ -85,6 +89,12 @@ const Listing = ({
   async function handleMutate() {
     setEdit(false);
     if (newRoute === route && newDest === destination) return;
+    if (!user) {
+      setNewRoute(route);
+      setNewDest(destination);
+      return setSignInModalOpen(true);
+    }
+
     setColor("amber-300");
     let newData;
     if (route !== newRoute) {
@@ -231,7 +241,16 @@ const Listing = ({
         >
           <Edit size="22px" />
         </button>
-        <Erase fallbackData={fallbackData} route={route} />
+        {user ? (
+          <Erase fallbackData={fallbackData} route={route} />
+        ) : (
+          <button
+            className="text-xs py-1 mr-3 invisible group-hover:visible"
+            onClick={() => setSignInModalOpen(true)}
+          >
+            <Eraser size="22px" />
+          </button>
+        )}
       </div>
       <div
         className={`border-l-2 w-20 border-black py-2 hidden sm:block font-bold ${

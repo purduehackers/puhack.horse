@@ -24,8 +24,5 @@ export const authOptions: NextAuthOptions = {
       const githubProfile = profile as ProfileWithLogin | undefined;
       return await isInOrg(githubProfile?.login);
     },
-    async redirect({ url, baseUrl }) {
-      return "/dashboard";
-    },
   },
 };

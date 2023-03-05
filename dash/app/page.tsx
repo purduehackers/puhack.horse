@@ -1,32 +1,49 @@
-import { redirect } from "next/navigation";
-import SignInButton from "../components/sign-in-button";
+import EmojiMarquee from "../components/emoji-marquee";
+import RouteList from "../components/route-list";
+import UserInfo from "../components/user/user-info";
+import { server } from "../lib/helpers";
 import { getCurrentUser } from "../lib/session";
 
-async function Index() {
+export default async function Index() {
   const user = await getCurrentUser();
-  if (user) {
-    return redirect("/dashboard");
-  }
+  const data = await fetch(`${server}/api/dash`, {
+    headers: {
+      Authorization: `Bearer ${process.env.HORSE_SECRET}`,
+    },
+  }).then((r) => r.json());
+
   return (
-    <div className="flex h-screen flex-col items-center justify-center py-2">
-      <main className="flex w-full flex-1 flex-col gap-4 items-center justify-center px-4 md:px-20">
-        <h1 className="text-amber-600 font-mono text-3xl sm:text-6xl font-bold">
-          <span className="select-none inline-block shake">🐴</span>{" "}
-          puhack.horse{" "}
-          <span className="select-none inline-block shake">🐴</span>
-        </h1>
-        <div className="border-2 border-black bg-gray-200 p-2 rounded max-w-lg flex flex-col gap-2">
-          <p>Hello!!!! You've found the admin dashboard for puhack.horse</p>
-          <p>
-            You can only access this if you're on the Core team in the Purdue
-            Hackers GitHub org. If you think you should be in there, but can't
-            access the dashboard, ping @matthew!!!
-          </p>
+    <div className="flex flex-col">
+      <UserInfo user={user} />
+      <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col items-center lg:items-start justify-center lg:flex-row w-full lg:w-11/12 xl:w-full gap-x-8">
+          <div className="flex flex-col gap-4 mx-4 max-w-sm">
+            <h1 className="text-center text-amber-600 font-mono text-3xl sm:text-4xl font-bold">
+              <span className="select-none inline-block shake">🐴</span>{" "}
+              puhack.horse{" "}
+              <span className="select-none inline-block shake">🐴</span>
+            </h1>
+            <hr className="h-1 border-0 bg-gray-600 rounded-sm" />
+            <div className="flex flex-col gap-2">
+              <p>
+                this is the dashboard for purdue hackers' link shortener.
+                welcome!!!
+              </p>
+              <p>
+                to edit something, just click on it in the table. your changes
+                will reflect on the dashboard immediately and update in edge
+                config in the background. it will take a few seconds to
+                propagate, but shouldn't take longer than that.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <EmojiMarquee large={true} />
+            </div>
+          </div>
+          <EmojiMarquee />
+          <RouteList fallbackData={data} user={user} />
         </div>
-        <SignInButton />
-      </main>
+      </div>
     </div>
   );
 }
-
-export default Index;
