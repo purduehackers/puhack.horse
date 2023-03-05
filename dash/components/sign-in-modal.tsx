@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { signIn } from "next-auth/react";
 
-const Add = ({
+const SignInModal = ({
   open,
   setOpen,
 }: {
@@ -46,4 +46,4 @@ const Add = ({
   );
 };
 
-export default Add;
+export default SignInModal;
