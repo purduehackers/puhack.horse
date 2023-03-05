@@ -1,6 +1,6 @@
 "use client";
 import { Plus, X } from "lucide-react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import useSWR from "swr";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ConfigData } from "../types/types";

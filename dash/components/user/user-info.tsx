@@ -1,4 +1,3 @@
-import { signOut } from "next-auth/react";
 import { User } from "../../types/types";
 import SignInButton from "../sign-in-button";
 import SignOutButton from "./sign-out-button";
