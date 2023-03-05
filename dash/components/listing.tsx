@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckSquare, Edit, Eraser, XSquare } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import useSWR from "swr";
 import usePrevious from "../hooks/use-previous";
 import { updateDestination, updateRoute } from "../lib/api";
@@ -23,6 +23,7 @@ const Listing = ({
   fallbackData,
   fetchedBefore,
   status,
+  setSignInModalOpen,
 }: {
   user: User;
   route: string;
@@ -31,6 +32,7 @@ const Listing = ({
   fallbackData: ConfigData[];
   fetchedBefore: boolean;
   status?: Status;
+  setSignInModalOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
     fallbackData,
@@ -86,7 +88,11 @@ const Listing = ({
 
   async function handleMutate() {
     setEdit(false);
-    if (!user) return;
+    if (!user) {
+      setNewRoute(route);
+      setNewDest(destination);
+      return setSignInModalOpen(true);
+    }
     if (newRoute === route && newDest === destination) return;
     setColor("amber-300");
     let newData;
@@ -237,7 +243,10 @@ const Listing = ({
         {user ? (
           <Erase fallbackData={fallbackData} route={route} />
         ) : (
-          <button className="text-xs py-1 mr-3 invisible group-hover:visible">
+          <button
+            className="text-xs py-1 mr-3 invisible group-hover:visible"
+            onClick={() => setSignInModalOpen(true)}
+          >
             <Eraser size="22px" />
           </button>
         )}

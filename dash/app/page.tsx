@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import EmojiMarquee from "../components/emoji-marquee";
 import RouteList from "../components/route-list";
 import UserInfo from "../components/user/user-info";

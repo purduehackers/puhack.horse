@@ -6,6 +6,7 @@ import { fetcher, server } from "../lib/helpers";
 import { ConfigData, User } from "../types/types";
 import Add from "./add";
 import Listing from "./listing";
+import SignInModal from "./sign-in-modal";
 
 const RouteList = ({
   fallbackData,
@@ -18,6 +19,8 @@ const RouteList = ({
     suspense: true,
     fallbackData,
   });
+
+  const [signInModalOpen, setSignInModalOpen] = useState(false);
 
   const [fetchedBefore, setFetchedBefore] = useState(false);
   useEffect(() => {
@@ -55,6 +58,7 @@ const RouteList = ({
             fallbackData={fallbackData}
             fetchedBefore={fetchedBefore}
             status={listing.status}
+            setSignInModalOpen={setSignInModalOpen}
           />
         ))}
       </div>
@@ -65,10 +69,16 @@ const RouteList = ({
           fallbackData={fallbackData}
         />
       ) : (
-        <div className="py-2 pl-2 bg-amber-500 font-bold flex flex-row items-center gap-1 hover:bg-amber-400 transition duration-100 cursor-pointer sticky w-full bottom-0 border-t-[3px] border-black">
-          <Plus />
-          <p>add</p>
-        </div>
+        <>
+          <SignInModal open={signInModalOpen} setOpen={setSignInModalOpen} />
+          <div
+            className="py-2 pl-2 bg-amber-500 font-bold flex flex-row items-center gap-1 hover:bg-amber-400 transition duration-100 cursor-pointer sticky w-full bottom-0 border-t-[3px] border-black"
+            onClick={() => setSignInModalOpen(true)}
+          >
+            <Plus />
+            <p>add</p>
+          </div>
+        </>
       )}
     </div>
   );
