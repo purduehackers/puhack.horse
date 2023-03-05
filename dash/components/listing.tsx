@@ -88,12 +88,13 @@ const Listing = ({
 
   async function handleMutate() {
     setEdit(false);
+    if (newRoute === route && newDest === destination) return;
     if (!user) {
       setNewRoute(route);
       setNewDest(destination);
       return setSignInModalOpen(true);
     }
-    if (newRoute === route && newDest === destination) return;
+
     setColor("amber-300");
     let newData;
     if (route !== newRoute) {
