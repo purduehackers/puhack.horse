@@ -6,7 +6,7 @@ import { fetcher, server } from "../lib/helpers";
 import { ConfigData, User } from "../types/types";
 import Add from "./add";
 import Listing from "./listing";
-import SignInModal from "./sign-in-modal";
+import SignInModal from "./sign-in-modal/sign-in-modal";
 
 const RouteList = ({
   fallbackData,

@@ -1,8 +1,7 @@
-"use client";
 import { X } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { signIn } from "next-auth/react";
+import SignInButton from "./sign-in-button";
 
 const SignInModal = ({
   open,
@@ -24,12 +23,7 @@ const SignInModal = ({
           </Dialog.Description>
           <div className="mt-[25px] flex justify-center">
             <Dialog.Close asChild>
-              <button
-                className="bg-amber4 text-amber11 disabled:bg-mauve4 disabled:text-mauve11 hover:bg-amber5 focus:shadow-black inline-flex h-[35px] items-center justify-center rounded-sm border-2 border-black focus:border-[2.5px] shadow-button shadow-gray-800/80 px-[15px] font-medium leading-none focus:outline-none"
-                onClick={() => signIn("github")}
-              >
-                Sign In
-              </button>
+              <SignInButton />
             </Dialog.Close>
           </div>
           <Dialog.Close asChild>
