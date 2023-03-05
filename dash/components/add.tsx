@@ -71,12 +71,13 @@ const Add = ({
               Route
             </label>
             <input
-              className="text-gray-800 shadow-amber-500 focus:shadow-amber-600 inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px]"
+              className="text-gray-800 appearance-none shadow-amber-500 focus:shadow-amber-600 inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] sm:text-[15px] leading-none shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px]"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
               id="route"
+              placeholder="gravity"
               value={route}
               onChange={(e) => setRoute(e.target.value)}
             />
@@ -89,12 +90,13 @@ const Add = ({
               Destination
             </label>
             <input
-              className="text-gray-800 shadow-amber-500 focus:shadow-amber-600 inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px]"
+              className="text-gray-800 appearance-none shadow-amber-500 focus:shadow-amber-600 inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] sm:text-[15px] leading-none shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px]"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
               id="destination"
+              placeholder="https://gravity.simple-physics.org"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
             />
