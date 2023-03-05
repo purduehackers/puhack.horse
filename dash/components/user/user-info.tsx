@@ -13,7 +13,7 @@ export default function UserInfo({ user }: { user: User }) {
               src={user?.image || ""}
               width="32px"
             />
-            <p className="font-bold">{user?.name}</p> •
+            <p className="font-bold">{user?.name} •</p>
             <SignOutButton />
           </>
         ) : (
