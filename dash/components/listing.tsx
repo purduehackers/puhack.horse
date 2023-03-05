@@ -86,6 +86,7 @@ const Listing = ({
 
   async function handleMutate() {
     setEdit(false);
+    if (!user) return;
     if (newRoute === route && newDest === destination) return;
     setColor("amber-300");
     let newData;
@@ -191,7 +192,6 @@ const Listing = ({
       <p
         className="text-sm truncate pr-4 pl-2 cursor-pointer border-r-2 border-black py-2 w-5/12 sm:w-1/4"
         onClick={() => {
-          if (!user) return;
           setEdit(true);
           setNewRoute(route);
           setNewDest(destination);
@@ -206,7 +206,6 @@ const Listing = ({
             color === "white" ? "text-gray-500" : "text-black"
           } group-hover:text-black cursor-pointer transition duration-100`}
           onClick={() => {
-            if (!user) return;
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
@@ -218,7 +217,6 @@ const Listing = ({
         <div
           className="grow cursor-pointer py-4"
           onClick={() => {
-            if (!user) return;
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
@@ -228,7 +226,6 @@ const Listing = ({
         <button
           className="text-xs py-1 px-2 invisible group-hover:visible"
           onClick={() => {
-            if (!user) return;
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
