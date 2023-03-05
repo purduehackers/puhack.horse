@@ -1,4 +1,5 @@
 "use client";
+import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetcher, server } from "../lib/helpers";
@@ -6,7 +7,7 @@ import { ConfigData, User } from "../types/types";
 import Add from "./add";
 import EmojiMarquee from "./emoji-marquee";
 import Listing from "./listing";
-import UserInfo from "./user-info";
+import UserInfo from "./user/user-info";
 
 const RouteList = ({
   fallbackData,
@@ -76,6 +77,7 @@ const RouteList = ({
             <div className="flex flex-col overflow-y-scroll max-h-[30rem]">
               {data.map((listing: ConfigData) => (
                 <Listing
+                  user={user}
                   key={listing.route}
                   route={listing.route}
                   destination={listing.destination}
@@ -86,11 +88,18 @@ const RouteList = ({
                 />
               ))}
             </div>
-            <Add
-              open={addDialogOpen}
-              setOpen={setAddDialogOpen}
-              fallbackData={fallbackData}
-            />
+            {user ? (
+              <Add
+                open={addDialogOpen}
+                setOpen={setAddDialogOpen}
+                fallbackData={fallbackData}
+              />
+            ) : (
+              <div className="py-2 pl-2 bg-amber-500 font-bold flex flex-row items-center gap-1 hover:bg-amber-400 transition duration-100 cursor-pointer sticky w-full bottom-0 border-t-[3px] border-black">
+                <Plus />
+                <p>add</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

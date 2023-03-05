@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckSquare, Edit, XSquare } from "lucide-react";
+import { CheckSquare, Edit, Eraser, XSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import usePrevious from "../hooks/use-previous";
@@ -12,10 +12,11 @@ import {
   mutateObject,
   server,
 } from "../lib/helpers";
-import { ConfigData, EditItem, Status } from "../types/types";
+import { ConfigData, EditItem, Status, User } from "../types/types";
 import Erase from "./erase";
 
 const Listing = ({
+  user,
   route,
   destination,
   visits,
@@ -23,6 +24,7 @@ const Listing = ({
   fetchedBefore,
   status,
 }: {
+  user: User;
   route: string;
   destination: string;
   visits: number;
@@ -189,6 +191,7 @@ const Listing = ({
       <p
         className="text-sm truncate pr-4 pl-2 cursor-pointer border-r-2 border-black py-2 w-5/12 sm:w-1/4"
         onClick={() => {
+          if (!user) return;
           setEdit(true);
           setNewRoute(route);
           setNewDest(destination);
@@ -203,6 +206,7 @@ const Listing = ({
             color === "white" ? "text-gray-500" : "text-black"
           } group-hover:text-black cursor-pointer transition duration-100`}
           onClick={() => {
+            if (!user) return;
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
@@ -214,6 +218,7 @@ const Listing = ({
         <div
           className="grow cursor-pointer py-4"
           onClick={() => {
+            if (!user) return;
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
@@ -223,6 +228,7 @@ const Listing = ({
         <button
           className="text-xs py-1 px-2 invisible group-hover:visible"
           onClick={() => {
+            if (!user) return;
             setEdit(true);
             setNewRoute(route);
             setNewDest(destination);
@@ -231,7 +237,13 @@ const Listing = ({
         >
           <Edit size="22px" />
         </button>
-        <Erase fallbackData={fallbackData} route={route} />
+        {user ? (
+          <Erase fallbackData={fallbackData} route={route} />
+        ) : (
+          <button className="text-xs py-1 mr-3 invisible group-hover:visible">
+            <Eraser size="22px" />
+          </button>
+        )}
       </div>
       <div
         className={`border-l-2 w-20 border-black py-2 hidden sm:block font-bold ${
