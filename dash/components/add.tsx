@@ -77,6 +77,7 @@ const Add = ({
               autoCapitalize="off"
               spellCheck="false"
               id="route"
+              placeholder="gravity"
               value={route}
               onChange={(e) => setRoute(e.target.value)}
             />
@@ -95,6 +96,7 @@ const Add = ({
               autoCapitalize="off"
               spellCheck="false"
               id="destination"
+              placeholder="https://gravity.simple-physics.org"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
             />
