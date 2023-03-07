@@ -18,7 +18,6 @@ module.exports = {
   theme: {
     fontFamily: {
       sans: ["var(--space-grotesk)", ...fontFamily.sans],
-      mono: ["var(--space-grotesk)", ...fontFamily.mono],
     },
     extend: {
       colors: {
