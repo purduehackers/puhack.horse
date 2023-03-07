@@ -1,3 +1,4 @@
+const { fontFamily } = require("tailwindcss/defaultTheme");
 const { violet, blackA, mauve, green, red } = require("@radix-ui/colors");
 
 /** @type {import('tailwindcss').Config} */
@@ -16,8 +17,8 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      sans: '"Space Grotesk", system-ui, Roboto, sans-serif',
-      mono: '"Space Mono"',
+      sans: ["var(--space-grotesk)", ...fontFamily.sans],
+      mono: ["var(--space-grotesk)", ...fontFamily.mono],
     },
     extend: {
       colors: {
