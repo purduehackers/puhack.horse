@@ -233,12 +233,12 @@ const Listing = ({
         <a
           href={newDest}
           target="_blank"
-          className="py-1 px-2 invisible group-hover:visible"
+          className="py-1 px-2 hidden group-hover:block"
         >
           <ExternalLink size="23px" />
         </a>
         <button
-          className="py-1 pr-2 invisible group-hover:visible"
+          className="py-1 pr-2 hidden group-hover:block"
           onClick={() => {
             setEdit(true);
             setNewRoute(route);
@@ -252,7 +252,7 @@ const Listing = ({
           <Erase fallbackData={fallbackData} route={route} />
         ) : (
           <button
-            className="py-1 mr-3 invisible group-hover:visible"
+            className="py-1 mr-3 hidden group-hover:block"
             onClick={() => setSignInModalOpen(true)}
           >
             <Eraser size="22px" />
