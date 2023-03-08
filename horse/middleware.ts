@@ -4,9 +4,8 @@ import { get } from "@vercel/edge-config";
 import isbot from "isbot";
 
 type ConfigData = {
-  route: string;
-  destination: string;
-  visits: number;
+  d: string;
+  v: number;
 };
 
 const server =
@@ -27,9 +26,8 @@ async function log(req: NextRequest, route: string, data: ConfigData) {
           operation: "update",
           key: route,
           value: {
-            route,
-            destination: data.destination,
-            visits: data.visits + 1,
+            d: data.d,
+            v: data.v + 1,
           },
         },
       ],
@@ -40,7 +38,8 @@ async function log(req: NextRequest, route: string, data: ConfigData) {
 export async function middleware(req: NextRequest, ev: NextFetchEvent) {
   try {
     const route = req.nextUrl.pathname.slice(1);
-    const data = await get(route);
+    const data: ConfigData | undefined = await get(route);
+    if (!data) return;
 
     ev.waitUntil(
       (async () => {
@@ -48,7 +47,7 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
       })()
     );
 
-    return NextResponse.redirect(data.destination);
+    return NextResponse.redirect(data.d);
   } catch (err) {
     return NextResponse.redirect("https://purduehackers.com");
   }
