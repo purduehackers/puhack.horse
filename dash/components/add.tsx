@@ -37,7 +37,7 @@ const Add = ({
     setDestination("");
     try {
       await mutate(add(route, destination, newData), {
-        optimisticData: newData,
+        optimisticData: { ...newData },
         rollbackOnError: true,
         revalidate: true,
         populateCache: true,

@@ -43,12 +43,13 @@ const Erase = ({
                 className="text-red11 bg-red4 hover:bg-red5 focus:shadow-black inline-flex h-[35px] items-center justify-center rounded-sm border-2 border-black shadow-button shadow-gray-800/80 px-[15px] font-medium leading-none outline-none focus:border-[2.75px]"
                 onClick={async () => {
                   if (!data) return;
-                  const newData = deleteObject(route, data);
+                  let newData: ConfigData = data;
+                  delete newData[route];
                   try {
                     await mutate(del(route, newData), {
-                      optimisticData: newData,
+                      optimisticData: { ...newData },
                       rollbackOnError: true,
-                      revalidate: false,
+                      revalidate: true,
                       populateCache: true,
                     });
                   } catch (err) {}
@@ -63,10 +64,5 @@ const Erase = ({
     </AlertDialog.Root>
   );
 };
-
-function deleteObject(route: string, data: ConfigData) {
-  delete data[route];
-  return data;
-}
 
 export default Erase;
