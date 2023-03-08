@@ -30,7 +30,7 @@ const Erase = ({
           </AlertDialog.Title>
           <AlertDialog.Description className="text-mauve11 mt-4 mb-5 text-[15px] leading-normal">
             Are you sure you want to delete the route{" "}
-            {<span className="font-bold text-black">{route}</span>}?
+            {<span className="font-bold text-gray-700">{route}</span>}?
           </AlertDialog.Description>
           <div className="flex justify-end gap-[25px]">
             <AlertDialog.Cancel asChild>
