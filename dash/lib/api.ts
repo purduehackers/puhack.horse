@@ -7,7 +7,7 @@ export async function add(
   route: string,
   destination: string,
   visits: number,
-  newData: ConfigData[]
+  newData: ConfigData
 ) {
   await fetch(url, {
     method: "PATCH",
@@ -32,9 +32,7 @@ export async function add(
     throw new Error(err);
   });
 
-  newData.map((obj) => {
-    if (obj.route === route) obj.status = "SUCCESS";
-  });
+  newData[route].status = "SUCCESS";
   await waitForPropagation(route);
   return newData;
 }
@@ -66,7 +64,7 @@ export async function updateRoute(
   newRoute: string,
   destination: string,
   visits: number,
-  newData: ConfigData[]
+  newData: ConfigData
 ) {
   await fetch(url, {
     method: "PATCH",
@@ -94,9 +92,7 @@ export async function updateRoute(
   }).catch((err) => {
     throw new Error(`${err}`);
   });
-  newData.map((obj) => {
-    if (obj.route === newRoute) obj.status = "SUCCESS";
-  });
+  newData[newRoute].status = "SUCCESS";
   await waitForPropagation(newRoute);
   return newData;
 }
@@ -105,7 +101,7 @@ export async function updateDestination(
   route: string,
   newDestination: string,
   visits: number,
-  newData: ConfigData[]
+  newData: ConfigData
 ) {
   await fetch(url, {
     method: "PATCH",
@@ -130,9 +126,7 @@ export async function updateDestination(
     throw new Error(err);
   });
 
-  newData.map((obj) => {
-    if (obj.route === route) obj.status = "SUCCESS";
-  });
+  newData[route].status = "SUCCESS";
   return newData;
 }
 
@@ -142,12 +136,8 @@ async function waitForPropagation(route: string, add = true) {
   // before returning data. If we didn't do this, the Optimistic UI
   // would update, but the row would then disappear when it revalidated.
   await delay(1000);
-  let all = await fetch(url).then((r) => r.json());
-  while (
-    add
-      ? !all.find((el: ConfigData) => el.route === route)
-      : all.find((el: ConfigData) => el.route === route)
-  ) {
+  let all: ConfigData = await fetch(url).then((r) => r.json());
+  while (add ? !all.hasOwnProperty(route) : all.hasOwnProperty(route)) {
     await delay(1000);
     all = await fetch(url).then((r) => r.json());
   }

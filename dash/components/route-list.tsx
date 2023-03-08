@@ -12,10 +12,10 @@ const RouteList = ({
   fallbackData,
   user,
 }: {
-  fallbackData: ConfigData[];
+  fallbackData: ConfigData;
   user: User;
 }) => {
-  const { data } = useSWR(`${server}/api/dash`, fetcher, {
+  const { data } = useSWR<ConfigData>(`${server}/api/dash`, fetcher, {
     suspense: true,
     fallbackData,
   });
@@ -48,19 +48,20 @@ const RouteList = ({
         <p className="sm:w-20"></p>
       </div>
       <div className="flex flex-col overflow-y-scroll max-h-[30rem]">
-        {data.map((listing: ConfigData) => (
-          <Listing
-            user={user}
-            key={listing.route}
-            route={listing.route}
-            destination={listing.destination}
-            visits={listing.visits}
-            fallbackData={fallbackData}
-            fetchedBefore={fetchedBefore}
-            status={listing.status}
-            setSignInModalOpen={setSignInModalOpen}
-          />
-        ))}
+        {data &&
+          Object.keys(data).map((route: string) => (
+            <Listing
+              user={user}
+              key={route}
+              route={route}
+              destination={data[route].destination}
+              visits={data[route].visits}
+              fallbackData={fallbackData}
+              fetchedBefore={fetchedBefore}
+              status={data[route].status}
+              setSignInModalOpen={setSignInModalOpen}
+            />
+          ))}
       </div>
       {user ? (
         <Add

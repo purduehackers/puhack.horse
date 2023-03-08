@@ -13,31 +13,35 @@ export const fetcher = (url: string) =>
     },
   }).then((r) => r.json());
 
-export function deleteObject(route: string, data: ConfigData[]) {
-  return data.filter((el) => el.route !== route);
+export function sort(data: ConfigData) {
+  return Object.keys(data)
+    .sort()
+    .reduce((obj: ConfigData, key) => {
+      obj[key] = data[key];
+      return obj;
+    }, {});
+}
+
+export function deleteObject(route: string, data: ConfigData) {
+  delete data[route];
+  return data;
 }
 
 export function mutateObject(
   toChange: string,
-  data: ConfigData[],
+  data: ConfigData,
   route: string,
   destination: string
 ) {
   if (toChange === "destination") {
-    data.map((obj) => {
-      if (obj.route === route) {
-        obj.destination = destination;
-        obj.status = "PENDING";
-      }
-    });
+    data[route].destination = destination;
+    data[route].status = "PENDING";
   }
   return data;
 }
 
-export function error(data: ConfigData[], route: string) {
-  data.map((obj) => {
-    if (obj.route === route) obj.status = "FAIL";
-  });
+export function error(data: ConfigData, route: string) {
+  data[route].status = "FAIL";
   return data;
 }
 

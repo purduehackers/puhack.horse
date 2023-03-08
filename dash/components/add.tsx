@@ -14,9 +14,9 @@ const Add = ({
 }: {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  fallbackData: ConfigData[];
+  fallbackData: ConfigData;
 }) => {
-  const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
+  const { data, mutate } = useSWR<ConfigData>(`${server}/api/dash`, fetcher, {
     suspense: true,
     fallbackData,
   });
@@ -27,6 +27,7 @@ const Add = ({
   async function handleSubmit() {
     setRoute("");
     setDestination("");
+    if (!data) return;
     const newData = data
       .concat({
         route,

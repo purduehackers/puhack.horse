@@ -6,12 +6,12 @@ export type User =
     }
   | undefined;
 
-export type ConfigData = {
-  route: string;
+export type ConfigValues = {
   destination: string;
   visits: number;
   status?: Status;
 };
+export type ConfigData = Record<string, ConfigValues>;
 
 export type Status = "PENDING" | "SUCCESS" | "FAIL" | "NEUTRAL";
 

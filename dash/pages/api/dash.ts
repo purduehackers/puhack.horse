@@ -4,7 +4,7 @@ import { getAll } from "@vercel/edge-config";
 export default async (req: NextRequest) => {
   if (req.method === "GET") {
     const configItems = await getAll();
-    return NextResponse.json(Object.values(configItems));
+    return NextResponse.json(configItems);
   } else if (req.method === "PATCH") {
     const authorization = req.headers.get("Authorization");
     if (!authorization) {

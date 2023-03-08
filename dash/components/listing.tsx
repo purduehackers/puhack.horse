@@ -11,6 +11,7 @@ import {
   fetcher,
   mutateObject,
   server,
+  sort,
 } from "../lib/helpers";
 import { ConfigData, EditItem, Status, User } from "../types/types";
 import Erase from "./erase";
@@ -29,7 +30,7 @@ const Listing = ({
   route: string;
   destination: string;
   visits: number;
-  fallbackData: ConfigData[];
+  fallbackData: ConfigData;
   fetchedBefore: boolean;
   status?: Status;
   setSignInModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -96,17 +97,15 @@ const Listing = ({
     }
 
     setColor("amber-300");
-    let newData;
+    let newData: ConfigData = data;
     if (route !== newRoute) {
-      const filteredData = deleteObject(route, data);
-      newData = filteredData
-        .concat({
-          route: newRoute,
-          destination: newDest,
-          visits,
-          status: "PENDING",
-        })
-        .sort((a, b) => a.route.localeCompare(b.route));
+      newData = deleteObject(route, data);
+      newData[newRoute] = {
+        destination: newDest,
+        visits,
+        status: "PENDING",
+      };
+      newData = sort(newData);
     } else {
       newData = mutateObject("destination", data, newRoute, newDest);
     }
