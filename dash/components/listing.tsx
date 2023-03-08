@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckSquare, Edit, Eraser, XSquare } from "lucide-react";
+import { CheckSquare, Edit, Eraser, XSquare, ExternalLink } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import useSWR from "swr";
 import usePrevious from "../hooks/use-previous";
@@ -230,8 +230,15 @@ const Listing = ({
             setEditItem("DESTINATION");
           }}
         ></div>
+        <a
+          href={newDest}
+          target="_blank"
+          className="py-1 px-2 invisible group-hover:visible"
+        >
+          <ExternalLink size="23px" />
+        </a>
         <button
-          className="text-xs py-1 px-2 invisible group-hover:visible"
+          className="py-1 pr-2 invisible group-hover:visible"
           onClick={() => {
             setEdit(true);
             setNewRoute(route);
@@ -245,7 +252,7 @@ const Listing = ({
           <Erase fallbackData={fallbackData} route={route} />
         ) : (
           <button
-            className="text-xs py-1 mr-3 invisible group-hover:visible"
+            className="py-1 mr-3 invisible group-hover:visible"
             onClick={() => setSignInModalOpen(true)}
           >
             <Eraser size="22px" />
