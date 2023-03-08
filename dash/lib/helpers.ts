@@ -34,7 +34,7 @@ export function mutateObject(
   destination: string
 ) {
   if (toChange === "destination") {
-    data[route].destination = destination;
+    data[route].d = destination;
     data[route].status = "PENDING";
   }
   return data;

@@ -102,8 +102,8 @@ const Listing = ({
     if (route !== newRoute) {
       newData = deleteObject(route, data);
       newData[newRoute] = {
-        destination: newDest,
-        visits,
+        d: newDest,
+        v: visits,
         status: "PENDING",
       };
       newData = sort(newData);

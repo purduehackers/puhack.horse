@@ -7,8 +7,8 @@ export type User =
   | undefined;
 
 export type ConfigValues = {
-  destination: string;
-  visits: number;
+  d: string;
+  v: number;
   status?: Status;
 };
 export type ConfigData = Record<string, ConfigValues>;

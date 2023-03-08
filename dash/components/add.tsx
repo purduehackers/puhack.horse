@@ -28,8 +28,8 @@ const Add = ({
     if (!data) return;
     let newData: ConfigData = data;
     newData[route] = {
-      destination,
-      visits: 0,
+      d: destination,
+      v: 0,
       status: "PENDING",
     };
     newData = sort(newData);

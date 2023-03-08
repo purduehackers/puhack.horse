@@ -20,8 +20,8 @@ export async function add(
           operation: "create",
           key: route,
           value: {
-            destination,
-            visits: 0,
+            d: destination,
+            v: 0,
           },
         },
       ],
