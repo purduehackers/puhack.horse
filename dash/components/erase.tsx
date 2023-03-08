@@ -9,7 +9,7 @@ const Erase = ({
   fallbackData,
   route,
 }: {
-  fallbackData: ConfigData[];
+  fallbackData: ConfigData;
   route: string;
 }) => {
   const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
@@ -45,7 +45,7 @@ const Erase = ({
                   const newData = deleteObject(route, data);
                   try {
                     await mutate(del(route, newData), {
-                      optimisticData: [...newData],
+                      optimisticData: newData,
                       rollbackOnError: true,
                       revalidate: false,
                       populateCache: true,
@@ -63,8 +63,9 @@ const Erase = ({
   );
 };
 
-function deleteObject(route: string, data: ConfigData[]) {
-  return data.filter((el) => el.route !== route);
+function deleteObject(route: string, data: ConfigData) {
+  delete data[route];
+  return data;
 }
 
 export default Erase;

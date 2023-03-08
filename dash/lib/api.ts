@@ -37,7 +37,7 @@ export async function add(
   return newData;
 }
 
-export async function del(route: string, newData: ConfigData[]) {
+export async function del(route: string, newData: ConfigData) {
   await fetch(url, {
     method: "PATCH",
     headers: {

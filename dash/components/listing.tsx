@@ -115,7 +115,7 @@ const Listing = ({
           ? updateRoute(route, newRoute, newDest, visits, newData)
           : updateDestination(newRoute, newDest, visits, newData),
         {
-          optimisticData: [...newData],
+          optimisticData: newData,
           rollbackOnError: true,
           revalidate: route !== newRoute,
           populateCache: true,

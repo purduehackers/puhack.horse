@@ -5,7 +5,7 @@ import useSWR from "swr";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ConfigData } from "../types/types";
 import { add } from "../lib/api";
-import { fetcher, server } from "../lib/helpers";
+import { fetcher, server, sort } from "../lib/helpers";
 
 const Add = ({
   open,
@@ -25,20 +25,18 @@ const Add = ({
   const [destination, setDestination] = useState("");
 
   async function handleSubmit() {
+    if (!data) return;
+    let newData: ConfigData = data;
+    newData[route] = {
+      destination,
+      visits: 0,
+      status: "PENDING",
+    };
     setRoute("");
     setDestination("");
-    if (!data) return;
-    const newData = data
-      .concat({
-        route,
-        destination,
-        visits: 0,
-        status: "PENDING",
-      })
-      .sort((a: ConfigData, b: ConfigData) => a.route.localeCompare(b.route));
     try {
       await mutate(add(route, destination, 0, newData), {
-        optimisticData: [...newData],
+        optimisticData: newData,
         rollbackOnError: true,
         revalidate: true,
         populateCache: true,
