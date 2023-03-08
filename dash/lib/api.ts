@@ -20,7 +20,6 @@ export async function add(
           operation: "create",
           key: route,
           value: {
-            route,
             destination,
             visits: 0,
           },
