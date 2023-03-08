@@ -11,6 +11,7 @@ import {
   fetcher,
   mutateObject,
   server,
+  sort,
 } from "../lib/helpers";
 import { ConfigData, EditItem, Status, User } from "../types/types";
 import Erase from "./erase";
@@ -29,12 +30,12 @@ const Listing = ({
   route: string;
   destination: string;
   visits: number;
-  fallbackData: ConfigData[];
+  fallbackData: ConfigData;
   fetchedBefore: boolean;
   status?: Status;
   setSignInModalOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
+  const { data, mutate } = useSWR<ConfigData>(`${server}/api/dash`, fetcher, {
     fallbackData,
   });
 
@@ -87,6 +88,7 @@ const Listing = ({
   }, [status]);
 
   async function handleMutate() {
+    if (!data) return;
     setEdit(false);
     if (newRoute === route && newDest === destination) return;
     if (!user) {
@@ -96,17 +98,15 @@ const Listing = ({
     }
 
     setColor("amber-300");
-    let newData;
+    let newData: ConfigData = data;
     if (route !== newRoute) {
-      const filteredData = deleteObject(route, data);
-      newData = filteredData
-        .concat({
-          route: newRoute,
-          destination: newDest,
-          visits,
-          status: "PENDING",
-        })
-        .sort((a, b) => a.route.localeCompare(b.route));
+      newData = deleteObject(route, data);
+      newData[newRoute] = {
+        destination: newDest,
+        visits,
+        status: "PENDING",
+      };
+      newData = sort(newData);
     } else {
       newData = mutateObject("destination", data, newRoute, newDest);
     }
@@ -116,7 +116,7 @@ const Listing = ({
           ? updateRoute(route, newRoute, newDest, visits, newData)
           : updateDestination(newRoute, newDest, visits, newData),
         {
-          optimisticData: [...newData],
+          optimisticData: newData,
           rollbackOnError: true,
           revalidate: route !== newRoute,
           populateCache: true,

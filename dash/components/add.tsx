@@ -5,7 +5,7 @@ import useSWR from "swr";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ConfigData } from "../types/types";
 import { add } from "../lib/api";
-import { fetcher, server } from "../lib/helpers";
+import { fetcher, server, sort } from "../lib/helpers";
 
 const Add = ({
   open,
@@ -14,9 +14,9 @@ const Add = ({
 }: {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  fallbackData: ConfigData[];
+  fallbackData: ConfigData;
 }) => {
-  const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
+  const { data, mutate } = useSWR<ConfigData>(`${server}/api/dash`, fetcher, {
     suspense: true,
     fallbackData,
   });
@@ -25,19 +25,19 @@ const Add = ({
   const [destination, setDestination] = useState("");
 
   async function handleSubmit() {
+    if (!data) return;
+    let newData: ConfigData = data;
+    newData[route] = {
+      destination,
+      visits: 0,
+      status: "PENDING",
+    };
+    newData = sort(newData);
     setRoute("");
     setDestination("");
-    const newData = data
-      .concat({
-        route,
-        destination,
-        visits: 0,
-        status: "PENDING",
-      })
-      .sort((a: ConfigData, b: ConfigData) => a.route.localeCompare(b.route));
     try {
-      await mutate(add(route, destination, 0, newData), {
-        optimisticData: [...newData],
+      await mutate(add(route, destination, newData), {
+        optimisticData: { ...newData },
         rollbackOnError: true,
         revalidate: true,
         populateCache: true,
