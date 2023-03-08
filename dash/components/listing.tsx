@@ -230,13 +230,6 @@ const Listing = ({
             setEditItem("DESTINATION");
           }}
         ></div>
-        <a
-          href={newDest}
-          target="_blank"
-          className="py-1 px-2 hidden group-hover:block"
-        >
-          <ExternalLink size="23px" />
-        </a>
         <button
           className="py-1 pr-2 hidden group-hover:block"
           onClick={() => {
@@ -252,13 +245,20 @@ const Listing = ({
           <Erase fallbackData={fallbackData} route={route} />
         ) : (
           <button
-            className="py-1 mr-3 hidden group-hover:block"
+            className="py-1 pr-2 hidden group-hover:block"
             onClick={() => setSignInModalOpen(true)}
           >
             <Eraser size="22px" />
           </button>
         )}
       </div>
+      <a
+        href={newDest}
+        target="_blank"
+        className="py-1 mr-2 hidden group-hover:block"
+      >
+        <ExternalLink size="23px" />
+      </a>
       <div
         className={`border-l-2 w-20 border-black py-2 hidden sm:block font-bold ${
           isNewVisit && "bg-blue-300"
