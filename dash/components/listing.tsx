@@ -35,7 +35,7 @@ const Listing = ({
   status?: Status;
   setSignInModalOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { data, mutate } = useSWR(`${server}/api/dash`, fetcher, {
+  const { data, mutate } = useSWR<ConfigData>(`${server}/api/dash`, fetcher, {
     fallbackData,
   });
 
@@ -88,6 +88,7 @@ const Listing = ({
   }, [status]);
 
   async function handleMutate() {
+    if (!data) return;
     setEdit(false);
     if (newRoute === route && newDest === destination) return;
     if (!user) {
