@@ -6,7 +6,6 @@ const url = `${server}/api/dash`;
 export async function add(
   route: string,
   destination: string,
-  visits: number,
   newData: ConfigData
 ) {
   await fetch(url, {
@@ -23,7 +22,7 @@ export async function add(
           value: {
             route,
             destination,
-            visits,
+            visits: 0,
           },
         },
       ],

@@ -32,10 +32,11 @@ const Add = ({
       visits: 0,
       status: "PENDING",
     };
+    newData = sort(newData);
     setRoute("");
     setDestination("");
     try {
-      await mutate(add(route, destination, 0, newData), {
+      await mutate(add(route, destination, newData), {
         optimisticData: newData,
         rollbackOnError: true,
         revalidate: true,
