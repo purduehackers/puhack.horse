@@ -23,9 +23,16 @@ const Add = ({
 
   const [route, setRoute] = useState("");
   const [destination, setDestination] = useState("");
+  const [routeExists, setRouteExists] = useState(false);
 
   async function handleSubmit() {
     if (!data) return;
+    if (Object.keys(data).includes(route)) {
+      setRouteExists(true);
+      return;
+    }
+
+    setOpen(false);
     let newData: ConfigData = data;
     newData[route] = {
       d: destination,
@@ -63,7 +70,11 @@ const Add = ({
             Your changes will appear on the dashboard instantly, but it will
             take a few seconds for them to reflect in Edge Config.
           </Dialog.Description>
-          <fieldset className="mb-[15px] flex items-center gap-5">
+          <fieldset
+            className={`${
+              routeExists ? "" : "mb-[15px]"
+            } flex items-center gap-5`}
+          >
             <label
               className="text-gray-800 font-bold w-[90px] text-right text-[15px]"
               htmlFor="route"
@@ -71,7 +82,11 @@ const Add = ({
               Route
             </label>
             <input
-              className="text-gray-800 appearance-none shadow-amber-500 focus:shadow-amber-600 inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] sm:text-[15px] leading-none shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px]"
+              className={`text-gray-800 appearance-none ${
+                routeExists
+                  ? `shadow-red-500 focus:shadow-red-600 bg-red-100`
+                  : `shadow-amber-500 focus:shadow-amber-600`
+              } inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] sm:text-[15px] leading-none shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px]`}
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
@@ -79,9 +94,19 @@ const Add = ({
               id="route"
               placeholder="gravity"
               value={route}
-              onChange={(e) => setRoute(e.target.value)}
+              onChange={(e) => {
+                setRoute(e.target.value);
+                if (routeExists) setRouteExists(false);
+              }}
             />
           </fieldset>
+          <p
+            className={`text-sm text-right font-mono mb-[15px] ${
+              routeExists ? "block" : "hidden"
+            }`}
+          >
+            Route already exists!
+          </p>
           <fieldset className="mb-[15px] flex items-center gap-5">
             <label
               className="text-gray-800 font-bold w-[90px] text-right text-[15px]"
@@ -102,15 +127,13 @@ const Add = ({
             />
           </fieldset>
           <div className="mt-[25px] flex justify-end">
-            <Dialog.Close asChild>
-              <button
-                className="bg-green4 text-green11 disabled:bg-mauve4 disabled:text-mauve11 hover:bg-green5 focus:shadow-black inline-flex h-[35px] items-center justify-center rounded-sm border-2 border-black focus:border-[2.5px] shadow-button shadow-gray-800/80 px-[15px] font-medium leading-none focus:outline-none"
-                disabled={route === "" || destination === ""}
-                onClick={handleSubmit}
-              >
-                Save changes
-              </button>
-            </Dialog.Close>
+            <button
+              className="bg-green4 text-green11 disabled:bg-mauve4 disabled:text-mauve11 hover:bg-green5 focus:shadow-black inline-flex h-[35px] items-center justify-center rounded-sm border-2 border-black focus:border-[2.5px] shadow-button shadow-gray-800/80 px-[15px] font-medium leading-none focus:outline-none"
+              disabled={route === "" || destination === ""}
+              onClick={handleSubmit}
+            >
+              Save changes
+            </button>
           </div>
           <Dialog.Close asChild>
             <button
