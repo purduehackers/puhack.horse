@@ -80,9 +80,8 @@ export async function updateRoute(
           operation: "create",
           key: newRoute,
           value: {
-            route: newRoute,
-            destination,
-            visits,
+            d: destination,
+            v: visits,
           },
         },
       ],
@@ -113,9 +112,8 @@ export async function updateDestination(
           operation: "update",
           key: route,
           value: {
-            route,
-            destination: newDestination,
-            visits,
+            d: newDestination,
+            v: visits,
           },
         },
       ],
