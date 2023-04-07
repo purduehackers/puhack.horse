@@ -19,4 +19,4 @@ The speed benefits are noticeable but not significant enough to matter much for 
 
 ---
 
-Note: Edge Config is great but not really meant to be used for a serious link shortener. The free plan only allows for 8KB of data; with 34 routes, we're already over 4KB. Plan accordingly!
+Note: Edge Config is great but not really meant to be used for a serious link shortener. The free plan only allows for 8KB of data, which you'll use up after ~100 routes.
