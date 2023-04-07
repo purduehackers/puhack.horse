@@ -8,7 +8,7 @@ export default async function Index() {
   const user = await getCurrentUser();
   const data = await fetch(`${server}/api/dash`, {
     headers: {
-      Authorization: `Bearer ${process.env.HORSE_SECRET}`,
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_HORSE_SECRET}`,
     },
   }).then((r) => r.json());
 

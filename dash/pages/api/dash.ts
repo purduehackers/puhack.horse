@@ -12,7 +12,9 @@ export default async (req: NextRequest) => {
         status: 400,
         statusText: `You need an API key to access this!!!!`,
       });
-    } else if (authorization !== `Bearer ${process.env.HORSE_SECRET}`) {
+    } else if (
+      authorization !== `Bearer ${process.env.NEXT_PUBLIC_HORSE_SECRET}`
+    ) {
       return new Response(null, {
         status: 403,
         statusText: `Incorrect API key!!!!!!!!!!`,
