@@ -51,6 +51,28 @@ const Listing = ({
   const prevRoute = usePrevious(route);
   const prevVisits = usePrevious(visits);
 
+  function handleEditDestination(user: User) {
+    if (user) {
+      setEdit(true);
+      setNewRoute(route);
+      setNewDest(destination);
+      setEditItem("DESTINATION");
+    } else {
+      setSignInModalOpen(true);
+    }
+  }
+
+  function handleEditRoute(user: User) {
+    if (user) {
+      setEdit(true);
+      setNewRoute(route);
+      setNewDest(destination);
+      setEditItem("ROUTE");
+    } else {
+      setSignInModalOpen(true);
+    }
+  }
+
   useEffect(() => {
     if (prevVisits && visits !== prevVisits) {
       setIsNewVisit(true);
@@ -198,12 +220,7 @@ const Listing = ({
     >
       <p
         className="text-sm truncate pr-4 pl-2 cursor-pointer border-r-2 border-black py-2 w-5/12 sm:w-1/4"
-        onClick={() => {
-          setEdit(true);
-          setNewRoute(route);
-          setNewDest(destination);
-          setEditItem("ROUTE");
-        }}
+        onClick={() => handleEditRoute(user)}
       >
         {route}
       </p>
@@ -212,32 +229,17 @@ const Listing = ({
           className={`font-mono p-2 truncate text-sm text-gray-500 ${
             color === "white" ? "text-gray-500" : "text-black"
           } group-hover:text-black cursor-pointer transition duration-100`}
-          onClick={() => {
-            setEdit(true);
-            setNewRoute(route);
-            setNewDest(destination);
-            setEditItem("DESTINATION");
-          }}
+          onClick={() => handleEditDestination(user)}
         >
           {newDest}
         </p>
         <div
           className="grow cursor-pointer py-4"
-          onClick={() => {
-            setEdit(true);
-            setNewRoute(route);
-            setNewDest(destination);
-            setEditItem("DESTINATION");
-          }}
+          onClick={() => handleEditDestination(user)}
         ></div>
         <button
           className="py-1 pr-2 hidden group-hover:block"
-          onClick={() => {
-            setEdit(true);
-            setNewRoute(route);
-            setNewDest(destination);
-            setEditItem("DESTINATION");
-          }}
+          onClick={() => handleEditDestination(user)}
         >
           <Edit size="22px" />
         </button>
