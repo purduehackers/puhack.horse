@@ -271,12 +271,6 @@ const Listing = ({
         ></div>
         <button
           className="py-1 pr-2 hidden group-hover:block"
-          onClick={() => copyDestinationToClipboard()}
-        >
-          {copied ? <Check size="22px" /> : <Copy size="22px" />}
-        </button>
-        <button
-          className="py-1 pr-2 hidden group-hover:block"
           onClick={() => handleEditField(user, "DESTINATION", "SIGN_IN")}
         >
           <Edit size="22px" />
@@ -291,6 +285,12 @@ const Listing = ({
             <Eraser size="22px" />
           </button>
         )}
+        <button
+          className="py-1 pr-2 hidden group-hover:block"
+          onClick={() => copyDestinationToClipboard()}
+        >
+          {copied ? <Check size="22px" /> : <Copy size="22px" />}
+        </button>
       </div>
       <a
         href={newDest}
