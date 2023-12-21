@@ -25,6 +25,8 @@ const Listing = ({
   fetchedBefore,
   status,
   setSignInModalOpen,
+  setInfoModalOpen,
+  setSelectedData,
 }: {
   user: User;
   route: string;
@@ -34,6 +36,10 @@ const Listing = ({
   fetchedBefore: boolean;
   status?: Status;
   setSignInModalOpen: Dispatch<SetStateAction<boolean>>;
+  setInfoModalOpen: Dispatch<SetStateAction<boolean>>;
+  setSelectedData: Dispatch<
+    SetStateAction<{ route: string; destination: string }>
+  >;
 }) => {
   const { data, mutate } = useSWR<ConfigData>(`${server}/api/dash`, fetcher, {
     fallbackData,
@@ -51,25 +57,26 @@ const Listing = ({
   const prevRoute = usePrevious(route);
   const prevVisits = usePrevious(visits);
 
-  function handleEditDestination(user: User) {
+  function handleEditField(
+    user: User,
+    editItem: "ROUTE" | "DESTINATION",
+    modal: "INFO" | "SIGN_IN"
+  ) {
     if (user) {
       setEdit(true);
       setNewRoute(route);
       setNewDest(destination);
-      setEditItem("DESTINATION");
+      setEditItem(editItem);
     } else {
-      setSignInModalOpen(true);
-    }
-  }
-
-  function handleEditRoute(user: User) {
-    if (user) {
-      setEdit(true);
-      setNewRoute(route);
-      setNewDest(destination);
-      setEditItem("ROUTE");
-    } else {
-      setSignInModalOpen(true);
+      setSelectedData({
+        route,
+        destination,
+      });
+      if (modal === "INFO") {
+        setInfoModalOpen(true);
+      } else {
+        setSignInModalOpen(true);
+      }
     }
   }
 
@@ -220,7 +227,7 @@ const Listing = ({
     >
       <p
         className="text-sm truncate pr-4 pl-2 cursor-pointer border-r-2 border-black py-2 w-5/12 sm:w-1/4"
-        onClick={() => handleEditRoute(user)}
+        onClick={() => handleEditField(user, "ROUTE", "INFO")}
       >
         {route}
       </p>
@@ -229,17 +236,17 @@ const Listing = ({
           className={`font-mono p-2 truncate text-sm text-gray-500 ${
             color === "white" ? "text-gray-500" : "text-black"
           } group-hover:text-black cursor-pointer transition duration-100`}
-          onClick={() => handleEditDestination(user)}
+          onClick={() => handleEditField(user, "DESTINATION", "INFO")}
         >
           {newDest}
         </p>
         <div
           className="grow cursor-pointer py-4"
-          onClick={() => handleEditDestination(user)}
+          onClick={() => handleEditField(user, "DESTINATION", "INFO")}
         ></div>
         <button
           className="py-1 pr-2 hidden group-hover:block"
-          onClick={() => handleEditDestination(user)}
+          onClick={() => handleEditField(user, "DESTINATION", "SIGN_IN")}
         >
           <Edit size="22px" />
         </button>

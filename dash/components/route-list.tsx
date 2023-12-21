@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { fetcher, server } from "../lib/helpers";
 import { ConfigData, User } from "../types/types";
 import Add from "./add";
+import InfoModal from "./info-modal";
 import Listing from "./listing";
 import SignInModal from "./sign-in-modal/sign-in-modal";
 
@@ -21,6 +22,14 @@ const RouteList = ({
   });
 
   const [signInModalOpen, setSignInModalOpen] = useState(false);
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [selectedData, setSelectedData] = useState<{
+    route: string;
+    destination: string;
+  }>({
+    route: "",
+    destination: "",
+  });
 
   const [fetchedBefore, setFetchedBefore] = useState(false);
   useEffect(() => {
@@ -60,6 +69,8 @@ const RouteList = ({
               fetchedBefore={fetchedBefore}
               status={data[route].status}
               setSignInModalOpen={setSignInModalOpen}
+              setInfoModalOpen={setInfoModalOpen}
+              setSelectedData={setSelectedData}
             />
           ))}
       </div>
@@ -72,6 +83,11 @@ const RouteList = ({
       ) : (
         <>
           <SignInModal open={signInModalOpen} setOpen={setSignInModalOpen} />
+          <InfoModal
+            open={infoModalOpen}
+            setOpen={setInfoModalOpen}
+            data={selectedData}
+          />
           <div
             className="py-2 pl-2 bg-amber-500 font-bold flex flex-row items-center gap-1 hover:bg-amber-400 transition duration-100 cursor-pointer sticky w-full bottom-0 border-t-[3px] border-black"
             onClick={() => setSignInModalOpen(true)}
