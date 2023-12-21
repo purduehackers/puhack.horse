@@ -51,3 +51,15 @@
     transform: translate(1px, -2px) rotate(-1deg);
   }
 }
+
+.icon-transition {
+  transition: opacity 300ms ease;
+}
+
+.fade-in {
+  opacity: 1;
+}
+
+.fade-out {
+  opacity: 0;
+}

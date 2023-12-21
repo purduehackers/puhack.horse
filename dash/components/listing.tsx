@@ -1,6 +1,14 @@
 "use client";
 
-import { CheckSquare, Edit, Eraser, XSquare, ExternalLink } from "lucide-react";
+import {
+  Check,
+  CheckSquare,
+  Edit,
+  Eraser,
+  XSquare,
+  ExternalLink,
+  Copy,
+} from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import useSWR from "swr";
 import usePrevious from "../hooks/use-previous";
@@ -51,6 +59,7 @@ const Listing = ({
   const [newDest, setNewDest] = useState(destination);
   const [isNewVisit, setIsNewVisit] = useState(false);
   const [color, setColor] = useState("white");
+  const [copied, setCopied] = useState(false);
 
   const [currentStatus, setCurrentStatus] = useState(status);
   const prevStatus = usePrevious(currentStatus);
@@ -78,6 +87,15 @@ const Listing = ({
         setSignInModalOpen(true);
       }
     }
+  }
+
+  function copyDestinationToClipboard() {
+    navigator.clipboard
+      .writeText(destination)
+      .then(() => setCopied(true))
+      .catch((err) => {
+        console.error("Failed to copy text: ", err);
+      });
   }
 
   useEffect(() => {
@@ -115,6 +133,13 @@ const Listing = ({
       }, 2000);
     }
   }, [status]);
+  useEffect(() => {
+    if (copied) {
+      setTimeout(() => {
+        setCopied(false);
+      }, 1000);
+    }
+  }, [copied]);
 
   async function handleMutate() {
     if (!data) return;
@@ -244,6 +269,12 @@ const Listing = ({
           className="grow cursor-pointer py-4"
           onClick={() => handleEditField(user, "DESTINATION", "INFO")}
         ></div>
+        <button
+          className="py-1 pr-2 hidden group-hover:block"
+          onClick={() => copyDestinationToClipboard()}
+        >
+          {copied ? <Check size="22px" /> : <Copy size="22px" />}
+        </button>
         <button
           className="py-1 pr-2 hidden group-hover:block"
           onClick={() => handleEditField(user, "DESTINATION", "SIGN_IN")}
