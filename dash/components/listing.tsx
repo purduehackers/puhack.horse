@@ -1,6 +1,14 @@
 "use client";
 
-import { CheckSquare, Edit, Eraser, XSquare, ExternalLink } from "lucide-react";
+import {
+  Check,
+  CheckSquare,
+  Edit,
+  Eraser,
+  XSquare,
+  ExternalLink,
+  Copy,
+} from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import useSWR from "swr";
 import usePrevious from "../hooks/use-previous";
@@ -25,6 +33,8 @@ const Listing = ({
   fetchedBefore,
   status,
   setSignInModalOpen,
+  setInfoModalOpen,
+  setSelectedData,
 }: {
   user: User;
   route: string;
@@ -34,6 +44,10 @@ const Listing = ({
   fetchedBefore: boolean;
   status?: Status;
   setSignInModalOpen: Dispatch<SetStateAction<boolean>>;
+  setInfoModalOpen: Dispatch<SetStateAction<boolean>>;
+  setSelectedData: Dispatch<
+    SetStateAction<{ route: string; destination: string }>
+  >;
 }) => {
   const { data, mutate } = useSWR<ConfigData>(`${server}/api/dash`, fetcher, {
     fallbackData,
@@ -45,11 +59,44 @@ const Listing = ({
   const [newDest, setNewDest] = useState(destination);
   const [isNewVisit, setIsNewVisit] = useState(false);
   const [color, setColor] = useState("white");
+  const [copied, setCopied] = useState(false);
 
   const [currentStatus, setCurrentStatus] = useState(status);
   const prevStatus = usePrevious(currentStatus);
   const prevRoute = usePrevious(route);
   const prevVisits = usePrevious(visits);
+
+  function handleEditField(
+    user: User,
+    editItem: "ROUTE" | "DESTINATION",
+    modal: "INFO" | "SIGN_IN"
+  ) {
+    if (user) {
+      setEdit(true);
+      setNewRoute(route);
+      setNewDest(destination);
+      setEditItem(editItem);
+    } else {
+      setSelectedData({
+        route,
+        destination,
+      });
+      if (modal === "INFO") {
+        setInfoModalOpen(true);
+      } else {
+        setSignInModalOpen(true);
+      }
+    }
+  }
+
+  function copyDestinationToClipboard() {
+    navigator.clipboard
+      .writeText(destination)
+      .then(() => setCopied(true))
+      .catch((err) => {
+        console.error("Failed to copy text: ", err);
+      });
+  }
 
   useEffect(() => {
     if (prevVisits && visits !== prevVisits) {
@@ -86,6 +133,13 @@ const Listing = ({
       }, 2000);
     }
   }, [status]);
+  useEffect(() => {
+    if (copied) {
+      setTimeout(() => {
+        setCopied(false);
+      }, 1000);
+    }
+  }, [copied]);
 
   async function handleMutate() {
     if (!data) return;
@@ -198,12 +252,7 @@ const Listing = ({
     >
       <p
         className="text-sm truncate pr-4 pl-2 cursor-pointer border-r-2 border-black py-2 w-5/12 sm:w-1/4"
-        onClick={() => {
-          setEdit(true);
-          setNewRoute(route);
-          setNewDest(destination);
-          setEditItem("ROUTE");
-        }}
+        onClick={() => handleEditField(user, "ROUTE", "INFO")}
       >
         {route}
       </p>
@@ -212,32 +261,17 @@ const Listing = ({
           className={`font-mono p-2 truncate text-sm text-gray-500 ${
             color === "white" ? "text-gray-500" : "text-black"
           } group-hover:text-black cursor-pointer transition duration-100`}
-          onClick={() => {
-            setEdit(true);
-            setNewRoute(route);
-            setNewDest(destination);
-            setEditItem("DESTINATION");
-          }}
+          onClick={() => handleEditField(user, "DESTINATION", "INFO")}
         >
           {newDest}
         </p>
         <div
           className="grow cursor-pointer py-4"
-          onClick={() => {
-            setEdit(true);
-            setNewRoute(route);
-            setNewDest(destination);
-            setEditItem("DESTINATION");
-          }}
+          onClick={() => handleEditField(user, "DESTINATION", "INFO")}
         ></div>
         <button
           className="py-1 pr-2 hidden group-hover:block"
-          onClick={() => {
-            setEdit(true);
-            setNewRoute(route);
-            setNewDest(destination);
-            setEditItem("DESTINATION");
-          }}
+          onClick={() => handleEditField(user, "DESTINATION", "SIGN_IN")}
         >
           <Edit size="22px" />
         </button>
@@ -251,6 +285,12 @@ const Listing = ({
             <Eraser size="22px" />
           </button>
         )}
+        <button
+          className="py-1 pr-2 hidden group-hover:block"
+          onClick={() => copyDestinationToClipboard()}
+        >
+          {copied ? <Check size="22px" /> : <Copy size="22px" />}
+        </button>
       </div>
       <a
         href={newDest}
