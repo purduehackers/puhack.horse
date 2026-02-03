@@ -1,12 +1,8 @@
-import { NextAuthOptions, Profile } from "next-auth";
-import GitHubProvider from "next-auth/providers/github";
+import NextAuth from "next-auth";
+import GitHub from "next-auth/providers/github";
 import isInOrg from "./is-in-org";
 
-interface ProfileWithLogin extends Profile {
-  login: string | null | undefined;
-}
-
-export const authOptions: NextAuthOptions = {
+export const { handlers, auth, signIn, signOut } = NextAuth({
   session: {
     strategy: "jwt",
   },
@@ -14,15 +10,15 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   providers: [
-    GitHubProvider({
+    GitHub({
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      const githubProfile = profile as ProfileWithLogin | undefined;
-      return await isInOrg(githubProfile?.login);
+    async signIn({ profile }) {
+      const login = profile?.login as string | undefined;
+      return await isInOrg(login);
     },
   },
-};
+});
