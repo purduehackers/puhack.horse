@@ -24,7 +24,7 @@ export default async (req: NextRequest) => {
       const data = await req.json();
       const { items } = data;
 
-      await fetch(
+      const response = await fetch(
         `https://api.vercel.com/v1/edge-config/${process.env.EDGE_CONFIG_ID}/items?teamId=${process.env.TEAM_ID}`,
         {
           method: "PATCH",
@@ -40,6 +40,16 @@ export default async (req: NextRequest) => {
         (err) =>
           new Response(null, { status: 500, statusText: `Error: ${err}` })
       );
+			if (!response.ok) {
+				return NextResponse.json({
+					ok: false,
+					reason: "Vercel Edge Config API request failed",
+					upstreamResponse: {
+						status: response.status,
+						body: await response.text(),
+					},
+				}, { status: 500 });
+      }
       return NextResponse.json({ ok: true });
     } catch (err) {
       console.log(err);
