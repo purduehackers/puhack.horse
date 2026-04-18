@@ -8,7 +8,7 @@ export async function add(
   destination: string,
   newData: ConfigData
 ) {
-  await fetch(url, {
+  const response = await fetch(url, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -29,6 +29,12 @@ export async function add(
   }).catch((err) => {
     throw new Error(err);
   });
+	if (!response.ok) {
+		throw new Error(
+			`API request failed with status ${response.status}`,
+			{ cause: response }
+		);
+  }
 
   newData[route].status = "SUCCESS";
   await waitForPropagation(route);
@@ -36,7 +42,7 @@ export async function add(
 }
 
 export async function del(route: string, newData: ConfigData) {
-  await fetch(url, {
+  const response = await fetch(url, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -53,6 +59,12 @@ export async function del(route: string, newData: ConfigData) {
   }).catch((err) => {
     throw new Error(`${err}`);
   });
+	if (!response.ok) {
+		throw new Error(
+			`API request failed with status ${response.status}`,
+			{ cause: response }
+		);
+  }
   await waitForPropagation(route, false);
   return newData;
 }
@@ -64,7 +76,7 @@ export async function updateRoute(
   visits: number,
   newData: ConfigData
 ) {
-  await fetch(url, {
+  const response = await fetch(url, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -89,6 +101,12 @@ export async function updateRoute(
   }).catch((err) => {
     throw new Error(`${err}`);
   });
+	if (!response.ok) {
+		throw new Error(
+			`API request failed with status ${response.status}`,
+			{ cause: response }
+		);
+  }
   newData[newRoute].status = "SUCCESS";
   await waitForPropagation(newRoute);
   return newData;
@@ -100,7 +118,7 @@ export async function updateDestination(
   visits: number,
   newData: ConfigData
 ) {
-  await fetch(url, {
+  const response = await fetch(url, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -121,7 +139,12 @@ export async function updateDestination(
   }).catch((err) => {
     throw new Error(err);
   });
-
+  if (!response.ok) {
+		throw new Error(
+			`API request failed with status ${response.status}`,
+			{ cause: response }
+		);
+  }
   newData[route].status = "SUCCESS";
   return newData;
 }
