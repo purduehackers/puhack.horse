@@ -2,12 +2,14 @@
 
 🔗🐴 A link shortener powered by [Vercel Edge Config](https://vercel.com/blog/edge-config-ultra-low-latency-data-at-the-edge).
 
-This is a monorepo with two repositories:
+This monorepo contains:
 
 - [dash](https://github.com/purduehackers/puhack.horse/tree/main/dash)
   - An admin dashboard with an optimistic UI
 - [horse](https://github.com/purduehackers/puhack.horse/tree/main/horse)
   - Middleware that handles redirecting
+- [cli](cli)
+  - `@purduehackers/phack-cli`, the `phack` command for creating and looking up links
   
 ## Story
 
