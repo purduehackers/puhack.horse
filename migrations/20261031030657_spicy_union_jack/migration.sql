@@ -1,5 +1,5 @@
 CREATE TABLE `account` (
-	`id` text PRIMARY KEY NOT NULL,
+	`id` text PRIMARY KEY,
 	`accountId` text NOT NULL,
 	`providerId` text NOT NULL,
 	`userId` text NOT NULL,
@@ -12,17 +12,17 @@ CREATE TABLE `account` (
 	`password` text,
 	`createdAt` integer NOT NULL,
 	`updatedAt` integer NOT NULL,
-	FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
+	CONSTRAINT `fk_account_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE
 );
 --> statement-breakpoint
 CREATE TABLE `apikey` (
-	`id` text PRIMARY KEY NOT NULL,
+	`id` text PRIMARY KEY,
 	`configId` text DEFAULT 'default' NOT NULL,
 	`name` text,
 	`start` text,
 	`referenceId` text NOT NULL,
 	`prefix` text,
-	`key` text NOT NULL,
+	`key` text NOT NULL UNIQUE,
 	`refillInterval` integer,
 	`refillAmount` integer,
 	`lastRefillAt` integer,
@@ -38,42 +38,39 @@ CREATE TABLE `apikey` (
 	`updatedAt` integer NOT NULL,
 	`permissions` text,
 	`metadata` text,
-	FOREIGN KEY (`referenceId`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
+	CONSTRAINT `fk_apikey_referenceId_user_id_fk` FOREIGN KEY (`referenceId`) REFERENCES `user`(`id`) ON DELETE CASCADE
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `apikey_key_unique` ON `apikey` (`key`);--> statement-breakpoint
 CREATE TABLE `link` (
-	`slug` text PRIMARY KEY NOT NULL,
+	`slug` text PRIMARY KEY,
 	`destination` text NOT NULL,
 	`visits` integer DEFAULT 0 NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `session` (
-	`id` text PRIMARY KEY NOT NULL,
+	`id` text PRIMARY KEY,
 	`expiresAt` integer NOT NULL,
-	`token` text NOT NULL,
+	`token` text NOT NULL UNIQUE,
 	`createdAt` integer NOT NULL,
 	`updatedAt` integer NOT NULL,
 	`ipAddress` text,
 	`userAgent` text,
 	`userId` text NOT NULL,
-	FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
+	CONSTRAINT `fk_session_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `session_token_unique` ON `session` (`token`);--> statement-breakpoint
 CREATE TABLE `user` (
-	`id` text PRIMARY KEY NOT NULL,
+	`id` text PRIMARY KEY,
 	`name` text NOT NULL,
-	`email` text NOT NULL,
+	`email` text NOT NULL UNIQUE,
 	`emailVerified` integer DEFAULT false NOT NULL,
 	`image` text,
 	`createdAt` integer NOT NULL,
 	`updatedAt` integer NOT NULL
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `user_email_unique` ON `user` (`email`);--> statement-breakpoint
 CREATE TABLE `verification` (
-	`id` text PRIMARY KEY NOT NULL,
+	`id` text PRIMARY KEY,
 	`identifier` text NOT NULL,
 	`value` text NOT NULL,
 	`expiresAt` integer NOT NULL,

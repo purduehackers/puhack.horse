@@ -66,9 +66,11 @@ export function accessControl(auth: Auth, db: Database, origin: string): Authori
           return denied(403, "Invalid origin");
       }
       if (!userId) return denied(401, "Sign in or supply an API key");
-      const account = await db.query.account.findFirst({
-        where: and(eq(schema.account.userId, userId), eq(schema.account.providerId, providerId)),
-      });
+      const [account] = await db
+        .select()
+        .from(schema.account)
+        .where(and(eq(schema.account.userId, userId), eq(schema.account.providerId, providerId)))
+        .limit(1);
       if (!account) return denied(403, "Purdue Hackers ID required");
       const token = await auth.api.getAccessToken({ body: { accountId: account.id, userId } });
       const response = await fetch(`${issuer}/oauth2/userinfo`, {

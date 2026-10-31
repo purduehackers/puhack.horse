@@ -1,7 +1,7 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { user } from "./user";
 export const apikey = sqliteTable("apikey", {
-  id: text().primaryKey(),
+  id: text().primaryKey().notNull(),
   configId: text().notNull().default("default"),
   name: text(),
   start: text(),
