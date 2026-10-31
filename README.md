@@ -1,46 +1,72 @@
-# puhack.horse
+# phack.rs
 
-🔗🐴 A link shortener powered by [Vercel Edge Config](https://vercel.com/blog/edge-config-ultra-low-latency-data-at-the-edge).
+One Bun package: an Elysia API, a plain HTML dashboard, an Eden CLI, and a thin Eden library. Two runtime dependencies; no React, Next.js, SDK, database migration, or separate client schemas.
 
-This monorepo contains:
+## Run
 
-- [dash](https://github.com/purduehackers/puhack.horse/tree/main/dash)
-  - An admin dashboard with an optimistic UI
-- [horse](https://github.com/purduehackers/puhack.horse/tree/main/horse)
-  - Middleware that handles redirecting
-- [cli](cli)
-  - `@purduehackers/phack-cli`, the `phack` command for creating and looking up links
-  
-## Story
+```sh
+bun install
+cp .env.example .env
+# Fill in PHACK_TOKEN (a long random secret) and VERCEL_API_TOKEN.
+bun run dev
+```
 
-A little while back we made [the original puhack.horse](https://github.com/purduehackers/puhack.horse-airtable), which used Airtable as a source of truth. This worked great for us, but we thought it could be even faster if it didn't have to leave the Edge to get its data.
+Open http://localhost:3000/dashboard and enter PHACK_TOKEN. The dashboard keeps credentials in memory only. The API uses the existing Purdue Hackers Global Config store, with its existing `{ d, v }` records. Local development uses the configured real store; use a separate store for experimentation.
 
-It turns out it's a lot faster! But we lose Airtable, and we have non-technical people on our team who want to be able to super easily edit routes—so the `dash` repo is an admin dashboard that allows for super easy editing of routes using the [SWR Mutation API](https://swr.vercel.app/docs/mutation).
+Production runs on Vercel with the Elysia preset and Bun runtime, using the repository root. The `puhack-horse-dash` project serves the consolidated app and existing domains; `main` is the production branch. Set the variables from `.env.example`. The admin token is stored as a Vercel Secret. Keep it in your password manager; Vercel cannot reveal it after saving. For another Bun host, run `bun run build` then `bun start` behind HTTPS; `PORT` defaults to 3000.
 
-<img width="1522" alt="Screenshot 2023-02-25 at 3 22 12 AM" src="https://user-images.githubusercontent.com/14811170/221347293-5df14229-bbd9-4fe9-b56a-f4ed60439922.png">
+## CLI
 
-## Deploy
+```sh
+export PHACK_URL=http://localhost:3000
+export PHACK_TOKEN=your-admin-token
+bun src/cli.ts create https://purduehackers.com/events --slug events
+bun src/cli.ts get events
+bun src/cli.ts list
+bun src/cli.ts delete events
+```
 
-- Create a GitHub OAuth app (Settings –> Developer Settings). Set the callback URL to `YOUR_DOMAIN/api/auth/callback/github`.
-- Create an Edge Config Store on your Vercel Dashboard.
-- Clone this repo.
-- In `dash/lib/auth.ts`, comment out the line with `isInOrg()` at the bottom, or replace it with your own function. This is used to restrict signup to a group of people (in our case, we only want people in our GitHub org to manage routes).
-- Deploy the project to Vercel. You'll have to create two projects: one for the `horse` folder and one for the `dash` folder.
-- Set the following environment variables in the `dash` project:
-  - `NEXT_PUBLIC_HORSE_SECRET`
-  - `EDGE_CONFIG_ID`
-  - `TEAM_ID`
-  - `VERCEL_API_TOKEN`
-  - `GITHUB_CLIENT_SECRET`
-  - `GITHUB_CLIENT_ID`
-  - `NEXTAUTH_URL`
-  - `NEXTAUTH_SECRET`
-  - `GH_ACCESS_TOKEN`
-- Set the following environment variable in the `horse` project:
-  - `HORSE_SECRET`
-- Connect the Edge Config Store you created to both projects in their "Edge Config" settings tabs.
-- profit!
+The package exposes the `phack` binary. Commands return JSON and exit nonzero on failure. An omitted slug is generated in the client. A failed create retains that slug in recovery instructions; check it and retry with the same `--slug`. Atomic creates never overwrite another destination or reset visit counts. An identical existing link is a successful retry.
 
----
+## Library
 
-Note: Edge Config is great but not meant to be used for a serious link shortener. The free plan only allows for 8KB of data, which you'll use up after ~100 routes.
+```ts
+import { createClient } from "@purduehackers/phack";
+
+const api = createClient("https://your-shortener.example", process.env.PHACK_TOKEN!);
+const { data, error } = await api.links.post({
+  slug: "events",
+  destination: "https://purduehackers.com/events",
+});
+const result = await api.links({ slug: "events" }).get();
+```
+
+The library returns Eden responses directly. Check `error` for HTTP failures and catch transport failures. Generate and retain a slug before submitting a create so that transport retries are idempotent. Consumers use Bun or a TypeScript-aware bundler. API types are imported only as types; server code and credentials are not bundled in the browser.
+
+## Routes
+
+| Method | Path               | Purpose                                    |
+| ------ | ------------------ | ------------------------------------------ |
+| GET    | `/`                | Purdue Hackers homepage redirect           |
+| GET    | `/:slug`           | Public 307 redirect; 404 for missing links |
+| GET    | `/dashboard`       | HTML interface                             |
+| GET    | `/api/links`       | List links                                 |
+| GET    | `/api/links/:slug` | Read a link                                |
+| POST   | `/api/links`       | Create `{ slug, destination }`             |
+| DELETE | `/api/links/:slug` | Delete a link                              |
+
+All `/api` routes require `Authorization: Bearer <PHACK_TOKEN>`. The browser is same-origin. GitHub OAuth and Vercel CLI login are replaced by this shared admin token; the Vercel management token stays on the server. Creates accept HTTP(S) URLs and nonreserved slugs of 2–64 alphanumeric characters with internal hyphens.
+
+Existing visit counts are preserved, but redirects no longer increment them. Reads currently use the authoritative Vercel management API, so latency and rate limits apply to public redirects too; this minimal implementation is not an edge-cached high-volume redirect service. Store failures return 503 rather than a misleading redirect. There are no automatic write retries.
+
+## Check
+
+```sh
+bun run typecheck
+bun run lint
+bun run format --check
+bun test
+bun run build
+```
+
+Tests use an isolated in-memory store and mocked Vercel requests; they do not touch production.

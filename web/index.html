@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>phack.rs · Purdue Hackers</title>
+  <style>
+    [hidden] {
+      display: none !important;
+    }
+    :root {
+      color-scheme: light dark;
+      font: 16px system-ui;
+    }
+    body {
+      max-width: 60rem;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+    h1 {
+      color: #d59400;
+    }
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+    input,
+    button {
+      font: inherit;
+      padding: 0.6rem;
+    }
+    input[type="url"] {
+      flex: 1;
+      min-width: 12rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    td,
+    th {
+      padding: 0.7rem;
+      text-align: left;
+      border-bottom: 1px solid #888;
+      overflow-wrap: anywhere;
+    }
+    #message {
+      min-height: 1.5rem;
+    }
+    button {
+      cursor: pointer;
+    }
+  </style>
+  <h1>phack.rs 🔗</h1>
+  <p>Purdue Hackers short links</p>
+  <form id="auth">
+    <input
+      name="token"
+      type="password"
+      aria-label="Admin token"
+      placeholder="Admin token"
+      required
+    /><button>Connect</button><button type="button" id="logout">Disconnect</button>
+  </form>
+  <form id="create" hidden>
+    <input name="slug" aria-label="Slug" placeholder="Slug (optional)" /><input
+      name="destination"
+      type="url"
+      aria-label="Destination"
+      placeholder="https://"
+      required
+    /><button>Create link</button>
+  </form>
+  <p id="message" role="status"></p>
+  <table hidden>
+    <thead>
+      <tr>
+        <th>Short link</th>
+        <th>Destination</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <script type="module" src="/dashboard/main.js"></script>
+</html>
