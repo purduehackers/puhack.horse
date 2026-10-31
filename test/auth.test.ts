@@ -8,7 +8,7 @@ import { sqlStore } from "../src/store";
 
 const secret = "test-secret-with-at-least-thirty-two-characters";
 test("real Better Auth sessions and API keys enforce owner membership and revocation", async () => {
-  const db = connect("file::memory:");
+  const db = await connect("file::memory:");
   await migrate(db, { migrationsFolder: "migrations" });
   const original = globalThis.fetch;
   let roles = ["organizer"];
@@ -160,7 +160,7 @@ test("real Better Auth sessions and API keys enforce owner membership and revoca
 });
 
 test("Turso schema preserves counts and enforces atomic unique slugs", async () => {
-  const db = connect("file::memory:");
+  const db = await connect("file::memory:");
   try {
     await migrate(db, { migrationsFolder: "migrations" });
     await db.insert(schema.link).values({ slug: "legacy", d: "https://example.com", v: 42 });

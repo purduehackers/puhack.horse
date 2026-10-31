@@ -10,7 +10,7 @@ function required(name: string) {
   if (!value) throw new Error(`${name} is required`);
   return value;
 }
-const db = connect(required("TURSO_DATABASE_URL"), process.env.TURSO_AUTH_TOKEN);
+const db = await connect(required("TURSO_DATABASE_URL"), process.env.TURSO_AUTH_TOKEN);
 const auth = createAuth(db, {
   url: required("BETTER_AUTH_URL"),
   secret: required("BETTER_AUTH_SECRET"),

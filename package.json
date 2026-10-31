@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "bun run build && bun --watch src/server.ts",
     "start": "bun src/server.ts",
-    "build": "bun build web/main.ts --outdir dist --minify",
+    "build": "bun build web/main.ts --outdir dist --minify && bun build src/server.ts --target bun --outfile dist/server.js --external elysia --external drizzle-orm/libsql",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
     "lint": "oxlint --deny-warnings",

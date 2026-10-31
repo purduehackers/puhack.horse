@@ -1,4 +1,4 @@
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-auth/minimal";
 import { APIError } from "better-auth/api";
 import { genericOAuth } from "better-auth/plugins";
 import { apiKey } from "@better-auth/api-key";
