@@ -13,7 +13,7 @@ bun run dev
 
 Open http://localhost:3000/dashboard and enter PHACK_TOKEN. The dashboard keeps credentials in memory only. The API uses the existing Purdue Hackers Global Config store, with its existing `{ d, v }` records. Local development uses the configured real store; use a separate store for experimentation.
 
-For production, run `bun run build` then `bun start` on a Bun host behind HTTPS. Set the variables from `.env.example`; `PORT` defaults to 3000. The old two-project Next.js deployments must be replaced before this can serve production. This repository does not deploy automatically.
+Production runs on Vercel with the Elysia preset and Bun runtime, using the repository root. The `puhack-horse-dash` project serves the consolidated app and existing domains; `main` is the production branch. Set the variables from `.env.example`. The protected `PHACK_TOKEN` is available to project administrators in Vercel environment settings. For another Bun host, run `bun run build` then `bun start` behind HTTPS; `PORT` defaults to 3000.
 
 ## CLI
 

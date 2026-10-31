@@ -18,7 +18,7 @@ export function vercelStore(token: string, id: string, team: string): Store {
         signal: AbortSignal.timeout(10_000),
       },
     );
-    if (response.status === 404 && !items) return undefined;
+    if ((response.status === 404 || response.status === 204) && !items) return undefined;
     if (!response.ok) throw new Error(`Link store returned ${response.status}`);
     return response.json();
   }

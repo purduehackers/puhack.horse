@@ -12,7 +12,13 @@ export function createApp(store: Store, token: string) {
     .onError(({ code, status }) => {
       if (code === "UNKNOWN") return status(503, { message: "Link store unavailable" });
     })
-    .get("/", ({ redirect }) => redirect("https://purduehackers.com"))
+    .get("/", ({ request, redirect }) =>
+      redirect(
+        new URL(request.url).hostname === "dash.puhack.horse"
+          ? "/dashboard"
+          : "https://purduehackers.com",
+      ),
+    )
     .group("/api", (app) =>
       app
         .onBeforeHandle(({ headers, status }) => {
