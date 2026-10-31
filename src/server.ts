@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { Elysia } from "elysia";
 import { createApp } from "./api";
 import { vercelStore } from "./store";
@@ -17,11 +18,17 @@ const app = new Elysia()
   .get(
     "/dashboard",
     () =>
-      new Response(Bun.file(new URL("../web/index.html", import.meta.url)), {
+      new Response(readFileSync(new URL("../web/index.html", import.meta.url), "utf8"), {
         headers: { "Content-Type": "text/html; charset=utf-8" },
       }),
   )
-  .get("/dashboard/main.js", () => Bun.file(new URL("../dist/main.js", import.meta.url)));
+  .get(
+    "/dashboard/main.js",
+    () =>
+      new Response(readFileSync(new URL("../dist/main.js", import.meta.url), "utf8"), {
+        headers: { "Content-Type": "text/javascript; charset=utf-8" },
+      }),
+  );
 
 export default app;
 if (import.meta.main) {
