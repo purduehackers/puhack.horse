@@ -19,7 +19,7 @@ const auth = createAuth(db, {
 });
 const authorize = accessControl(auth, db, new URL(required("BETTER_AUTH_URL")).origin);
 const app = new Elysia()
-  .all("/api/auth/*", ({ request }) => authHandler(auth, authorize)(request))
+  .all("/api/auth/*", ({ request }) => authHandler(auth, authorize)(request), { parse: "none" })
   .use(createApp(sqlStore(db), authorize))
   .get("/dashboard", ({ request, redirect }) =>
     new URL(request.url).origin !== new URL(required("BETTER_AUTH_URL")).origin

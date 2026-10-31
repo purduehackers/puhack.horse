@@ -1,4 +1,5 @@
 import { test, expect } from "bun:test";
+import { Elysia } from "elysia";
 import { migrate } from "drizzle-orm/libsql/migrator";
 import { makeSignature, symmetricEncrypt } from "better-auth/crypto";
 import { connect, schema } from "../src/db";
@@ -59,7 +60,12 @@ test("real Better Auth sessions and API keys enforce owner membership and revoca
     });
     const cookie = `better-auth.session_token=${encodeURIComponent(`${session.token}.${await makeSignature(session.token, secret)}`)}`;
     const authorize = accessControl(auth, db, "http://localhost:3000");
-    const handler = authHandler(auth, authorize);
+    const app = new Elysia().all(
+      "/api/auth/*",
+      ({ request }) => authHandler(auth, authorize)(request),
+      { parse: "none" },
+    );
+    const handler = (request: Request) => app.handle(request);
     const request = (
       path: string,
       method: "GET" | "POST" = "GET",
@@ -133,7 +139,7 @@ test("real Better Auth sessions and API keys enforce owner membership and revoca
     expect((await authorize(request("/api/links", "GET", undefined, keyHeaders)))?.status).toBe(
       401,
     );
-    const signin = await auth.handler(
+    const signin = await handler(
       request("/api/auth/sign-in/social", "POST", {
         provider: "purduehackers",
         callbackURL: "/dashboard",
