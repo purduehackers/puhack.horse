@@ -1,0 +1,38 @@
+{
+  "name": "@purduehackers/phack",
+  "version": "0.2.0",
+  "bin": {
+    "phack": "./src/cli.ts"
+  },
+  "files": [
+    "src",
+    "web",
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": "./src/client.ts"
+  },
+  "scripts": {
+    "dev": "bun run build && bun --watch src/server.ts",
+    "start": "bun src/server.ts",
+    "build": "bun build web/main.ts --outdir dist --minify",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "lint": "oxlint --deny-warnings",
+    "format": "oxfmt"
+  },
+  "dependencies": {
+    "@elysiajs/eden": "^1.4.9",
+    "elysia": "^1.4.30"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.4",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "bun": ">=1.3.0"
+  }
+}
