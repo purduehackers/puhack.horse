@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { treaty } from "@elysiajs/eden";
 import { createApp } from "../src/api";
 import { createClient } from "../src/client";
-import { vercelStore, type Link, type Store } from "../src/store";
+import { type Link, type Store } from "../src/store";
 
 function fixture() {
   const links = new Map<string, Link>();
@@ -21,15 +21,16 @@ function fixture() {
       links.delete(slug);
     },
   };
-  const app = createApp(store, "test-token");
+  const app = createApp(store, async (request) =>
+    request.headers.get("authorization") === "Bearer test-token"
+      ? undefined
+      : Response.json({ message: "Unauthorized" }, { status: 401 }),
+  );
   const api = treaty(app, { headers: { authorization: "Bearer test-token" } }).api;
   return { links, store, app, api };
 }
 
 describe("API", () => {
-  test("fails closed without a token", () => {
-    expect(() => createApp(fixture().store, "")).toThrow();
-  });
   test("protects every management operation", async () => {
     const { app, links } = fixture();
     for (const [method, path] of [
@@ -148,51 +149,4 @@ describe("API", () => {
       app.stop();
     }
   });
-});
-
-test("Vercel adapter uses atomic create and preserves stored values", async () => {
-  const original = globalThis.fetch;
-  const requests: { url: string; init?: RequestInit }[] = [];
-  globalThis.fetch = Object.assign(
-    async (input: string | URL | Request, init?: RequestInit) => {
-      requests.push({ url: String(input), init });
-      return Response.json(
-        init?.method === "PATCH"
-          ? { status: "ok" }
-          : String(input).includes("/item/")
-            ? { value: { d: "https://example.com", v: 9 } }
-            : [{ key: "test", value: { d: "https://example.com", v: 9 } }],
-      );
-    },
-    { preconnect: original.preconnect },
-  ) as typeof fetch;
-  try {
-    const store = vercelStore("token", "store", "team");
-    await store.create("test", "https://example.com");
-    expect(JSON.parse(String(requests[0].init?.body))).toEqual({
-      items: [{ operation: "create", key: "test", value: { d: "https://example.com", v: 0 } }],
-    });
-    expect(await store.get("test")).toEqual({ d: "https://example.com", v: 9 });
-    expect(await store.list()).toEqual({ test: { d: "https://example.com", v: 9 } });
-    await store.delete("test");
-    expect(
-      requests.every((request) =>
-        request.url.startsWith("https://api.vercel.com/v1/global-config/store/"),
-      ),
-    ).toBe(true);
-  } finally {
-    globalThis.fetch = original;
-  }
-});
-
-test("missing Vercel items return undefined on 204", async () => {
-  const original = globalThis.fetch;
-  globalThis.fetch = Object.assign(async () => new Response(null, { status: 204 }), {
-    preconnect: original.preconnect,
-  }) as typeof fetch;
-  try {
-    expect(await vercelStore("token", "store", "team").get("missing")).toBeUndefined();
-  } finally {
-    globalThis.fetch = original;
-  }
 });

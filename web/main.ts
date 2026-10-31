@@ -1,10 +1,12 @@
 import { createClient } from "../src/client";
-const auth = document.querySelector<HTMLFormElement>("#auth")!;
+import { createAuthClient } from "better-auth/client";
+import { apiKeyClient } from "@better-auth/api-key/client";
+const auth = createAuthClient({ plugins: [apiKeyClient()] });
 const form = document.querySelector<HTMLFormElement>("#create")!;
 const table = document.querySelector("table")!;
 const rows = document.querySelector("tbody")!;
 const message = document.querySelector("#message")!;
-let api = createClient(location.origin, "");
+const api = createClient(location.origin);
 const report = (error: unknown) => {
   message.textContent = error instanceof Error ? error.message : JSON.stringify(error);
 };
@@ -35,24 +37,62 @@ async function refresh() {
   }
   form.hidden = table.hidden = false;
 }
-auth.onsubmit = async (event) => {
-  event.preventDefault();
-  api = createClient(location.origin, String(new FormData(auth).get("token")));
-  try {
-    await refresh();
-    auth.reset();
-    message.textContent = "Connected";
-  } catch (error) {
-    report(error);
+const login = document.querySelector<HTMLButtonElement>("#login")!;
+const logout = document.querySelector<HTMLButtonElement>("#logout")!;
+const keys = document.querySelector<HTMLElement>("#keys")!;
+login.onclick = async () => {
+  const { error } = await auth.signIn.social({
+    provider: "purduehackers",
+    callbackURL: "/dashboard",
+  });
+  if (error) report(error);
+};
+logout.onclick = async () => {
+  await auth.signOut();
+  location.reload();
+};
+async function refreshKeys() {
+  const { data, error } = await auth.apiKey.list();
+  if (error) throw error;
+  const list = document.querySelector("#key-list")!;
+  list.replaceChildren();
+  for (const key of data.apiKeys) {
+    const item = document.createElement("li");
+    item.textContent = `${key.name} (${key.start ?? ""}…) `;
+    const remove = document.createElement("button");
+    remove.textContent = "Revoke";
+    remove.onclick = async () => {
+      if (!confirm(`Revoke ${key.name}?`)) return;
+      const { error } = await auth.apiKey.delete({ keyId: key.id });
+      if (error) report(error);
+      else await refreshKeys().catch(report);
+    };
+    item.append(remove);
+    list.append(item);
   }
+}
+const keyForm = document.querySelector<HTMLFormElement>("#key-create")!;
+keyForm.onsubmit = async (event) => {
+  event.preventDefault();
+  const { data, error } = await auth.apiKey.create({
+    name: String(new FormData(keyForm).get("name")),
+  });
+  if (error) return report(error);
+  document.querySelector("#new-key")!.textContent =
+    `Copy this key now; it is shown once: ${data.key}`;
+  keyForm.reset();
+  await refreshKeys().catch(report);
 };
-document.querySelector<HTMLButtonElement>("#logout")!.onclick = () => {
-  api = createClient(location.origin, "");
-  rows.replaceChildren();
-  auth.reset();
-  form.hidden = table.hidden = true;
-  message.textContent = "Disconnected";
-};
+void auth
+  .getSession()
+  .then(async ({ data }) => {
+    if (!data) return;
+    await refresh();
+    await refreshKeys();
+    login.hidden = true;
+    logout.hidden = keys.hidden = false;
+  })
+  .catch(report);
 form.onsubmit = async (event) => {
   event.preventDefault();
   const fields = new FormData(form);

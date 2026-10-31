@@ -9,5 +9,5 @@
     "types": ["bun"],
     "lib": ["ESNext", "DOM", "DOM.Iterable"]
   },
-  "include": ["src", "web", "test"]
+  "include": ["src", "web", "test", "scripts", "drizzle.config.ts"]
 }

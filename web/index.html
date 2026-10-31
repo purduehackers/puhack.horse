@@ -54,15 +54,16 @@
   </style>
   <h1>phack.rs 🔗</h1>
   <p>Purdue Hackers short links</p>
-  <form id="auth">
-    <input
-      name="token"
-      type="password"
-      aria-label="Admin token"
-      placeholder="Admin token"
-      required
-    /><button>Connect</button><button type="button" id="logout">Disconnect</button>
-  </form>
+  <button id="login">Sign in with Purdue Hackers ID</button>
+  <button id="logout" hidden>Sign out</button>
+  <section id="keys" hidden>
+    <h2>My API keys</h2>
+    <form id="key-create">
+      <input name="name" placeholder="Key name" required /><button>Create API key</button>
+    </form>
+    <p id="new-key" role="status"></p>
+    <ul id="key-list"></ul>
+  </section>
   <form id="create" hidden>
     <input name="slug" aria-label="Slug" placeholder="Slug (optional)" /><input
       name="destination"

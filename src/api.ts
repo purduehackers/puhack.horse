@@ -1,13 +1,12 @@
 import { Elysia, t } from "elysia";
-import { timingSafeEqual } from "node:crypto";
+import type { Authorize } from "./auth";
 import type { Store } from "./store";
 
 const slug = t.String({ pattern: "^[A-Za-z0-9][A-Za-z0-9-]{0,62}[A-Za-z0-9]$" });
 const params = t.Object({ slug });
 const reserved = new Set(["404", "api", "dashboard", "favicon", "login"]);
 
-export function createApp(store: Store, token: string) {
-  if (!token) throw new Error("PHACK_TOKEN is required");
+export function createApp(store: Store, authorize: Authorize) {
   return new Elysia()
     .onError(({ code, status }) => {
       if (code === "UNKNOWN") return status(503, { message: "Link store unavailable" });
@@ -21,11 +20,13 @@ export function createApp(store: Store, token: string) {
     )
     .group("/api", (app) =>
       app
-        .onBeforeHandle(({ headers, status }) => {
-          const actual = Buffer.from(headers.authorization ?? "");
-          const expected = Buffer.from(`Bearer ${token}`);
-          if (actual.length !== expected.length || !timingSafeEqual(actual, expected))
-            return status(401, { message: "Unauthorized" });
+        .onBeforeHandle(async ({ request, status }) => {
+          const denied = await authorize(request);
+          if (denied)
+            return status(
+              denied.status === 401 ? 401 : denied.status === 403 ? 403 : 503,
+              (await denied.json()) as { message: string },
+            );
         })
         .get("/links", () => store.list())
         .get(
