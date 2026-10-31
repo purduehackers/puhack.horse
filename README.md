@@ -8,11 +8,11 @@ One Bun package: an Elysia API, plain HTML dashboard, Eden CLI, and thin Eden li
 bun install
 cp .env.example .env
 # Fill in Better Auth secret and ID application credentials.
-bun run db:migrate
+bunx --bun drizzle-kit migrate
 bun run dev
 ```
 
-Use a random secret of at least 32 characters for `BETTER_AUTH_SECRET`. Local development uses `file:local.db`; production uses a Turso database URL and auth token. Migrations run explicitly, never during application startup or preview builds.
+Use a random secret of at least 32 characters for `BETTER_AUTH_SECRET`. Local development uses `file:local.db`; production uses a Turso database URL and auth token. Generate schema changes with `bunx --bun drizzle-kit generate` and apply them with `bunx --bun drizzle-kit migrate`. Migrations run explicitly, never during application startup or preview builds.
 
 Register an application at [Purdue Hackers ID](https://id.purduehackers.com) with scopes `openid profile email roles offline_access` and callback `http://localhost:3000/api/auth/callback/purduehackers` for development, or `https://phack.rs/api/auth/callback/purduehackers` for production. Set its client ID and, for a confidential client, client secret. `BETTER_AUTH_URL` is the canonical application origin. Dashboard requests on other hostnames redirect there; public short links continue working on every alias.
 
@@ -24,7 +24,7 @@ Organizers can create, list and revoke their own API keys on the dashboard. Keys
 
 1. Provision Turso and register the production ID application. Configure `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, `ID_CLIENT_ID`, and optionally `ID_CLIENT_SECRET` in the Vercel project. Give previews their own database and ID callback.
 2. Stop legacy link writers briefly and export the complete Edge Config items array (`[{"key":"slug","value":{"d":"https://…","v":0}}]`) to a private JSON file.
-3. Run `bun run db:migrate`, then `bun run db:import /absolute/path/items.json` against the target database. The import is transactional and preserves exact slugs, destinations and counts; identical reruns are safe, conflicting rows abort the import. Compare the exported links to authenticated `GET /api/links` before completing cutover.
+3. Run `bunx --bun drizzle-kit migrate` against the target database. Import the export once during cutover, preserving exact slugs, destinations and visit counts, then compare every row to the export. Provisioning and this one-time data transfer stay outside the application repository.
 4. Deploy, sign in as an organizer, create a key for each integration, and update its `PHACK_TOKEN`. Old shared tokens are no longer accepted. Update Wack Hacker and agent harness to the API before resuming their writes. Keep the export and old store for rollback; do not delete Edge Config while any legacy writer still uses it.
 
 Production uses Vercel's Elysia preset and Bun runtime at the repository root (`puhack-horse-dash`). For another Bun host, run `bun run build` then `bun start` behind HTTPS.
