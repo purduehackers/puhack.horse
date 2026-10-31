@@ -30,7 +30,7 @@
     "@types/bun": "^1.4.4",
     "oxfmt": "^0.75.0",
     "oxlint": "^1.90.0",
-    "typescript": "^7.0.2"
+    "typescript": "5.9.3"
   },
   "engines": {
     "bun": ">=1.3.0"
