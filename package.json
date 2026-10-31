@@ -1,23 +1,36 @@
 {
   "name": "@purduehackers/phack",
   "version": "0.2.0",
+  "description": "Typed API client and CLI for Purdue Hackers short links",
+  "homepage": "https://phack.rs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/purduehackers/puhack.horse.git"
+  },
   "bin": {
-    "phack": "./src/cli.ts"
+    "phack": "./dist/cli.js"
   },
   "files": [
-    "src",
-    "web",
-    "dist"
+    "dist/client.js",
+    "dist/cli.js",
+    "dist/types/src"
   ],
   "type": "module",
   "exports": {
-    ".": "./src/client.ts"
+    ".": {
+      "types": "./dist/types/src/client.d.ts",
+      "default": "./dist/client.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "dev": "bun run build && bun --watch src/server.ts",
     "start": "bun src/server.ts",
     "build": "bun build web/main.ts --outdir dist --minify && bun build src/server.ts --target bun --outfile dist/server.js --external elysia --external drizzle-orm/libsql",
     "typecheck": "tsc --noEmit",
+    "prepack": "bun build src/client.ts src/cli.ts --outdir dist --target bun --packages external && tsc --noEmit false --declaration --emitDeclarationOnly --outDir dist/types",
     "test": "bun test",
     "lint": "oxlint --deny-warnings",
     "format": "oxfmt"

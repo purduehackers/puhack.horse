@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
-import { user } from "./user";
+import { user } from "./user.js";
 export const session = sqliteTable("session", {
   id: text().primaryKey().notNull(),
   expiresAt: integer({ mode: "timestamp_ms" }).notNull(),

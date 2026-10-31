@@ -4,7 +4,7 @@ import { genericOAuth } from "better-auth/plugins";
 import { apiKey } from "@better-auth/api-key";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { and, eq } from "drizzle-orm";
-import { schema, type Database } from "./db";
+import { schema, type Database } from "./db/index.js";
 
 const providerId = "purduehackers";
 const issuer = "https://id.purduehackers.com/api/auth";

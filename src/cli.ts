@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 import { parseArgs } from "node:util";
-import { createClient } from "./client";
+import { createClient } from "./client.js";
 
 const usage =
   "phack list | get <slug> | create <url> [--slug <slug>] | delete <slug>\nSet PHACK_URL and PHACK_TOKEN. Output is JSON.";

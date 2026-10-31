@@ -1,9 +1,9 @@
 import { readFileSync } from "node:fs";
 import { Elysia } from "elysia";
-import { createApp } from "./api";
-import { sqlStore } from "./store";
-import { connect } from "./db";
-import { createAuth, accessControl, authHandler } from "./auth";
+import { createApp } from "./api.js";
+import { sqlStore } from "./store.js";
+import { connect } from "./db/index.js";
+import { createAuth, accessControl, authHandler } from "./auth.js";
 
 function required(name: string) {
   const value = process.env[name];
