@@ -1,6 +1,7 @@
 import { test, expect } from "bun:test";
 import { Elysia } from "elysia";
 import { migrate } from "drizzle-orm/libsql/migrator";
+import { eq } from "drizzle-orm";
 import { makeSignature, symmetricEncrypt } from "better-auth/crypto";
 import { connect, schema } from "../src/db";
 import { createAuth, accessControl, authHandler } from "../src/auth";
@@ -108,6 +109,17 @@ test("real Better Auth sessions and API keys enforce owner membership and revoca
     const key = await response.json();
     expect(key.key).toStartWith("phrs_");
     const keyHeaders = { authorization: `Bearer ${key.key}` };
+    for (let i = 0; i < 11; i++)
+      expect(await authorize(request("/api/links", "GET", undefined, keyHeaders))).toBeUndefined();
+    await db.update(schema.apikey).set({ requestCount: 999 }).where(eq(schema.apikey.id, key.id));
+    expect(await authorize(request("/api/links", "GET", undefined, keyHeaders))).toBeUndefined();
+    const limited = await authorize(request("/api/links", "GET", undefined, keyHeaders));
+    expect(limited?.status).toBe(429);
+    expect(await limited?.json()).toEqual({ message: "API key rate limit exceeded" });
+    await db
+      .update(schema.apikey)
+      .set({ lastRequest: new Date(Date.now() - 86_400_001) })
+      .where(eq(schema.apikey.id, key.id));
     expect(await authorize(request("/api/links", "GET", undefined, keyHeaders))).toBeUndefined();
     expect(
       (

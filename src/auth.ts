@@ -42,7 +42,12 @@ export function createAuth(
           },
         ],
       }),
-      apiKey({ defaultPrefix: "phrs_", requireName: true, enableSessionForAPIKeys: false }),
+      apiKey({
+        defaultPrefix: "phrs_",
+        requireName: true,
+        enableSessionForAPIKeys: false,
+        rateLimit: { timeWindow: 86_400_000, maxRequests: 1000 },
+      }),
     ],
   });
 }
@@ -58,6 +63,8 @@ export function accessControl(auth: Auth, db: Database, origin: string): Authori
         request.headers.get("x-api-key");
       if (key && !sessionOnly) {
         const result = await auth.api.verifyApiKey({ body: { key } });
+        if (result.error?.code === "RATE_LIMITED")
+          return denied(429, "API key rate limit exceeded");
         if (result.valid) userId = result.key?.referenceId;
       } else {
         const session = await auth.api.getSession({ headers: request.headers });
