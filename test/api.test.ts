@@ -184,3 +184,15 @@ test("Vercel adapter uses atomic create and preserves stored values", async () =
     globalThis.fetch = original;
   }
 });
+
+test("missing Vercel items return undefined on 204", async () => {
+  const original = globalThis.fetch;
+  globalThis.fetch = Object.assign(async () => new Response(null, { status: 204 }), {
+    preconnect: original.preconnect,
+  }) as typeof fetch;
+  try {
+    expect(await vercelStore("token", "store", "team").get("missing")).toBeUndefined();
+  } finally {
+    globalThis.fetch = original;
+  }
+});

@@ -5,6 +5,8 @@
   "installCommand": "bun install --frozen-lockfile",
   "buildCommand": "bun run build",
   "functions": {
-    "src/server.ts": { "includeFiles": ["web/index.html", "dist/main.js"] }
+    "src/server.ts": {
+      "includeFiles": "{web/index.html,dist/main.js}"
+    }
   }
 }
