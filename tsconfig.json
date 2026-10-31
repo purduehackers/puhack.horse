@@ -7,7 +7,8 @@
     "noEmit": true,
     "skipLibCheck": true,
     "types": ["bun"],
-    "lib": ["ESNext", "DOM", "DOM.Iterable"]
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["src", "web", "test"]
+  "include": ["src", "web", "test", "drizzle.config.ts"]
 }

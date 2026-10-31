@@ -5,3 +5,7 @@ dist/
 !.env.example
 
 .vercel/
+
+*.db
+*.db-shm
+*.db-wal

@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { treaty } from "@elysiajs/eden";
 import { createApp } from "../src/api";
 import { createClient } from "../src/client";
-import { vercelStore, type Link, type Store } from "../src/store";
+import { type Link, type Store } from "../src/store";
 
 function fixture() {
   const links = new Map<string, Link>();
@@ -13,29 +13,45 @@ function fixture() {
     async get(slug) {
       return links.get(slug);
     },
+    async visit(slug) {
+      const link = links.get(slug);
+      if (!link) return;
+      const visited = { ...link, v: link.v + 1 };
+      links.set(slug, visited);
+      return visited;
+    },
     async create(slug, d) {
       if (links.has(slug)) throw new Error("Conflict");
       links.set(slug, { d, v: 0 });
+    },
+    async update(slug, d) {
+      const previous = links.get(slug);
+      if (!previous) return;
+      const updated = { ...previous, d };
+      links.set(slug, updated);
+      return updated;
     },
     async delete(slug) {
       links.delete(slug);
     },
   };
-  const app = createApp(store, "test-token");
+  const app = createApp(store, async (request) =>
+    request.headers.get("authorization") === "Bearer test-token"
+      ? undefined
+      : Response.json({ message: "Unauthorized" }, { status: 401 }),
+  );
   const api = treaty(app, { headers: { authorization: "Bearer test-token" } }).api;
   return { links, store, app, api };
 }
 
 describe("API", () => {
-  test("fails closed without a token", () => {
-    expect(() => createApp(fixture().store, "")).toThrow();
-  });
   test("protects every management operation", async () => {
     const { app, links } = fixture();
     for (const [method, path] of [
       ["GET", "/api/links"],
       ["GET", "/api/links/abc"],
       ["POST", "/api/links"],
+      ["PATCH", "/api/links/abc"],
       ["DELETE", "/api/links/abc"],
     ]) {
       const response = await app.handle(
@@ -43,7 +59,7 @@ describe("API", () => {
           method,
           headers: { "content-type": "application/json" },
           body:
-            method === "POST"
+            method === "POST" || method === "PATCH"
               ? JSON.stringify({ slug: "abc", destination: "https://example.com" })
               : undefined,
         }),
@@ -84,6 +100,34 @@ describe("API", () => {
       409,
     );
     expect(links.get("taken")).toEqual({ d: "https://example.com", v: 42 });
+  });
+  test("explicit edits change only the destination and reject unsafe or missing links", async () => {
+    const { api, app, links } = fixture();
+    links.set("edit-me", { d: "https://old.example", v: 42 });
+    expect(
+      (await api.links({ slug: "edit-me" }).patch({ destination: "https://new.example" })).data,
+    ).toEqual({ d: "https://new.example", v: 42 });
+    const redirect = await app.handle(new Request("http://localhost/edit-me"));
+    expect(redirect.headers.get("location")).toBe("https://new.example/");
+    for (const destination of ["javascript:alert(1)", "ftp://example.com", "broken"])
+      expect((await api.links({ slug: "edit-me" }).patch({ destination })).status).toBe(422);
+    expect(
+      (await api.links({ slug: "missing" }).patch({ destination: "https://new.example" })).status,
+    ).toBe(404);
+    expect(links.get("edit-me")).toEqual({ d: "https://new.example", v: 43 });
+  });
+  test("redirects count views while management reads and HEAD requests do not", async () => {
+    const { app, api, links } = fixture();
+    links.set("viewed", { d: "https://example.com", v: 12 });
+    await api.links({ slug: "viewed" }).get();
+    expect(
+      (await app.handle(new Request("http://localhost/viewed", { method: "HEAD" }))).status,
+    ).toBe(307);
+    expect(links.get("viewed")?.v).toBe(12);
+    await Promise.all(
+      Array.from({ length: 5 }, () => app.handle(new Request("http://localhost/viewed"))),
+    );
+    expect(links.get("viewed")?.v).toBe(17);
   });
   test("reconciles a committed write whose response was lost", async () => {
     const { api, store, links } = fixture();
@@ -148,51 +192,4 @@ describe("API", () => {
       app.stop();
     }
   });
-});
-
-test("Vercel adapter uses atomic create and preserves stored values", async () => {
-  const original = globalThis.fetch;
-  const requests: { url: string; init?: RequestInit }[] = [];
-  globalThis.fetch = Object.assign(
-    async (input: string | URL | Request, init?: RequestInit) => {
-      requests.push({ url: String(input), init });
-      return Response.json(
-        init?.method === "PATCH"
-          ? { status: "ok" }
-          : String(input).includes("/item/")
-            ? { value: { d: "https://example.com", v: 9 } }
-            : [{ key: "test", value: { d: "https://example.com", v: 9 } }],
-      );
-    },
-    { preconnect: original.preconnect },
-  ) as typeof fetch;
-  try {
-    const store = vercelStore("token", "store", "team");
-    await store.create("test", "https://example.com");
-    expect(JSON.parse(String(requests[0].init?.body))).toEqual({
-      items: [{ operation: "create", key: "test", value: { d: "https://example.com", v: 0 } }],
-    });
-    expect(await store.get("test")).toEqual({ d: "https://example.com", v: 9 });
-    expect(await store.list()).toEqual({ test: { d: "https://example.com", v: 9 } });
-    await store.delete("test");
-    expect(
-      requests.every((request) =>
-        request.url.startsWith("https://api.vercel.com/v1/global-config/store/"),
-      ),
-    ).toBe(true);
-  } finally {
-    globalThis.fetch = original;
-  }
-});
-
-test("missing Vercel items return undefined on 204", async () => {
-  const original = globalThis.fetch;
-  globalThis.fetch = Object.assign(async () => new Response(null, { status: 204 }), {
-    preconnect: original.preconnect,
-  }) as typeof fetch;
-  try {
-    expect(await vercelStore("token", "store", "team").get("missing")).toBeUndefined();
-  } finally {
-    globalThis.fetch = original;
-  }
 });
