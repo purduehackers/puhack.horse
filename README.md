@@ -32,7 +32,7 @@ Production uses Vercel's Elysia preset and Bun runtime at the repository root (`
 ## CLI and library
 
 ```sh
-bun add --global @purduehackers/phack
+bun add --global @purduehackers/phack-cli
 export PHACK_URL=https://phack.rs
 export PHACK_TOKEN=phrs_your_api_key
 phack create https://purduehackers.com/events --slug events
@@ -43,10 +43,10 @@ phack delete events
 
 The CLI requires Bun. Commands return JSON and exit nonzero on failure. An omitted slug is generated in the client and retained in recovery instructions. Check the same slug after a failed create and retry with the same `--slug`.
 
-Install the library with `bun add @purduehackers/phack` or `npm install @purduehackers/phack`:
+Install the library with `bun add @purduehackers/phack-cli` or `npm install @purduehackers/phack-cli`:
 
 ```ts
-import { createClient } from "@purduehackers/phack";
+import { createClient } from "@purduehackers/phack-cli";
 const api = createClient("https://phack.rs", process.env.PHACK_TOKEN!);
 const { data, error } = await api.links.post({
   slug: "events",

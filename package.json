@@ -1,5 +1,5 @@
 {
-  "name": "@purduehackers/phack",
+  "name": "@purduehackers/phack-cli",
   "version": "0.2.0",
   "description": "Typed API client and CLI for Purdue Hackers short links",
   "homepage": "https://phack.rs",
@@ -8,7 +8,7 @@
     "url": "git+https://github.com/purduehackers/puhack.horse.git"
   },
   "bin": {
-    "phack": "./dist/cli.js"
+    "phack": "dist/cli.js"
   },
   "files": [
     "dist/client.js",
