@@ -16,9 +16,9 @@ Use a random secret of at least 32 characters for `BETTER_AUTH_SECRET`. Local de
 
 Register an application at [Purdue Hackers ID](https://id.purduehackers.com) with scopes `openid profile email roles offline_access` and callback `http://localhost:3000/api/auth/callback/purduehackers` for development, or `https://phack.rs/api/auth/callback/purduehackers` for production. Set its client ID and, for a confidential client, client secret. `BETTER_AUTH_URL` is the canonical application origin. Dashboard requests on other hostnames redirect there; public short links continue working on every alias.
 
-Open `/dashboard` and sign in with ID. Only users with the ID `organizer` claim can sign in or manage links and API keys; ID admins also receive that claim. OAuth uses PKCE and verified ID tokens. Every management request checks the owner's current roles at ID's userinfo endpoint, including requests authenticated with an API key. ID failures deny management access but do not affect public redirects. Refresh tokens allow integrations to continue after the browser session ends; revoked/expired ID authorization requires signing in again. OAuth tokens are encrypted at rest using the Better Auth secret.
+Open `/dashboard` and sign in with ID. Search, copy, create, edit, and delete links; view counts retain their history when a destination changes. Only users with the ID `organizer` claim can sign in or manage links and API keys; ID admins also receive that claim. OAuth uses PKCE and verified ID tokens. Every management request checks the owner's current roles at ID's userinfo endpoint, including requests authenticated with an API key. ID failures deny management access but do not affect public redirects. Refresh tokens allow integrations to continue after the browser session ends; revoked/expired ID authorization requires signing in again. OAuth tokens are encrypted at rest using the Better Auth secret.
 
-Organizers can create, list and revoke their own API keys on the dashboard. Keys are shown once, stored hashed, and use the Better Auth API-key plugin's default rate limits. API keys cannot manage other API keys; key management requires an organizer's browser session. Cookie-authenticated writes require a matching Origin. Do not put `BETTER_AUTH_SECRET` in clients.
+Organizers can create, list and revoke their own API keys on the dashboard. New keys start with `phrs_`. Keys are shown once, stored hashed, and use the Better Auth API-key plugin's default rate limits. API keys cannot manage other API keys; key management requires an organizer's browser session. Cookie-authenticated writes require a matching Origin. Do not put `BETTER_AUTH_SECRET` in clients.
 
 ## Migrate production
 
@@ -33,7 +33,7 @@ Production uses Vercel's Elysia preset and Bun runtime at the repository root (`
 
 ```sh
 export PHACK_URL=https://phack.rs
-export PHACK_TOKEN=phack_your_api_key
+export PHACK_TOKEN=phrs_your_api_key
 bun src/cli.ts create https://purduehackers.com/events --slug events
 bun src/cli.ts get events
 bun src/cli.ts list
@@ -53,18 +53,19 @@ const { data, error } = await api.links.post({
 
 The library returns Eden responses directly. Check `error` for HTTP failures and catch transport failures. Omitting the token uses same-origin browser cookies. Server code is imported only as types and is not bundled into the dashboard.
 
-| Method | Path               | Purpose                                    |
-| ------ | ------------------ | ------------------------------------------ |
-| GET    | `/`                | Purdue Hackers homepage redirect           |
-| GET    | `/:slug`           | Public 307 redirect; 404 for missing links |
-| GET    | `/dashboard`       | ID login, link and API-key management      |
-| *      | `/api/auth/*`      | Better Auth endpoints                      |
-| GET    | `/api/links`       | List links                                 |
-| GET    | `/api/links/:slug` | Read a link                                |
-| POST   | `/api/links`       | Create `{ slug, destination }`             |
-| DELETE | `/api/links/:slug` | Delete a link                              |
+| Method | Path               | Purpose                                               |
+| ------ | ------------------ | ----------------------------------------------------- |
+| GET    | `/`                | Purdue Hackers homepage redirect                      |
+| GET    | `/:slug`           | Public 307 redirect; 404 for missing links            |
+| GET    | `/dashboard`       | ID login, link and API-key management                 |
+| *      | `/api/auth/*`      | Better Auth endpoints                                 |
+| GET    | `/api/links`       | List links                                            |
+| GET    | `/api/links/:slug` | Read a link                                           |
+| POST   | `/api/links`       | Create `{ slug, destination }`                        |
+| PATCH  | `/api/links/:slug` | Update `{ destination }`; preserve the slug and count |
+| DELETE | `/api/links/:slug` | Delete a link                                         |
 
-Link management accepts an organizer session, `Authorization: Bearer <API key>`, or `x-api-key`. Creates accept HTTP(S) URLs and nonreserved slugs of 2–64 alphanumeric characters with internal hyphens. Atomic inserts never overwrite destinations or counters. Retrying an identical link succeeds. Existing visit counts are preserved; redirects do not increment them. Store failures return 503. There are no automatic write retries.
+Link management accepts an organizer session, `Authorization: Bearer <API key>`, or `x-api-key`. Creates accept HTTP(S) URLs and nonreserved slugs of 2–64 alphanumeric characters with internal hyphens. Atomic inserts never overwrite destinations or counters. Retrying an identical link succeeds. Existing view counts are preserved. GET redirects increment views atomically; HEAD requests and management reads do not. Store failures return 503. There are no automatic write retries.
 
 ## Check
 

@@ -29,6 +29,26 @@ const app = new Elysia()
         }),
   )
   .get(
+    "/dashboard/DepartureMono.woff2",
+    () =>
+      new Response(readFileSync(new URL("../web/DepartureMono.woff2", import.meta.url)), {
+        headers: {
+          "Content-Type": "font/woff2",
+          "Cache-Control": "public, max-age=31536000, immutable",
+        },
+      }),
+  )
+  .get(
+    "/dashboard/JetBrainsMono.woff2",
+    () =>
+      new Response(readFileSync(new URL("../web/JetBrainsMono.woff2", import.meta.url)), {
+        headers: {
+          "Content-Type": "font/woff2",
+          "Cache-Control": "public, max-age=31536000, immutable",
+        },
+      }),
+  )
+  .get(
     "/dashboard/main.js",
     () =>
       new Response(readFileSync(new URL("../dist/main.js", import.meta.url), "utf8"), {

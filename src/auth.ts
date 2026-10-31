@@ -42,7 +42,7 @@ export function createAuth(
           },
         ],
       }),
-      apiKey({ defaultPrefix: "phack_", requireName: true, enableSessionForAPIKeys: false }),
+      apiKey({ defaultPrefix: "phrs_", requireName: true, enableSessionForAPIKeys: false }),
     ],
   });
 }

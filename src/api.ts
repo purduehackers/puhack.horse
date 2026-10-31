@@ -5,6 +5,7 @@ import type { Store } from "./store";
 const slug = t.String({ pattern: "^[A-Za-z0-9][A-Za-z0-9-]{0,62}[A-Za-z0-9]$" });
 const params = t.Object({ slug });
 const reserved = new Set(["404", "api", "dashboard", "favicon", "login"]);
+const destination = t.String({ maxLength: 8192, format: "uri", pattern: "^https?://" });
 
 export function createApp(store: Store, authorize: Authorize) {
   return new Elysia()
@@ -41,12 +42,6 @@ export function createApp(store: Store, authorize: Authorize) {
             const { slug, destination } = body;
             if (reserved.has(slug.toLowerCase())) return status(422, { message: "Reserved slug" });
             try {
-              const url = new URL(destination);
-              if (!["http:", "https:"].includes(url.protocol)) throw new Error();
-            } catch {
-              return status(422, { message: "Use an HTTP(S) destination" });
-            }
-            try {
               await store.create(slug, destination);
               return { slug, d: destination, v: 0, status: "created" as const };
             } catch {
@@ -61,7 +56,14 @@ export function createApp(store: Store, authorize: Authorize) {
               });
             }
           },
-          { body: t.Object({ slug, destination: t.String({ maxLength: 8192 }) }) },
+          { body: t.Object({ slug, destination }) },
+        )
+        .patch(
+          "/links/:slug",
+          async ({ params, body, status }) =>
+            (await store.update(params.slug, body.destination)) ??
+            status(404, { message: "Link not found" }),
+          { params, body: t.Object({ destination }) },
         )
         .delete(
           "/links/:slug",
@@ -72,8 +74,11 @@ export function createApp(store: Store, authorize: Authorize) {
           { params },
         ),
     )
-    .get("/:slug", async ({ params, redirect, status, set }) => {
-      const link = await store.get(params.slug);
+    .all("/:slug", async ({ params, request, redirect, status, set }) => {
+      if (!["GET", "HEAD"].includes(request.method)) return status(405, "Method not allowed");
+      const link = await (request.method === "HEAD"
+        ? store.get(params.slug)
+        : store.visit(params.slug));
       set.headers["cache-control"] = "no-store";
       return link ? redirect(link.d, 307) : status(404, "Link not found");
     });

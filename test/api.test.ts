@@ -13,9 +13,23 @@ function fixture() {
     async get(slug) {
       return links.get(slug);
     },
+    async visit(slug) {
+      const link = links.get(slug);
+      if (!link) return;
+      const visited = { ...link, v: link.v + 1 };
+      links.set(slug, visited);
+      return visited;
+    },
     async create(slug, d) {
       if (links.has(slug)) throw new Error("Conflict");
       links.set(slug, { d, v: 0 });
+    },
+    async update(slug, d) {
+      const previous = links.get(slug);
+      if (!previous) return;
+      const updated = { ...previous, d };
+      links.set(slug, updated);
+      return updated;
     },
     async delete(slug) {
       links.delete(slug);
@@ -37,6 +51,7 @@ describe("API", () => {
       ["GET", "/api/links"],
       ["GET", "/api/links/abc"],
       ["POST", "/api/links"],
+      ["PATCH", "/api/links/abc"],
       ["DELETE", "/api/links/abc"],
     ]) {
       const response = await app.handle(
@@ -44,7 +59,7 @@ describe("API", () => {
           method,
           headers: { "content-type": "application/json" },
           body:
-            method === "POST"
+            method === "POST" || method === "PATCH"
               ? JSON.stringify({ slug: "abc", destination: "https://example.com" })
               : undefined,
         }),
@@ -85,6 +100,34 @@ describe("API", () => {
       409,
     );
     expect(links.get("taken")).toEqual({ d: "https://example.com", v: 42 });
+  });
+  test("explicit edits change only the destination and reject unsafe or missing links", async () => {
+    const { api, app, links } = fixture();
+    links.set("edit-me", { d: "https://old.example", v: 42 });
+    expect(
+      (await api.links({ slug: "edit-me" }).patch({ destination: "https://new.example" })).data,
+    ).toEqual({ d: "https://new.example", v: 42 });
+    const redirect = await app.handle(new Request("http://localhost/edit-me"));
+    expect(redirect.headers.get("location")).toBe("https://new.example/");
+    for (const destination of ["javascript:alert(1)", "ftp://example.com", "broken"])
+      expect((await api.links({ slug: "edit-me" }).patch({ destination })).status).toBe(422);
+    expect(
+      (await api.links({ slug: "missing" }).patch({ destination: "https://new.example" })).status,
+    ).toBe(404);
+    expect(links.get("edit-me")).toEqual({ d: "https://new.example", v: 43 });
+  });
+  test("redirects count views while management reads and HEAD requests do not", async () => {
+    const { app, api, links } = fixture();
+    links.set("viewed", { d: "https://example.com", v: 12 });
+    await api.links({ slug: "viewed" }).get();
+    expect(
+      (await app.handle(new Request("http://localhost/viewed", { method: "HEAD" }))).status,
+    ).toBe(307);
+    expect(links.get("viewed")?.v).toBe(12);
+    await Promise.all(
+      Array.from({ length: 5 }, () => app.handle(new Request("http://localhost/viewed"))),
+    );
+    expect(links.get("viewed")?.v).toBe(17);
   });
   test("reconciles a committed write whose response was lost", async () => {
     const { api, store, links } = fixture();

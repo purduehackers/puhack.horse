@@ -106,7 +106,7 @@ test("real Better Auth sessions and API keys enforce owner membership and revoca
     );
     expect(response.status).toBe(200);
     const key = await response.json();
-    expect(key.key).toStartWith("phack_");
+    expect(key.key).toStartWith("phrs_");
     const keyHeaders = { authorization: `Bearer ${key.key}` };
     expect(await authorize(request("/api/links", "GET", undefined, keyHeaders))).toBeUndefined();
     expect(
@@ -198,6 +198,13 @@ test("Turso schema preserves counts and enforces atomic unique slugs", async () 
     await db.insert(schema.link).values({ slug: "legacy", d: "https://example.com", v: 42 });
     const store = sqlStore(db);
     expect(await store.get("legacy")).toEqual({ d: "https://example.com", v: 42 });
+    expect(await store.update("legacy", "https://changed.com")).toEqual({
+      d: "https://changed.com",
+      v: 42,
+    });
+    expect(await store.update("missing", "https://changed.com")).toBeUndefined();
+    await Promise.all(Array.from({ length: 8 }, () => store.visit("legacy")));
+    expect((await store.get("legacy"))?.v).toBe(50);
     const results = await Promise.allSettled([
       store.create("race", "https://one.com"),
       store.create("race", "https://two.com"),
