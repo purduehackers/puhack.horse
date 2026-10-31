@@ -6,6 +6,8 @@ const form = document.querySelector<HTMLFormElement>("#create")!;
 const table = document.querySelector("table")!;
 const rows = document.querySelector("tbody")!;
 const message = document.querySelector("#message")!;
+const loginError = new URLSearchParams(location.search).get("error");
+if (loginError) message.textContent = `Sign-in failed (${loginError}). Please try again.`;
 const api = createClient(location.origin);
 const report = (error: unknown) => {
   message.textContent = error instanceof Error ? error.message : JSON.stringify(error);

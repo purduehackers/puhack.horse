@@ -15,7 +15,7 @@ test("real Better Auth sessions and API keys enforce owner membership and revoca
   let subject = "id-owner";
   let unavailable = false;
   globalThis.fetch = Object.assign(
-    async (input: string | URL | Request) => {
+    async (input: string | URL | Request, init?: RequestInit) => {
       const url = String(input instanceof Request ? input.url : input);
       if (url.endsWith("openid-configuration"))
         return Response.json({
@@ -25,6 +25,17 @@ test("real Better Auth sessions and API keys enforce owner membership and revoca
           userinfo_endpoint: "https://id.purduehackers.com/api/auth/oauth2/userinfo",
           jwks_uri: "https://id.purduehackers.com/api/auth/jwks",
         });
+      if (url.endsWith("/token")) {
+        const request = new Request(input, init);
+        expect(request.headers.get("authorization")).toBe(`Basic ${btoa("test:client-secret")}`);
+        const body = new URLSearchParams(await request.text());
+        expect(body.has("client_secret")).toBe(false);
+        return Response.json({
+          access_token: "renewed-token",
+          token_type: "Bearer",
+          expires_in: 3600,
+        });
+      }
       if (url.endsWith("/userinfo"))
         return unavailable
           ? new Response(null, { status: 503 })
@@ -34,7 +45,12 @@ test("real Better Auth sessions and API keys enforce owner membership and revoca
     { preconnect: original.preconnect },
   ) as typeof fetch;
   try {
-    const auth = createAuth(db, { url: "http://localhost:3000", secret, clientId: "test" });
+    const auth = createAuth(db, {
+      url: "http://localhost:3000",
+      secret,
+      clientId: "test",
+      clientSecret: "client-secret",
+    });
     const context = await auth.$context;
     const [user] = await db
       .insert(schema.user)
@@ -102,6 +118,16 @@ test("real Better Auth sessions and API keys enforce owner membership and revoca
     ).toBe(401);
     roles = ["alumni"];
     const provider = context.socialProviders.find((p) => p.id === "purduehackers")!;
+    expect(
+      (
+        await provider.validateAuthorizationCode({
+          code: "test-code",
+          codeVerifier: "test-verifier",
+          redirectURI: "http://localhost:3000/api/auth/callback/purduehackers",
+        })
+      )?.accessToken,
+    ).toBe("renewed-token");
+    expect((await provider.refreshAccessToken!("test-refresh"))?.accessToken).toBe("renewed-token");
     await expect(provider.getUserInfo({ accessToken: "test" })).rejects.toThrow("Organizers only");
     expect((await authorize(request("/api/links")))?.status).toBe(403);
     expect((await authorize(request("/api/links", "GET", undefined, keyHeaders)))?.status).toBe(
@@ -153,6 +179,12 @@ test("real Better Auth sessions and API keys enforce owner membership and revoca
     expect(url.searchParams.get("redirect_uri")).toBe(
       "http://localhost:3000/api/auth/callback/purduehackers",
     );
+    const failedCallback = await handler(
+      request("/api/auth/callback/purduehackers?error=access_denied"),
+    );
+    const errorURL = new URL(failedCallback.headers.get("location")!);
+    expect(errorURL.pathname).toBe("/dashboard");
+    expect(errorURL.searchParams.get("error")).toBe("state_not_found");
   } finally {
     globalThis.fetch = original;
     db.$client.close();

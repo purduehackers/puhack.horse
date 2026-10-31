@@ -17,6 +17,7 @@ export function createAuth(
   return betterAuth({
     baseURL: config.url,
     secret: config.secret,
+    onAPIError: { errorURL: new URL("/dashboard", config.url).href },
     database: drizzleAdapter(db, { provider: "sqlite", schema }),
     account: { encryptOAuthTokens: true, accountLinking: { enabled: false } },
     plugins: [
@@ -26,6 +27,9 @@ export function createAuth(
             providerId,
             clientId: config.clientId,
             clientSecret: config.clientSecret,
+            tokenEndpointAuth: {
+              method: config.clientSecret ? "client_secret_basic" : "none",
+            },
             discoveryUrl: `${issuer}/.well-known/openid-configuration`,
             scopes: ["openid", "profile", "email", "roles", "offline_access"],
             pkce: true,
