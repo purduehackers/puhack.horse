@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
-import { user } from "./user";
+import { user } from "./user.js";
 export const apikey = sqliteTable("apikey", {
   id: text().primaryKey().notNull(),
   configId: text().notNull().default("default"),

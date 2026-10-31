@@ -18,7 +18,7 @@ Register an application at [Purdue Hackers ID](https://id.purduehackers.com) wit
 
 Open `/dashboard` and sign in with ID. Search, copy, create, edit, and delete links; view counts retain their history when a destination changes. Only users with the ID `organizer` claim can sign in or manage links and API keys; ID admins also receive that claim. OAuth uses PKCE and verified ID tokens. Every management request checks the owner's current roles at ID's userinfo endpoint, including requests authenticated with an API key. ID failures deny management access but do not affect public redirects. Refresh tokens allow integrations to continue after the browser session ends; revoked/expired ID authorization requires signing in again. OAuth tokens are encrypted at rest using the Better Auth secret.
 
-Organizers can create, list and revoke their own API keys on the dashboard. New keys start with `phrs_`. Keys are shown once, stored hashed, and use the Better Auth API-key plugin's default rate limits. API keys cannot manage other API keys; key management requires an organizer's browser session. Cookie-authenticated writes require a matching Origin. Do not put `BETTER_AUTH_SECRET` in clients.
+Organizers can create, list and revoke their own API keys on the dashboard. New keys start with `phrs_`. Keys are shown once, stored hashed, and allow 1,000 requests per 24 hours. Exhausted keys return HTTP 429. API keys cannot manage other API keys; key management requires an organizer's browser session. Cookie-authenticated writes require a matching Origin. Do not put `BETTER_AUTH_SECRET` in clients.
 
 ## Migrate production
 
@@ -32,15 +32,18 @@ Production uses Vercel's Elysia preset and Bun runtime at the repository root (`
 ## CLI and library
 
 ```sh
+bun add --global @purduehackers/phack
 export PHACK_URL=https://phack.rs
 export PHACK_TOKEN=phrs_your_api_key
-bun src/cli.ts create https://purduehackers.com/events --slug events
-bun src/cli.ts get events
-bun src/cli.ts list
-bun src/cli.ts delete events
+phack create https://purduehackers.com/events --slug events
+phack get events
+phack list
+phack delete events
 ```
 
-The package exposes the `phack` binary. Commands return JSON and exit nonzero on failure. An omitted slug is generated in the client and retained in recovery instructions. Check the same slug after a failed create and retry with the same `--slug`.
+The CLI requires Bun. Commands return JSON and exit nonzero on failure. An omitted slug is generated in the client and retained in recovery instructions. Check the same slug after a failed create and retry with the same `--slug`.
+
+Install the library with `bun add @purduehackers/phack` or `npm install @purduehackers/phack`:
 
 ```ts
 import { createClient } from "@purduehackers/phack";
@@ -78,3 +81,9 @@ bun run build
 ```
 
 Tests use isolated SQLite databases and mocked ID responses; they never touch production.
+
+## Publish
+
+Set the next version in `package.json`, run the checks above, then run `npm publish`.
+The prepack hook builds the library, CLI, and TypeScript declarations. Dashboard assets,
+server bundles, migrations, tests, and local configuration are excluded from the npm package.

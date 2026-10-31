@@ -45,6 +45,15 @@ function fixture() {
 }
 
 describe("API", () => {
+  test("preserves rate limits from authorization", async () => {
+    const { store } = fixture();
+    const app = createApp(store, async () =>
+      Response.json({ message: "API key rate limit exceeded" }, { status: 429 }),
+    );
+    const response = await app.handle(new Request("http://localhost/api/links"));
+    expect(response.status).toBe(429);
+    expect(await response.json()).toEqual({ message: "API key rate limit exceeded" });
+  });
   test("protects every management operation", async () => {
     const { app, links } = fixture();
     for (const [method, path] of [

@@ -1,6 +1,6 @@
 import { eq, sql } from "drizzle-orm";
-import type { Database } from "./db";
-import { link } from "./db/schema/link";
+import type { Database } from "./db/index.js";
+import { link } from "./db/schema/link.js";
 export type Link = { d: string; v: number };
 export interface Store {
   list(): Promise<Record<string, Link>>;

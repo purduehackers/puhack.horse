@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia";
-import type { Authorize } from "./auth";
-import type { Store } from "./store";
+import type { Authorize } from "./auth.js";
+import type { Store } from "./store.js";
 
 const slug = t.String({ pattern: "^[A-Za-z0-9][A-Za-z0-9-]{0,62}[A-Za-z0-9]$" });
 const params = t.Object({ slug });
@@ -25,7 +25,13 @@ export function createApp(store: Store, authorize: Authorize) {
           const denied = await authorize(request);
           if (denied)
             return status(
-              denied.status === 401 ? 401 : denied.status === 403 ? 403 : 503,
+              denied.status === 401
+                ? 401
+                : denied.status === 403
+                  ? 403
+                  : denied.status === 429
+                    ? 429
+                    : 503,
               (await denied.json()) as { message: string },
             );
         })
